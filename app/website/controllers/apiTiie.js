@@ -1,6 +1,5 @@
 var ApiTiieView = require('../views/reference'),
     ApiTiieModel = require('../models/dataAccess'),
-    NodeCron = require('node-cron'),
     Request = require('request')
 
 var ApiTiie = function(conf) {
@@ -109,12 +108,8 @@ ApiTiie.prototype.post_insertarTiie = function (req, res, next) {
     });
 };
 
-NodeCron.schedule('00 06 * * *', () => {
-    actualizaTiiesDesdeBanxico(this.conf.parameters.ApiTiie, this.conf.parameters.UltimaFechaEndpoint, this.conf.parameters.InsertarEndpoint, this.conf.parameters.TokenBanxico, this.conf.parameters.ApiBanxico, this.conf.parameters.TiiesEndpoint);
-});
-
 var actualizaTiiesDesdeBanxico = function (apiTiie, ultimaFechaEndpoint, insertarEndpoint, tokenBanxico, apiBanxico, tiiesEndpoint) {
-    console.log(apiTiie, ultimaFechaEndpoint, insertarEndpoint, tokenBanxico, apiBanxico, tiiesEndpoint);
+    //console.logconsole.log(apiTiie, ultimaFechaEndpoint, insertarEndpoint, tokenBanxico, apiBanxico, tiiesEndpoint);
     recuperaUltimaFechaTiie(apiTiie, ultimaFechaEndpoint, insertarEndpoint, tokenBanxico, apiBanxico, tiiesEndpoint);
 }
 
