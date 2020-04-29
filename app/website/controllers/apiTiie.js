@@ -73,6 +73,11 @@ ApiTiie.prototype.get_actualizaTiie = function(req, res, next) {
     });
 };
 
+ApiTiie.prototype.post_actualizaTiiesDesdeBanxico = function (req, res, next) {
+    actualizaTiiesDesdeBanxico(this.conf.parameters.ApiTiie, this.conf.parameters.UltimaFechaEndpoint, this.conf.parameters.InsertarEndpoint, this.conf.parameters.TokenBanxico, this.conf.parameters.ApiBanxico, this.conf.parameters.TiiesEndpoint);
+    res.status(204).send();
+};
+
 ApiTiie.prototype.get_ultimaFechaTiie = function (req, res, next) {
 
     var self = this;
@@ -105,51 +110,52 @@ ApiTiie.prototype.post_insertarTiie = function (req, res, next) {
 };
 
 NodeCron.schedule('00 06 * * *', () => {
-    actualizaTiiesDesdeBanxico();
+    actualizaTiiesDesdeBanxico(this.conf.parameters.ApiTiie, this.conf.parameters.UltimaFechaEndpoint, this.conf.parameters.InsertarEndpoint, this.conf.parameters.TokenBanxico, this.conf.parameters.ApiBanxico, this.conf.parameters.TiiesEndpoint);
 });
 
-var actualizaTiiesDesdeBanxico = function () {
-    recuperaUltimaFechaTiie();
+var actualizaTiiesDesdeBanxico = function (apiTiie, ultimaFechaEndpoint, insertarEndpoint, tokenBanxico, apiBanxico, tiiesEndpoint) {
+    console.log(apiTiie, ultimaFechaEndpoint, insertarEndpoint, tokenBanxico, apiBanxico, tiiesEndpoint);
+    recuperaUltimaFechaTiie(apiTiie, ultimaFechaEndpoint, insertarEndpoint, tokenBanxico, apiBanxico, tiiesEndpoint);
 }
 
-var recuperaUltimaFechaTiie = function () {
-    let url = 'http://localhost:4900/api/apiTiie/ultimaFechaTiie';
+var recuperaUltimaFechaTiie = function (apiTiie, ultimaFechaEndpoint, insertarEndpoint, tokenBanxico, apiBanxico, tiiesEndpoint) {
+    let url = apiTiie + ultimaFechaEndpoint;
     Request.get(url, (error, response, body) => {
         if (!error && response && body) {
             var bodyAsObject = JSON.parse(body);
             var ultimaFecha = bodyAsObject[0].UltimaFecha;
             var fechaISO = new Date(ultimaFecha).toISOString().slice(0, 10);
 
-            recuperaTiiesDesdeBanxicoDesdeFecha(fechaISO);
+            recuperaTiiesDesdeBanxicoDesdeFecha(fechaISO, apiTiie, insertarEndpoint, tokenBanxico, apiBanxico, tiiesEndpoint);
         }
     });
 }
 
-var recuperaTiiesDesdeBanxicoDesdeFecha = function (fechaInicial) {
+var recuperaTiiesDesdeBanxicoDesdeFecha = function (fechaInicial, apiTiie, insertarEndpoint, tokenBanxico, apiBanxico, tiiesEndpoint) {
     var fechaDeHoy = new Date().toISOString().slice(0, 10);
 
     if (fechaInicial == fechaDeHoy)
         return;
 
-    let url = 'https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF43783/datos/' + fechaInicial + '/' + fechaDeHoy;
+    let url = apiBanxico + tiiesEndpoint + fechaInicial + '/' + fechaDeHoy;
     Request.get({
         url: url,
         headers: {
-            'Bmx-Token': '818165c998d9dd09b8fbb4bc4544f2216990e36738b3c707260809f8ffb8e916'
+            'Bmx-Token': tokenBanxico
         }
         }, (error, response, body) => {
             if (!error && response && body) {
                 var bodyAsObject = JSON.parse(body);
                 var serie = bodyAsObject.bmx.series[0].datos;
 
-                serie.forEach(tasa => insertaTiie(tasa.fecha, tasa.dato));
+                serie.forEach(tasa => insertaTiie(tasa.fecha, tasa.dato, apiTiie, insertarEndpoint));
             }
         }
     );
 }
 
-var insertaTiie = function (fecha, tasa) {
-    let url = 'http://localhost:4900/api/apiTiie/insertarTiie';
+var insertaTiie = function (fecha, tasa, apiTiie, insertarEndpoint) {
+    let url = apiTiie + insertarEndpoint;
     Request.post({
         url: url,
         body: {

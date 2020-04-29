@@ -5,5 +5,11 @@
     "SQL_server": "192.168.20.92",
     "SQL_database": "PlanPiso",
     "SQL_connectionTimeout": 60000,
-    "SQL_requestTimeout": 300000
+    "SQL_requestTimeout": 300000,
+    "ApiTiie": "http://localhost:4900/api/apiTiie/",
+    "UltimaFechaEndpoint": "ultimaFechaTiie",
+    "InsertarEndpoint": "insertarTiie",
+    "TokenBanxico": "818165c998d9dd09b8fbb4bc4544f2216990e36738b3c707260809f8ffb8e916",
+    "ApiBanxico": "https://www.banxico.org.mx/SieAPIRest/service/v1/",
+    "TiiesEndpoint": "series/SF43783/datos/"
 }
