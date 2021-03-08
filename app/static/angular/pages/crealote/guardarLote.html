@@ -1,0 +1,82 @@
+<top-bar></top-bar>
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="dropdown setInline">
+                                <button class="btn btn-warning" type="button" data-toggle="dropdown">{{currentCuentaName}}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li ng-repeat="cuentas in lstCuentas">
+                                        <a ng-click="getDocumentos(cuentas)">{{cuentas.cuenta}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="dropdown setInline">
+                                <button class="btn btn-warning" type="button" ng-click="actualizarCartera()">Actualizar Cartera</button>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-right">
+                            <h3><strong>{{nombreLote}}</strong></h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-danger" role="alert" ng-show="documentosNoEncontrados.length > 0">
+                                <h4 class="alert-heading">
+                                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> No se encontraron los siguientes documentos favor de <strong>actualizar cartera</strong>
+                                </h4>
+                                <div class="row mb-0" ng-repeat="documentosNoEncontrado in documentosNoEncontrados">
+                                    <div class="col-md-4">
+                                        <b>{{documentosNoEncontrado.documento}}</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="alert alert-warning" role="alert" ng-show="financieraMasCuenta.length > 0">
+                                <h4 class="alert-heading">
+                                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Tiene mas de una cuenta destino las siguientes financieras
+                                </h4>
+                                <div class="row mb-0" ng-repeat="cuentaRepetida in cuentasRepetidas">
+                                    <!-- <div class="col-md-4">
+                                        <b>{{cuentaRepetida.proveedor}}</b>
+                                    </div> -->
+                                    <div class="col-md-12">
+                                        <b>{{cuentaRepetida.proveedor}}</b>
+                                        <div class="dropdown setInline m-l-sm">
+                                            <button class="btn btn-warning btn-outline" type="button" data-toggle="dropdown">{{cuentaRepetida.currentCuentaDestino}}
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li ng-repeat="cuentas in cuentaRepetida.cuentaDestino">
+                                                    <a ng-click="cuentaRepetida.currentCuentaDestino = cuentas; cambioCuentasGrid(cuentaRepetida.currentCuentaDestino, cuentaRepetida.proveedor)">{{cuentas}}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 text-right">
+                            <h3>{{sumaDocumentos | currency}}</h3>
+                        </div>
+                        <div class="col-md-12">
+                            <div id="grid1" ui-grid="gridOptions" ui-grid-grouping ui-grid-edit class="gridStyle"></div>
+                        </div>
+                        <div class="col-md-12 m-t-sm">
+                            <button class="btn btn-success pull-right" ng-show="BotonGuardarLote" ng-click="validaDocumentosSeleccionados()">Guardar Lote</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<modal-pdf></modal-pdf>

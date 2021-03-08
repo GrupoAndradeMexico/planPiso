@@ -1,0 +1,77 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="col-sm-3">
+            <div class="form-group" id="calendar">
+                <label for="fInicio">Fecha Inicio:</label>
+                <div class="input-group date" data-provide="datepicker" data-date-format="dd/mm/yyyy" ng-model="fechaInicio">
+                    <input type="text" id="fInicio" class="form-control" ng-model="fechaInicio">
+                    <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group" id="calendar">
+                <label for="fFin">Fecha Fin:</label>
+                <div class="input-group date" data-provide="datepicker" data-date-format="dd/mm/yyyy" ng-model="fechaFin">
+                    <input type="text" class="form-control" id="fFin" ng-model="fechaFin">
+                    <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <button type="button" class="btn btn-success botonFormulario" ng-click="buscarLotes()">Buscar Lotes</button>
+        </div>        
+    </div>
+    <div class="col-md-12">
+            <table id="consultaLotes" class="table table-striped">
+                <tr>
+                    <th>Lote</th>
+                    <th>Fecha Lote</th>
+                    <th>Nombre</th>
+                    <th>Estatus del lote</th>
+                    <th>Total a pagar</th>
+                    <th>Banco pago </th>
+                    <th>Detalle</th>
+                    <th>Bitacora Interes</th>
+                    <th>Aplicar</th>
+                    <th>Intereses</th>
+                </tr>
+                <tr ng-repeat="lote in lotes">
+                    <td>{{lote.idLotePago}} </td>
+                    <td>{{lote.fecha}}</td>
+                    <td>{{lote.nombre}}</td>
+                    <td>{{lote.descLote}}</td>
+                    <td class="text-right">{{lote.totalPagar | currency}}</td>
+                    <td>{{lote.cuentaPago}}</td>
+                    <td>
+                        <button type="button" class="btn btn-default" ng-click="detalleLote(lote)">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </button>                        
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default" ng-click="detalleBitacora(lote)">
+                            <span class="glyphicon glyphicon-list-alt"></span>
+                        </button>                        
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default" ng-click="sacarPlanPiso(lote)">
+                            <span class="glyphicon glyphicon-save"></span>
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default" ng-click="agregaIntereses(lote)" ng-show="lote.banderaorden && lote.pal_estatus == 1">
+                            <span class="glyphicon glyphicon-save-file"></span>
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+</div>
+<modal-detalle-lote></modal-detalle-lote>
+<modal-detalle-interes></modal-detalle-interes>
+<modal-detalle-aplicado></modal-detalle-aplicado>
+<!-- <button type="button" class="btn btn-success" ng-click="prevStep()">regresar</button> -->

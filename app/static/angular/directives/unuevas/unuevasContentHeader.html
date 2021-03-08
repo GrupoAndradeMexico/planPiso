@@ -1,0 +1,28 @@
+<div class="row">
+    <div class="col-md-8">
+        <div class="dropdown setInline">
+            <button class="btn btn-warning" type="button" data-toggle="dropdown">{{currentSucursalName}}
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li ng-repeat="sucursal in lstSucursal">
+                    <a ng-click="setCurrentSucursal(sucursal)">{{sucursal.nombreSucursal}}</a>
+                </li>
+            </ul>
+        </div>
+        <div class="dropdown setInline" ng-show="ddlFinancialShow">
+            <button class="btn btn-warning" type="button" data-toggle="dropdown">
+                {{currentFinancialName}}
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li ng-repeat="financial in lstFinancial">
+                    <a ng-click="setCurrentFinancialHead(financial)">{{financial.nombre}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <a class="btn btn-warning pull-right"><i class="fa fa-car"></i> <b>{{totalUnidades}}</b></a>
+    </div>
+</div>

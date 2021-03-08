@@ -1,0 +1,50 @@
+<link href="assets/css/aplicaPago.css" rel="stylesheet">
+<div class="modal fade" id="modalDetalleInteres" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="pci-cross pci-circle"></i></button>
+                <h4 class="modal-title">Detalle Intereses Lote</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table id="consultaLotes" class="table table-striped">
+                            <tr>
+                                <th>Documento</th>
+                                <th>Puntos</th>
+                                <th>TIIE</th>
+                                <th>Penetración</th>
+                                <th>Interes</th>
+                                <th>Fecha Inicio</th>
+                                <th>Fecha Fin</th>
+                                <th>Días</th>
+                                <th>Intereses</th>
+                                <th>Tipo</th>
+                            </tr>
+                            <tr ng-repeat="intereseBitacora in interesesBitacora">
+                                <td>{{intereseBitacora.documento}}</td>
+                                <th>{{intereseBitacora.puntos}}</th>
+                                <th>{{intereseBitacora.tiie}}</th>
+                                <th>{{intereseBitacora.penetracion}}</th>
+                                <th>{{intereseBitacora.Interes}}</th>
+                                <th>{{intereseBitacora.fechainicio | date:'dd/MM/yyyy' : 'UTC'}}</th>
+                                <th>{{intereseBitacora.fechafin | date:'dd/MM/yyyy' : 'UTC'}}</th>
+                                <th>{{intereseBitacora.dias}}</th>
+                                <td>{{intereseBitacora.totalInteres}}</td>
+                                <td>{{intereseBitacora.tipo | uppercase}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

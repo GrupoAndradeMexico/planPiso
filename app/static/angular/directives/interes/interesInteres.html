@@ -1,0 +1,76 @@
+<div class="row">
+    <div class="col-md-12" ng-show="lstNewUnits.length > 0">
+        <table id="tblUnidadesNuevas" class="table tblUnidadesNuevas">
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" ng-click="checkAllUnits()" ng-model="allUnits.isChecked">
+                    </th>
+                    <th>Documento</th>
+                    <th>Numero Serie</th>
+                    <th>Financiera</th>
+                    <th>Esquema</th>
+                    <th>Modelo</th>
+                    <th>Año</th>
+                    <th>TipoEntrada</th>
+                    <th>Situación</th>
+                    <th>Tipo</th>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Fin</th>
+                    <th>Importe</th>
+                    <th>Saldo</th>
+                    <th>Saldo en CC</th>
+                    <th>Dias Restantes</th>
+                    <th>Interes Mes</th>
+                    <th>Interes Acumulado</th>
+                    <!-- <th>Interes Acumulado Financiera</th>
+                    <th>Interes Total</th> -->
+                    <th>Interes Total</th>
+                    <th>Estatus</th>
+                    <th>Susceptible de pago</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="unidad in lstNewUnits | filter:{excludeField:false}" ng-class="{'alert alert-warning':unidad.ccs==1,'alert alert-danger':unidad.ccs==2,'alert alert-info':unidad.ccs==3}">
+                    <td>
+                        <input type="checkbox" ng-model="unidad.isChecked" ng-click="checkUnits(unidad)">
+                    </td>
+                    <td>{{unidad.CCP_IDDOCTO}}</td>
+                    <td>{{unidad.vehNumserie}}</td>
+                    <td>{{unidad.financiera}}</td>
+                    <td>{{unidad.nombre}}</td>
+                    <td>{{unidad.VEH_TIPOAUTO}}</td>
+                    <td>{{unidad.VEH_ANMODELO}}</td>
+                    <td>{{unidad.tipoEntrada}}</td>
+                    <td>{{unidad.situacion}}</td>
+                    <td>{{unidad.tipoColateral}}</td>
+                    <td>{{unidad.fechainicio }}</td>
+                    <td>{{unidad.fechafin }}</td>
+                    <td>{{unidad.importe | currency}}</td>
+                    <td>{{unidad.saldo | currency}}</td>
+                    <td>{{unidad.saldoCXC | currency}}</td>
+                    <td>{{unidad.diasRestantes}}</td>
+                    <td>{{unidad.InteresMesActual | currency}}</td>
+                    <td>{{unidad.InteresAcumulado | currency}}</td>
+                    <!-- <td>{{unidad.InteresAcumuladoFinanciera | currency}}</td> -->
+                    <td>{{unidad.InteresTotal | currency}}</td>
+                    <td></td>
+                    <td>{{unidad.susceptible}}</td>
+                    <td>
+                        <button type="button" class="btn btn-success" ng-click="setPnlDetalleUnidad(unidad)">
+                            <span class="glyphicon glyphicon-th-list"> </span>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" ng-click="TraspasoSucursal(unidad)" ng-hide="unidad.vin.length==0"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-12" ng-show="noExisten">
+        <div class="alert alert-warning text-center" role="alert"><strong>No se encontraron resultados</strong></div>
+    </div>
+</div>

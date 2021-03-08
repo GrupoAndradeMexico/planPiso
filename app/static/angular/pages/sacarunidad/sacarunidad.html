@@ -1,0 +1,67 @@
+<top-bar></top-bar>
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="dropdown setInline">
+                                <button class="btn btn-warning" type="button" data-toggle="dropdown">{{currentCuentaName}}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li ng-repeat="cuentas in lstCuentas">
+                                        <a ng-click="getDocumentos(cuentas)">{{cuentas.cuenta}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="dropdown setInline">
+                                <button class="btn btn-warning" type="button" ng-click="actualizarCartera()">Actualizar Cartera</button>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-right">
+                            <h3><strong>{{nombreLote}}</strong></h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="forum-item">
+                        <div class="row">
+                            <div class="col-md-1 forum-info" ng-show="saldoBanco">
+                                <span class="views-number">
+                                    {{saldoBanco | currency}}
+                                </span>
+                                <div>
+                                    <small>Saldo Cuenta</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-right">
+                            <h3>{{sumaDocumentos | currency}}</h3>
+                        </div>
+                        <div class="col-md-12">
+                            <div id="grid1" ui-grid="gridOptions" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav  class="gridStyle"></div>
+                        </div>
+                        <div class="col-md-12 m-t-sm">
+                            <button class="btn btn-success pull-right" ng-show="BotonGuardarLote" ng-click="validaDocumentosSeleccionados()">Guardar Lote</button>
+                        </div>
+                    </div>
+                    <!-- <div ng-switch on="currentPanel" style="padding:10px; background-color: #fff; margin:8px;">
+                        <div ng-switch-when="pnlHome" class="animated fadeInRight">
+                            <crealote-home></crealote-home>
+                        </div>
+                        <div ng-switch-when="pnlDetale" class="animated fadeInRight">
+                            <crealote-detalle>
+                                </ccrealote-detalle>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<modal-pdf></modal-pdf>
+<modal-grid-lote></modal-grid-lote>

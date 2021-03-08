@@ -1,0 +1,123 @@
+<div class="row">
+    <div class="col-md-6">
+        <div ng-show="estatusConciliacion != 1">
+
+      
+        <div class="alert alert-danger" role="alert" ng-show="situacion.financiera != 0">
+            <h4 class="alert-heading">
+                <i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 20px"></i> 
+                Unidades no reportadas por Grupo Andrade!
+            </h4>
+            <p>No es posible realizar la CONCILIACIÓN debido a que Grupo Andrade no reporta unidades que en el Layout se especifican.</p>
+            <hr>
+            <p class="mb-0">
+                <b>NOTA:</b> Debera actualizar la cartera para cuadrar la conciliación.
+                <button type="button" class="btn btn-primary pull-right" ng-show="MuestracompraVirtual" ng-click="CompraVirtual()" >Compra Virtual</button>
+            </p>
+        </div>
+    </div>
+    </div>
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-6 text-right">
+                <h2><small>Periodo Contable:</small> <br>{{frmConciliacion.lblMes}}</h2>
+            </div>
+            <div class="col-md-6 text-right">
+                <h2><small>Financiera:</small> <br>{{ lblFinanciera }}</h2>
+            </div>
+            <div class="col-md-12">&nbsp;</div>
+            <div class="col-md-6 text-right">
+              
+            </div>
+            <div class="col-md-6 text-right">
+                <button type="button" class="btn btn-primary pull-right" ng-click="reporteConsulta()" >Carátula</button>
+            </div>            
+        </div>
+    </div>
+</div>
+<hr>
+<hr>
+<table id="tblConciliacion" class="table table-hover borderless">
+    <thead>
+        <tr>
+            <th width="30"></th>
+            <th>Numero Serie</th>
+            <th>Saldo G.A.</th>
+            <th>Sando Financiera</th>
+            <th>Diferencia</th>
+            <th width="180">Situación</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="(key, dato) in lstConceal" repeat-end="setTableStyle('#tblConciliacion')">
+            <td>
+                <input  type="checkbox"
+                        ng-checked="dato.checked"
+                        ng-disabled="true">
+                <!-- ng-checked="situacion.financiera == 0" -->
+            </td>
+            <td>
+                <b>{{dato.numeroSerie}}</b><br>
+                <small class="text-warning">{{dato.CCP_IDDOCTO}}</small>
+            </td>
+            <td>{{dato.saldo | currency}}</td>
+            <td>{{dato.valor | currency}}</td>
+            <td>
+                {{dato.saldo-dato.valor | currency}}
+            </td>
+            <td ng-class="  {
+                                'celdaFondoRojo': dato.equiparante == 2,
+                                'celdaFondoAmarillo': dato.equiparante == 3,
+                            }">
+                <table width="100%" border="0">
+                    <tr>
+                        <td width="50" class="text-center">
+                           
+                            <i ng-show="dato.equiparante == 2" class="fa fa-arrow-circle-right text-danger" 
+                            aria-hidden="true" style="font-size: 20px "></i>
+
+                            <i ng-show="dato.equiparante == 3" class="fa fa-arrow-circle-left text-warning" 
+                            aria-hidden="true" style="font-size: 20px "></i>
+                        </td>
+                        <td>
+                            <p ng-show=" dato.equiparante == 2">Reportada por la Financiera</p>
+                            <p ng-show=" dato.equiparante == 3">Reportada por Grupo Andrade</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <!-- <td ng-class="dato.esMayor == 1 ? 'celdaFondoVerde' : dato.esMayor == 2 ? 'celdaFondoAmarillo' : 'celdaFondoRojo'  ">{{dato.diferencia| currency}}</td> -->
+        </tr>
+    </tbody>
+</table>
+
+<div class="row">
+    <div class="col-sm-6">
+        &nbsp;
+    </div>
+    <div class="col-sm-6">
+      
+        
+             <button type="button" class="btn btn-default pull-right" ng-click="prevStep()">Regresar</button>
+        
+    </div>
+</div>
+<!--INICIA modal que muestra el reporte en pdf -->
+<!--===================================================-->
+<div id="reproteModalPdf" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#1f897f;">
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="pci-cross pci-circle" style="color:#fff;"></i>
+                </button>
+                <h4 class="modal-title text-center" id="myLargeModalLabel" style="color:#fff;">Conciliación</h4>
+            </div>
+            <div id="htmlReporteConciliacion" class="modal-body text-center">
+
+                
+            </div>
+        </div>
+    </div>
+</div>
+</div>

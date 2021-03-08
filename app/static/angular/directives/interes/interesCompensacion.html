@@ -1,0 +1,305 @@
+<div class="row">
+    <div class="col-md-6">
+        <h2><strong>Validar Compensacion</strong></h2>
+    </div>
+    <div class="col-md-6">
+        <div class="alert alert-info" role="alert">
+            <button class="btn btn-primary" ng-click="totalCompensar();">Calcular</button>
+            <!-- <form class="form-inline">
+                <label for="exampleInputName2">Saldo a Compensar: </label>
+                {{montoCompensar | currency}}
+            </form>
+            <form class="form-inline">
+                <label for="exampleInputName2">Compra: </label>
+                {{saldoCompensar | currency}}
+            </form> -->
+            <form class="form-inline">
+                <label for="exampleInputName2">Diferencia vs plan piso: </label>
+                {{diferenciaPP | currency}}
+            </form>
+            <form class="form-inline">
+                <label for="exampleInputName2">Saldo Serie PP x Pagar: </label>
+                {{montoCompensar | currency}}
+            </form>
+            <form class="form-inline">
+                <label for="exampleInputName2">Saldo CXC: </label>
+                {{saldoCXC | currency}}
+            </form>
+        </div>
+    </div>
+    <hr>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">{{unidadCompensacion.CCP_IDDOCTO}}</div>
+            <div class="panel-body">
+                <div>
+                    Cuentas por cobrar {{montoCompensarCxc}}
+                </div>
+                <!-- <div class="row">
+                    <div class="col-md-4">
+                        <label>Número de Serie: </label>
+                        <span>{{unidadCompensacion.vehNumserie}}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Modelo: </label>
+                        <span>{{unidadCompensacion.VEH_TIPOAUTO}}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Año: </label>
+                        <span>{{unidadCompensacion.VEH_ANMODELO}}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Importe: </label>
+                        <span>{{unidadCompensacion.importe | currency}}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Financiera: </label>
+                        <span>{{unidadCompensacion.financiera}}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Saldo: </label>
+                        <span>{{unidadCompensacion.saldo | currency}}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Días restantes: </label>
+                        <span>{{unidadCompensacion.diasRestantes}}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Interes mes actual: </label>
+                        <span>{{unidadCompensacion.InteresMesActual | currency}}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Interes total: </label>
+                        <span>{{unidadCompensacion.InteresTotal | currency}}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Interes acumulado: </label>
+                        <span>{{unidadCompensacion.InteresAcumulado}}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Interes Acumulado Financiera: </label>
+                        <span>{{unidadCompensacion.InteresAcumuladoFinanciera}}</span>
+                    </div>
+                </div> -->
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th colspan="5">Cuenta por pagar</th>
+                    </tr>
+                    <tr>
+                        <th>Financiera</th>
+                        <th class="left" style="width:200px">Documento</th>
+                        <th>Importe</th>
+                        <th class="text-right">Saldo</th>
+                        <th class="text-right">Monto a Compensar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{unidadCompensacion.financiera}}</td>
+                        <td>{{unidadCompensacion.vehNumserie}}</td>
+                        <td>{{unidadCompensacion.importe || currency}}</td>
+                        <td class="text-right">{{unidadCompensacion.saldo | currency}}</td>
+                        <td><input type="text" class="form-control text-right" style="width: 100%" ng-model="unidadCompensacion.montoCompensar" ng-change="sumaCompensarCxP(unidadCompensacion.montoCompensar, {{unidadCompensacion.montoCompensar}})"></td>
+                    </tr>
+                    <tr ng-repeat="ocGarantia in ocGarantias">
+                        <td>{{ocGarantia.financiera}}</td>
+                        <td>{{ocGarantia.oce_folioorden}}</td>
+                        <td>{{ocGarantia.oce_importetotal || currency}}</td>
+                        <td class="text-right">{{ocGarantia.saldo | currency}}</td>
+                        <td><input type="text" class="form-control text-right" style="width: 100%" ng-model="ocGarantia.montoCompensar" ng-change="sumaCompensarOc()"></td>
+                    </tr>
+                    <tr ng-repeat="facturaCompensacion in facturasCompensacion | filter: { tipoProducto: 'PROV' }">
+                        <td></td>
+                        <td>{{facturaCompensacion.tipoFactura}}</td>
+                        <td></td>
+                        <td></td>
+                        <td><input type="text" class="form-control text-right" ng-model="facturaCompensacion.montoCompensar" style="width: 100%;" ng-change="totalCompensar()"></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" class="text"><strong>Total</strong></td>
+                        <td class="text-right">{{totalTablaCXP | currency}}</td>
+                        <!-- <td></td> -->
+                    </tr>
+                </tfoot>
+            </table>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th colspan="5">Cuenta por cobrar</th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>Descripción</th>
+                        <th class="left" style="width:200px">Documento</th>
+                        <th>Fecha</th>
+                        <th class="text-right">Importe</th>
+                        <th class="text-right">Saldo</th>
+                        <th class="text-right">Monto a Compensar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="factura in facturasTotal">
+                        <td>{{financieraCotizacion}}</td>
+                        <td>{{factura.tipoFactura}}</td>
+                        <td>{{factura.descripcion}}</td>
+                        <td>{{factura.factura}}</td>
+                        <td>{{factura.fecha}}</td>
+                        <td class="text-right">{{factura.cargo | currency}}</td>
+                        <td class="text-right">{{factura.saldo | currency}}</td>
+                        <td>
+                            <input type="text" class="form-control  text-right" style="width: 100%" ng-model="factura.montoCompensar" ng-change="sumaCompensar(factura, $index, {{factura.montoCompensar}})">
+                        </td>
+                    </tr>
+                    <tr ng-repeat="facturaCompensacion in facturasCompensacion | filter: { tipoProducto: 'CD' }">
+                        <td></td>
+                        <td colspan="2">{{facturaCompensacion.tipoFactura}}</td>
+                        <td ng-show="facturaCompensacion.tipoProducto == 'CD'">
+                            <!-- <input type="text" class="form-control text-right" ng-model="facturaSubsidio " style="width: 100%;"> -->
+                            <div class="input-group">
+                                <input type="text" class="form-control" ng-model="documentoCD">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="button" style="font-size: 14px !important;" ng-click="buscaComision(documentoCD, $index)"><span class="glyphicon glyphicon-search"></span></button>
+                                </span>
+                            </div>
+                        </td>
+                        <td ng-show="facturaCompensacion.tipoProducto != 'CD'"></td>
+                        <td></td>
+                        <td class="text-right">{{facturaCompensacion.importe | currency}}</td>
+                        <td class="text-right">{{facturaCompensacion.saldo | currency}}</td>
+                        <td><input type="text" class="form-control text-right" ng-model="facturaCompensacion.montoCompensar" style="width: 100%;" ng-change="totalCompensar()"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">Enganche</td>
+                        <td class="text-right">{{engancheCotizacion.ucu_impenganche ? engancheCotizacion.ucu_impenganche : 0 | currency }}</td>
+                        <td></td>
+                    </tr>
+                    <!-- <tr>
+                        <td colspan="5">Factura Comisión Dealer</td>
+                        <td><input type="text" class="form-control text-right" style="width: 100%;"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">Factura Incentivo Penetración</td>
+                        <td><input type="text" class="form-control text-right" style="width: 100%;"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">Factura UDI por pagar</td>
+                        <td><input type="text" class="form-control text-right" style="width: 100%;"></td>
+                    </tr> -->
+                </tbody>
+                <tr>
+                    <td colspan="7" class="text"><strong>Total</strong></td>
+                    <td class="text-right">{{totalTablaCXC | currency}}</td>
+                    <!-- <td></td> -->
+                </tr>
+                <!-- <tfoot>
+                    <tr>
+                        <td colspan="3" class="text"><strong>Total</strong></td>
+                        <td class="text-right">{{montoTotal | currency}}</td>
+                        <td></td>
+                    </tr>
+                </tfoot> -->
+            </table>
+        </div>
+    </div>
+    <!-- <div class="col-md-12"> -->
+    <!--  <div class="col-md-5">
+            <table class="table table-striped">
+                <tr>
+                    <th class="left" style="width:200px">Rubro</th>
+                    <th class="left" style="width:200px">Documento</th>
+                    <th style="text-align: right">Monto</th>
+                </tr>
+                <tr>
+                    <td class="left" style="width:200px">Serie de Unidad: </td>
+                    <td col-span=2 style="text-align: right">{{vin }}</td>
+                </tr>
+                <tr>
+                    <td class="left" style="width:200px">Factura de unidad: </td>
+                    <td style="text-align: right">{{faturaunidad }}</td>
+                    <td style="text-align: right">{{facunidadmonto | number :2}}</td>
+                </tr>
+                <tr>
+                    <td class="left" style="width:200px">Factura de accesorios: </td>
+                    <td style="text-align: right">{{facaccesorios }}</td>
+                    <td style="text-align: right">{{facaccesoriosmonto | number :2}}</td>
+                </tr>
+                <tr>
+                    <td class="left" style="width:200px">Fatura de servicio: </td>
+                    <td style="text-align: right">{{facservicio }}</td>
+                    <td style="text-align: right">{{facserviciomonto | number :2}}</td>
+                </tr>
+                <tr>
+                    <td class="left">Enganche o Pago Inicial: </td>
+                    <td></td>
+                    <td style="text-align: right">{{pagosiniciales | number :2}}</td>
+                </tr>
+                <tr>
+                    <td class="left">Diferencia vs Plan Piso: </td>
+                    <td></td>
+                    <td style="text-align: right">{{difplanpiso | number :2}}</td>
+                </tr>
+                <tr>
+                    <td class="left">Nota de cargo ComsionDealer: </td>
+                    <td style="text-align: right">{{notacargo }}</td>
+                    <td style="text-align: right">{{comisiondealer | number :2}}</td>
+                </tr>
+                <tr>
+                    <td class="left" style="width:200px">Cliente Nota de crédito: </td>
+                    <td></td>
+                    <td style="text-align: right">{{vin }}</td>
+                </tr>
+                <tr>
+                    <td class="left">Incentivo penetracion: </td>
+                    <td></td>
+                    <td style="text-align: right">{{diferenciaSaldo | number :2}}</dt>
+                </tr>
+                <tr>
+                    <td class="left" style="width:200px">UDI por pagar: </td>
+                    <td></td>
+                    <td style="text-align: right">{{facunidadmonto | number :2}}</td>
+                </tr>
+                <tr>
+                    <td class="left" style="width:200px">Precio distribuidor GE: </td>
+                    <td></td>
+                    <td style="text-align: right">{{facunidadmonto | number :2}}</td>
+                </tr>
+                <tr>
+                    <td class="left" style="width:200px">Subsidio dealer tasa vehiculo: </td>
+                    <td></td>
+                    <td style="text-align: right">{{facunidadmonto | number :2}}</td>
+                </tr>
+                <tr>
+                    <td class="left" style="width:200px">Valor Factura Plan Piso: </td>
+                    <td></td>
+                    <td style="text-align: right">{{facunidadmonto | number :2}}</td>
+                </tr>
+                <tr>
+                    <td class="left" style="width:200px">Saldo Serie PP x Pagar: </td>
+                    <td></td>
+                    <td style="text-align: right">{{facunidadmonto | number :2}}</td>
+                </tr>
+            </table>
+        </div> -->
+    <!-- <div class="col-md-7">
+            <table class="table table-striped">
+                <tr>
+                    <td class="left" style="width:200px">Saldo a Compensar: </td>
+                    <td><input type="text" class="form-control" ng-model="saldoCompensar" style="width: 100px"></td>
+                </tr>
+            </table>
+        </div> -->
+    <!-- </div> -->
+</div>
+<div>
+    <button class="btn btn-primary" ng-click="setPnlInteres()" style="margin:10px"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Regresar</button>
+    <button class="btn btn-primary pull-right" ng-click="setPnlCompensacionResumen(saldoCompensar)" style="margin:10px">Siguiente
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    </button>
+</div>

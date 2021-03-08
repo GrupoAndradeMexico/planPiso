@@ -1,0 +1,116 @@
+<div class="col-md-12">
+    <h2>Cargar Spreads faltantes</h2>
+    <hr>
+</div>
+<button class="btn btn-primary" ng-click="CargarNuevo()" style="margin:10px"><span class="glyphicon glyphicon-add" aria-hidden="true"></span>Cargar nuevo spread</button>
+<div class="row">
+    <div class="col-md-12">
+        <table id="tblSpread" class="table table-striped">
+            <thead>
+                <tr>
+                   
+                    <th>Financiera</th>
+                    <th>Spread</th>
+                    <th>Tiie</th>
+                    <th>Penetracion</th>
+                    <th>Mes</th>
+                    <th>Año</th>
+                    <th></th>
+                    
+                    <!-- <th></th> -->
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in lstSpreads " repeat-end="setDelayTableStyle(tblSpread)">
+
+                    <td>{{item.financiera}}</td>
+                    <td>{{item.puntos}}</td>
+                    <td>{{item.tiie}}</td>
+                    <td>{{item.penetracion}}</td>
+                    <td>{{item.mes}}</td>
+                    <td>{{item.anio}}</td>
+                   <td>
+                        <button type="button" class="btn btn-default" ng-click="editDetail(item)">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </button>
+                        <button type="button" class="btn btn-default" ng-click="">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </td> 
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div>
+    <button class="btn btn-primary" ng-click="setPnlInteres()" style="margin:10px"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Regresar</button>
+</div>
+<!--===================================================-->
+<!--Modal selectReporte-->
+<!--===================================================-->
+<div class="modal fade" id="selectReporte" role="dialog" tabindex="-1" data-focus-on="input:first" data-backdrop="static" aria-labelledby="demo-default-modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="row jumbotron">
+            <div class="modal-content">
+                <div class="media-body pad-lft">
+                    <div class="modal-body">
+                        <h3 class="text-title">Agregar spread faltante </h3>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="fpuntos"> Financiera:</label>
+                                <div class="dropdown" >
+                                    <button class="btn btn-warning dropdown-toggle" type="button" data-toggle="dropdown">
+                                        {{currentFinancialName2}}
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li ng-repeat="financial in lstFinancial">
+                                            <a ng-click="setCurrentFinance2(financial)">{{financial.nombre}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+              
+                                <label for="fpuntos">Spread:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="fpuntos" ng-model="puntos"  placeholder="Ej.: 10">
+                                </div>
+                                <label for="ftiie">Tiie:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="ftiie" ng-model="tiie" placeholder="Ej.: 10">
+                                </div>
+                                <label for="fpenetracion">Penetracion:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="fpenetracion" ng-model="penetracion" placeholder="Ej.: 10">
+                                </div>
+                                <label for="fmes">Mes:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="fmes" ng-model="mes" placeholder="Ej.: 10">
+                                </div>
+                                <label for="fanio">Año:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="fanio" ng-model="anio" placeholder="Ej.: 2020">
+                                </div>
+                            </div>
+                                
+                            <div class="form-group">
+                            
+                            <button type="button" class="btn btn-default" ng-click="CancelarDetail()">
+                                <span class="glyphicon glyphicon-floppy-remove"></span>
+                            </button>
+                            <button type="button" class="btn btn-default" ng-click="GuardarDetail(puntos,tiie,penetracion,mes,anio)">
+                                <span class="glyphicon glyphicon-floppy-disk"></span>
+                            </button>
+                            </div>
+                        </div>
+                        
+                        <a class="btn btn-default pull-right" data-dismiss="modal"> Cerrar </a>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--===================================================-->
+<!--End Modal selectReporte-->

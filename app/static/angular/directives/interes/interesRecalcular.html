@@ -1,0 +1,33 @@
+<div class="col-md-12">
+    <h2>Recalcular Intereses</h2>
+    <hr>
+</div>
+
+<div class="col-md-12">
+    <div class="dropdown setInline" >
+        <button class="btn btn-warning" type="button" data-toggle="dropdown">
+            {{currentFinancialeName}}
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li ng-repeat="financiale in lstFinanciale">
+                <a ng-click="setCurrentFinanciale(financiale)">{{financiale.nombre}}</a>
+            </li>
+        </ul>
+    </div>
+    <div class="dropdown setInline" >
+        <button class="btn btn-warning" type="button" data-toggle="dropdown">
+            {{currentMesName}}
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li ng-repeat="mes in lstMes">
+                <a ng-click="setCurrentMes(mes)">{{mes.mes}}</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div>
+    <button class="btn btn-primary" ng-click="setPnlInteres()" style="margin:10px"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Regresar</button>
+    <button class="btn btn-primary pull-right" ng-click="recalculaInteres()" ng-hide="deshabilitaBoton" style="margin:10px">Recalcular </button>
+</div>

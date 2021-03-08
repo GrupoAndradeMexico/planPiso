@@ -1,0 +1,12 @@
+{
+    "WSGeneraPdf": "http://192.168.20.92:8091/WS_Gen_Pdf.asmx?WSDL",
+    "jsReport": "http://192.168.20.92:5488/api/report",
+    "urlApi": "http://192.168.20.121:",
+    "port": 4900,
+    "SQL_user": "sa",
+    "SQL_password": "S0p0rt3",
+    "SQL_server": "192.168.20.121",
+    "SQL_database": "PlanPiso",
+    "SQL_connectionTimeout": 60000,
+    "SQL_requestTimeout": 300000
+}

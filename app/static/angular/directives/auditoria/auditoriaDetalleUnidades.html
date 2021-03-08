@@ -1,0 +1,322 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+           
+            <div class="col-md-2 text-right">
+                <h2><small>Número de Unidades:</small> <br>{{ ctrl.numveh }}</h2>
+            </div>
+            <div class="col-md-2 text-right">
+                
+            </div>
+            <div class="col-md-2 text-right">
+                <h2><small>Auditoría Num:</small> <br>{{ctrl.lblNum}}</h2>
+            </div>
+            <div class="col-md-2 text-right">
+                
+            </div>
+            <div class="col-md-2 text-right">
+                <h2><small>Fecha:</small> <br>{{ctrl.lblFecha}}</h2>
+            </div>
+            <div class="col-md-12">
+                 <div class="col-md-2 text-right">
+                <h2><small>Unidades encontradas:</small> <br>{{ ctrl.numvehenc }}</h2>
+            </div>
+            <div class="col-md-2 text-right">
+                <h2><small>Unidades no encontradas:</small> <br>{{ctrl.numvehnoenc}}</h2>
+            </div>
+            <div class="col-md-2 text-right">
+                <h2><small>Unidades por auditar:</small> <br>{{ctrl.numvehaud}}</h2>
+            </div>
+            <div class="col-md-2 text-right">
+                <h2><small>Unidades estrella:</small> <br>{{ctrl.numvehestre}}</h2>
+            </div>
+            <div class="col-md-2 text-right">
+                <h2><small>Unidades doble estrella:</small> <br>{{ctrl.numvehedoblestre}}</h2>
+            </div>
+        </div>
+            <div class="col-md-6 text-right">
+            </div>
+            <div class="col-md-6 text-right">
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+<button type="button" class="btn btn-default" ng-show="Muestraeditar" ng-click="editDetailGeneral()">
+    Cambiar observaciones en general <span class="glyphicon glyphicon-edit"></span>
+</button>
+<button type="button" class="btn btn-default" ng-click="Buscarunidad()">
+    Buscar unidad <span class="glyphicon glyphicon-search"></span>
+</button>
+<button type="button" class="btn btn-primary" ng-show='ctrl.idtipoAuditoria==2' ng-click="generaReporte()">
+    Generar Reporte <span class="fa fa-file-pdf-o"></span>
+</button>
+<button type="button" class="btn btn-default" ng-show='ctrl.idtipoAuditoria==1' ng-click="CargarAuditoria()">
+    Cargar auditoria en excel <span class="glyphicon glyphicon-search"></span>
+</button>
+<h2>Unidades Plan Piso Normales</h2>
+<table id="tblNormales" class="table table-hover borderless">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Financiera</th>
+            <th>Tipo</th>
+            <th>Colateral</th>
+            <th>Documento</th>
+            <th>Número serie</th>
+            <th>Ubicación</th>
+            <th>Situación</th>
+            <th>Fecha factura</th>
+            <th>Factura</th>
+            <th>Fecha Salida</th>
+            <th>Fecha fin DPP</th>
+            <th>Saldo</th>
+            <th>Saldo CXC</th>
+            <th>Cliente</th>
+            <th>Estrella</th>
+            <th>Unidad encontrada?</th>
+            <th>Unidad por auditar?</th>
+            <th width="180">Observaciones</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="(key, dato) in lstAuditoria" repeat-end="setTableStyle('#tblNormales')">
+            <td style="text-align: center;">
+                <input type="checkbox" ng-model="dato.isChecked">
+            </td>
+            <td>{{dato.financiera}}</td>
+            <td>{{dato.tipo}}</td>
+            <td>{{dato.tipoColateral}}</td>
+            <td>{{dato.documento}}</td>
+            <td>
+                <b>{{dato.vin}}</b><br>
+            </td>
+            <td>{{dato.Ubicacion}}</td>
+            <td>{{dato.Situacion}}</td>
+           
+            <td>{{dato.ucn_fechaalta}}</td>
+            <td>{{dato.ucn_idFactura}}</td>
+            <td>{{dato.veh_fechasalida}}</td>
+            <td>{{dato.fechafin}}</td>
+            <td>{{dato.saldo | currency}}</td>
+            <td>{{dato.saldoCXC | currency}}</td>
+            <td>{{dato.cliente}}</td>
+            <td>
+               <span ng-if="dato.estrella=='*'">Estrella</span> 
+               <span ng-if="dato.dobleEstrella=='**'">Doble Estrella</span> 
+               <span ng-if="dato.estrella==''||dato.dobleEstrella==''"></span> 
+            </td>
+            <td><input type="checkbox" ng-checked="dato.encontrada" ng-model="dato.encontrada" ng-change="Encontrada(dato)"></td>
+            <td>{{dato.porauditar}}</td>
+            <td>{{dato.observaciones}}</td>
+            <td>
+                <button type="button" class="btn btn-default" ng-show="Muestraeditar" ng-click="editDetail(dato)" ng-show="dato.idestatus==1">
+                    <span class="glyphicon glyphicon-edit"></span>
+                </button>
+            </td>
+            <!-- <td ng-class="dato.esMayor == 1 ? 'celdaFondoVerde' : dato.esMayor == 2 ? 'celdaFondoAmarillo' : 'celdaFondoRojo'  ">{{dato.diferencia| currency}}</td> -->
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="11" style="text-align:right">Total:</th>
+            <th>{{lstAuditoriaTotal | currency}}</th>
+        </tr>
+    </tfoot>
+</table>
+
+<div class="row">
+    <div class="col-sm-6">
+        &nbsp;
+    </div>
+    <div class="col-sm-6">
+        <div style="overflow: hidden;" ng-show="ctrl.idestatus != 1">
+            <button type="button" class="btn btn-default pull-right" ng-click="prevStep()">Regresar</button>
+        </div>
+        <div style="overflow: hidden;" ng-show="ctrl.idestatus == 1">
+            <button type="button" class="btn btn-primary pull-right" ng-show="MuestraguardarAuditoria" ng-click="guardaAuditoria()">Guardar Auditoría</button>
+            <button type="button" class="btn btn-default pull-right" ng-show="MuestracancelarAuditoria" ng-click="CancelarAuditoria()">Cancelar Auditoría</button>
+            <button type="button" class="btn btn-default pull-right" ng-click="prevStep()">Regresar</button>
+        </div>
+    </div>
+</div>
+<!--===================================================-->
+<!--Modal selectReporte-->
+<!--===================================================-->
+<div class="modal fade" id="selectObservaciones" role="dialog" tabindex="-1" data-focus-on="input:first" data-backdrop="static" aria-labelledby="demo-default-modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="row jumbotron">
+            <div class="modal-content">
+                <div class="media-body pad-lft">
+                    <div class="modal-body">
+                        <h3 class="text-title">Actualizar observaciones de {{documento}} con vin: {{vin}} </h3>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="fpuntos1">Observaciones:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="fpuntos1" ng-model="observaciones" style="width: 500px;">
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-default" ng-click="CancelarDetail()">
+                                        <span class="glyphicon glyphicon-floppy-remove"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-default" ng-click="GuardarDetail(observaciones,idAuditoriaDetalle)">
+                                        <span class="glyphicon glyphicon-floppy-disk"></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <a class="btn btn-default pull-right" data-dismiss="modal"> Cerrar </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--===================================================-->
+<!--End Modal selectReporte-->
+<!--===================================================-->
+<!--===================================================-->
+<!--Modal selectReporte-->
+<!--===================================================-->
+<div class="modal fade" id="selectObservacionesGeneral" role="dialog" tabindex="-1" data-focus-on="input:first" data-backdrop="static" aria-labelledby="demo-default-modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="row jumbotron">
+            <div class="modal-content">
+                <div class="media-body pad-lft">
+                    <div class="modal-body">
+                        <h3 class="text-title">Actualizar observaciones </h3>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="fpuntos2">Observaciones:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="fpuntos2" ng-model="observaciones" style="width: 500px;">
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-default" ng-click="CancelarDetail()">
+                                        <span class="glyphicon glyphicon-floppy-remove"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-default" ng-click="GuardarDetailGeneral(observaciones)">
+                                        <span class="glyphicon glyphicon-floppy-disk"></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <a class="btn btn-default pull-right" data-dismiss="modal"> Cerrar </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--===================================================-->
+<!--End Modal selectReporte-->
+<!--===================================================-->
+<!--===================================================-->
+<!--Modal selectReporte-->
+<!--===================================================-->
+<div class="modal fade" id="selectBuscarUnidad" role="dialog" tabindex="-1" data-focus-on="input:first" data-backdrop="static" aria-labelledby="demo-default-modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="row jumbotron">
+            <div class="modal-content">
+                <div class="media-body pad-lft">
+                    <div class="modal-body">
+                        <h3 class="text-title">Buscar unidad </h3>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="fpuntos3">VIN:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="fpuntos3" ng-model="buscar" style="width: 500px;">
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-default" ng-click="BuscarDetailGeneral(buscar)">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <h2>Unidades Plan Piso Fecha de Salida con saldo</h2>
+<table id="tblBusca" class="table table-hover borderless">
+    <thead>
+        <tr>
+            <th>Documento</th>
+            <th>Número serie</th>
+            <th>Fecha Salida</th>
+            <th>Ubicación</th>
+            <th>Tipo de auto</th>
+            <th>Situación</th>
+            <th>Financiera</th>
+            <th>Esquema</th>
+           
+            <th>Activo</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="dato in lstBuscar" repeat-end="setTableStyle('#tblFS')">
+            
+            <td>{{dato.CCP_IDDOCTO}}</td>
+            <td>
+                <b>{{dato.VIN}}</b><br>
+            </td>
+            <td>{{dato.VEH_FECHSALIDA}}</td>
+            <td>{{dato.ubicacion}}</td>
+            <td>{{dato.VEH_TIPOAUTO}}</td>
+            <td>{{dato.situacion}}</td>
+            <td>{{dato.financiera}}</td>
+            <td>{{dato.esquema}}</td>
+            <td><input type="checkbox" ng-checked="dato.active" ng-model="dato.active" ng-disabled="true"></td>
+             </tr>
+    </tbody>
+  
+</table>
+                                </div>
+                            </div>
+                            <a class="btn btn-default pull-right" data-dismiss="modal"> Cerrar </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--===================================================-->
+<!--End Modal selectReporte-->
+<!--===================================================-->
+
+<!-- Modal -->
+<div class="modal fade" id="modalNuevaConciliacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"> <span class="text-navy">Carga de Archivo</span> </h2>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label>Carga Layout</label>
+                        <div id="templeteDropzone2"></div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div ng-show="!loadingPanel">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" ng-click="nextStep2()">Continuar</button>
+                </div>
+                <div ng-show="loadingPanel">
+                    <center>
+                        <img src="assets/img/loading-light.gif" width="30"> Cargando ...
+                    </center>
+                    <!-- <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin={{contador}} aria-valuemax={{maxcontador}} style="width: 75%"></div>
+                      </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,84 @@
+</br>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content text-center p-md">
+                <h2><span class="text-navy">Bienvenido a PlanPiso</span>
+                    antes de comenzar a utilizar el sistema<br/> seleccione una empresa.</h2>
+                <p>Puede regresar en cualquier momento a esta pantalla para elegir una nueva empresa.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-md-3" ng-repeat="(key, emp) in lstEmpresa">
+            <div class="widget style1 navy-bg" ng-click="setEmpresa( key )"  style="height: 90px; cursor: pointer;">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-bank fa-4x"></i>
+                    </div>
+                    <div class="col-xs-9 text-left">
+                        <!-- <span> Empresa</span> -->
+                        <h4 class="font-bold">{{emp.emp_nombre}}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="col-md-3" ng-repeat="itemEmpresa in lstEmpresa track by $index">
+            <div class="widget style1 navy-bg" ng-hide="itemEmpresa.column1.hide" ng-click="setEmpresa(itemEmpresa.column1)">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-bank fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> Empresa </span>
+                        <h3 class="font-bold">{{itemEmpresa.column1.nombre}}</h3>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <!-- <div class="col-md-3">
+            <div class="widget style1 navy-bg" ng-hide="itemEmpresa.column2.hide" ng-click="setEmpresa(itemEmpresa.column2)">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-bank fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> Empresa </span>
+                        <h3 class="font-bold">{{itemEmpresa.column2.nombre}}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="widget style1 navy-bg" ng-hide="itemEmpresa.column3.hide" ng-click="setEmpresa(itemEmpresa.column3)">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-bank fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> Empresa </span>
+                        <h3 class="font-bold">{{itemEmpresa.column3.nombre}}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="widget style1 navy-bg" ng-hide="itemEmpresa.column4.hide" ng-click="setEmpresa(itemEmpresa.column4)">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-bank fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> Empresa </span>
+                        <h3 class="font-bold">{{itemEmpresa.column4.nombre}}</h3>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</div>
+
+<!-- <button type="button" class="btn btn-primary btn-sm" ng-click="test()">test</button> -->
+

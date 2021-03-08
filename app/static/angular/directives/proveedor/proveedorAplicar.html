@@ -1,0 +1,43 @@
+<table id="tblSelectedUnits" class="table table-striped">
+    <thead>
+        <tr>
+            <th>Num Documento</th>
+            <!-- <th>Descripcion</th>
+            <th>Tipo documento</th> -->
+            <th>VIN</th>
+            <th>Marca</th>
+            <th>Descripción Modelo</th>
+            <th>Modelo</th>
+            <th>Precio venta</th>
+            <th>Saldo Inicial</th>
+            <th>Fecha Calculo</th>
+            <th>Mensage</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="unidadSeleccion in lstNewUnits | filter:{isChecked:true}" repeat-end="setTableStyle('#tblSelectedUnits')">
+            <td>{{unidadSeleccion.CCP_IDDOCTO}}</td>
+            <!-- <td>{{unidadSeleccion.DES_CARTERA}}</td>
+            <td>{{unidadSeleccion.DES_TIPODOCTO}}</td> -->
+            <td>{{unidadSeleccion.veh_numserie}}</td>
+            <td>{{unidadSeleccion.marca}}</td>
+            <td>{{unidadSeleccion.descModelo}}</td>
+            <td>{{unidadSeleccion.modelo}}</td>
+            <td class="text-right">{{unidadSeleccion.IMPORTE | currency}}</td>
+            <td class="text-right">{{unidadSeleccion.SALDO | currency}}</td>
+            <td>
+                <div class="input-group date" data-provide="datepicker" data-date-format="dd/mm/yyyy" ng-model="unidadSeleccion.fechaCalculo">
+                    <input type="text" class="form-control" ng-model="unidadSeleccion.fechaCalculo" >
+                    <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </div>
+                </div>
+            </td>
+            <td ng-style="unidadSeleccion.isValid ?  
+            {'background-color':'#1A7BB9', 'color':'white'} : 
+            {'background-color':'#EC4758', 'color':'white'} ">
+                {{unidadSeleccion.isValid ? 'Se asignara' : 'No se asignara'}}
+            </td>
+        </tr>
+    </tbody>
+</table>

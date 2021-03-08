@@ -1,0 +1,96 @@
+<top-Bar></top-Bar>
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Auditoría</h5>
+                </div>
+                <div class="ibox-content">
+                    <div ng-switch on="currentPanel" style="padding:10px; background-color: #fff; margin:8px;">
+                        <div ng-switch-when="pnlCargaArchivo" class="animated fadeInRight">
+                            <auditoria-Uploader><auditoria-Uploader>
+                        </div>
+                       
+                        <div ng-switch-when="pnlAuditoriaUnidades" class="animated fadeInRight">
+                            <auditoria-Detalle-Unidades></auditoria-Detalle-Unidades>
+                        </div>
+                       
+                       
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalNuevaAuditoria" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"> <span class="text-navy">Crear Auditoría</span> </h2>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label>Tipo auditoria</label>
+                        <select class="form-control" ng-model="frmauditoria.idtipoauditoria" >
+                            <option ng-repeat="tipo in lstTipoAuditoria" value="{{tipo.idtipoAuditoria}}" >{{tipo.tipoAuditoria}}</option>
+                        </select>
+                        <br>
+                        <label>Financiera</label>
+                        <select class="form-control" ng-model="frmauditoria.idFinanciera"  ng-change="SelFinanciera(item)">
+                            <option ng-repeat="item in lstFinancial" value="{{item.financieraID}}">{{item.nombre}}</option>
+                        </select>
+                        <br>
+                        <label>Colateral</label>
+                        <select class="form-control" ng-model="frmauditoria.idtipoColateral">
+                            <option ng-repeat="colateral in lstTipoColateral" value="{{colateral.idtipoColateral}}">{{colateral.tipoColateral}}</option>
+                        </select>
+                        <br>
+                       
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" ng-click="nexStep()">Continuar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modalCargarArchivo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"> <span class="text-navy">Carga de Archivo</span> </h2>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label>Carga Layout</label>
+                        <div id="templateDropzone"></div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div ng-show="!loadingPanel">
+                                      
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" ng-click="readLayoutauditoria()">Guardar</button>
+                </div>
+                <div ng-show="loadingPanel">
+                    <center>
+                        <img src="assets/img/loading-light.gif" width="30"> Cargando ...
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

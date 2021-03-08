@@ -1,0 +1,35 @@
+<div class="col-md-12">
+    <h2>Validar Pago</h2>
+    <hr>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table id="tblSchemas" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Sucursal</th>
+                    <th>Colateral</th>
+                    <th>Intereses del mes</th>
+                    <!-- <th>Fecha promesa</th> -->
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="unidad in lstInteresesMes" repeat-end="initTblSchemas()">
+                    <td>{{unidad.nombre_sucursal}}</td>
+                    <td>{{unidad.tipoColateral}}</td>
+                    <td>{{unidad.Interes}}</td>
+                    
+                    <!-- <td><input type="text" class="form-control" ng-model="unidad.InteresMes" style="width: 100px"></td> -->
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div>
+    <button class="btn btn-primary" ng-click="setPnlInteres()" style="margin:10px"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Regresar</button>
+    <button class="btn btn-primary pull-right" ng-click="CrearProvision()" style="margin:10px">Crear póliza 
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            </button>
+</div>

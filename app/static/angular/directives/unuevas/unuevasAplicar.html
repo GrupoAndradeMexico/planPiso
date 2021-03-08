@@ -1,0 +1,62 @@
+<table id="tblSelectedUnits" class="table table-striped">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Num Documento</th>
+            <!-- <th>Descripcion</th>
+            <th>Tipo documento</th> -->
+            <th>VIN</th>
+            <th>Tipo Entrada</th>
+            <th>Marca</th>
+            <th>Descripción Modelo</th>
+            <th>Modelo</th>
+            <th>Valor plan piso</th>
+            <th>Dias gracia</th>
+            <th>Fecha Cálculo</th>
+            <th>Plazo esquema</th>
+            <th>Fecha inicio esquema</th>
+            <th>Fecha fin esquema</th>
+            <th>Interes Acumulado</th>
+            <th>Saldo Inicial</th>
+            <th>Mensage</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="unidadSeleccion in lstNewUnits | filter:{isChecked:true}" >
+            <td style="text-align: center;">
+                <input type="checkbox" ng-model="unidadSeleccion.isChecked" ng-change="EvaluarUnidad(unidadSeleccion)">
+            </td>
+            <td>{{unidadSeleccion.CCP_IDDOCTO}}</td>
+            <!-- <td>{{unidadSeleccion.DES_CARTERA}}</td>
+            <td>{{unidadSeleccion.DES_TIPODOCTO}}</td> -->
+            <td>{{unidadSeleccion.veh_numserie}}</td>
+            <td>{{unidadSeleccion.tipoCompra}}</td>
+            <td>{{unidadSeleccion.marca}}</td>
+            <td>{{unidadSeleccion.descModelo}}</td>
+            <td>{{unidadSeleccion.modelo}}</td>
+            <td>{{unidadSeleccion.IMPORTE}}</td>
+            <td>
+                <input type="text" class="form-control" ng-model="unidadSeleccion.diasgracia" style="width: 50px">
+            </td>
+            <td style="width:200px">
+                <div class="input-group date" data-provide="datepicker" data-date-format="dd/mm/yyyy" ng-model="unidadSeleccion.fechaRecibo" ng-change="Cambiarfecha(unidadSeleccion.fechaRecibo,unidadSeleccion)">
+                    <input type="text" class="form-control" ng-model="unidadSeleccion.fechaRecibo" ng-change="Cambiarfecha(unidadSeleccion.fechaRecibo,unidadSeleccion)" >
+                    <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </div>
+                </div>
+            </td>
+            <td>{{unidadSeleccion.plazo}}</td>
+            <td>{{unidadSeleccion.fechainicio | date:'dd/MM/yyyy'}}</td>
+            <td>{{unidadSeleccion.fechafin | date:'dd/MM/yyyy'}}</td>
+            <td>{{unidadSeleccion.interes}}</td>
+            <td>{{unidadSeleccion.SALDO}}</td>
+
+            <td ng-style="unidadSeleccion.isValid ?  
+            {'background-color':'#1A7BB9', 'color':'white'} : 
+            {'background-color':'#EC4758', 'color':'white'} ">
+                {{unidadSeleccion.isValid ? 'Se asignara' : 'No se asignara'}}
+            </td>
+        </tr>
+    </tbody>
+</table>

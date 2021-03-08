@@ -1,0 +1,43 @@
+<h2><span class="text-navy">Agregar</span></h2>
+<hr>
+<div class="row">
+    <div class="col-sm-4">
+        <div class="form-group" id="calendar">
+            <label for="fInicio">Fecha:</label>
+            <div class="input-group date" data-provide="datepicker">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                <input type="text" disabled="" class="form-control" id="fInicio" ng-model="tiieFields.date" placeholder="dd/mm/yyyy">
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <label for="txtPercent">Porcentaje:</label>
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">%</span>
+            <input type="text" id="txtPercent" class="form-control" placeholder="porcentaje" aria-describedby="basic-addon1" ng-model="tiieFields.percent">
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <br>
+        <button type="button" 
+                ng-hide="MuestraAgregar == false || showEditBtn || currentTIIEData.success == 1" 
+                class="btn btn-primary" 
+                ng-click="checkTiie()">Agregar</button>
+
+        <button type="button" 
+                ng-hide="MuestraAgregar == false || showEditBtn || currentTIIEData.success == 0" 
+                class="btn btn-primary" 
+                ng-click="checkTiie()">Actualizar</button>
+    </div>
+
+</div>
+<div class="alert alert-warning" role="alert" ng-show="currentTIIEData.success == 0">
+    <h4 class="alert-heading">
+        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> TIIE no esta actualizada!
+    </h4>
+    <p>Es necesario mantener actualizada la TIIE para que las operaciones se realialicen de forma adecuada.</p>
+    <hr>
+    <p class="mb-0">
+        <b>NOTA:</b> El porcentaje que se muestra en el campo, es el sugerido por el Banco de México.
+    </p>
+</div>

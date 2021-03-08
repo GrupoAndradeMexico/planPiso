@@ -1,0 +1,104 @@
+<table id="tblSchemas" class="table table-striped">
+    <thead>
+        <tr>
+            <th>Tipo Colateral</th>
+            <th>Nombre</th>
+            <th>Días Gracia</th>
+            <th>Plazo</th>
+            <th>Fecha Creación</th>
+            <th>Tasa Interes</th>
+            <th>Tipo DPP</th>
+            <th>Tiene Reduccion</th>
+            <th>Fecha Inicio</th>
+            <th>Fecha Fin</th>
+            <th>% penetración</th>
+            <th>Tipo tiie</th>
+            <th>Tiie</th>
+            <th>Opciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="schema in lstSchemas" repeat-end="initTblSchemas()">
+            <td>{{schema.tipoColateral}}</td>
+            <td>{{schema.nombre}}</td>
+            <td>{{schema.diasGracia}}</td>
+            <td>{{schema.plazo}}</td>
+            <td>{{schema.fechaCreacion}}</td>
+            <td>{{schema.tasaInteres}}</td>
+            <td>
+                <input type="checkbox"  ng-checked="schema.tieneDPP" >
+            </td>
+            <td>
+                <input type="checkbox"  ng-checked="schema.tieneReduccion" >
+            </td>
+            <td>{{schema.fechaInicio}}</td>
+            <td>{{schema.fechaFin}}</td>
+            <td>{{schema.porcentajePenetracion}}</td>
+            <td>{{schema.tipoTiie}}</td>
+            <td>{{schema.tiie}}</td>
+            <td>
+                <button type="button" class="btn btn-success" ng-click="editSchema(schema)" ng-hide="muestraeditar">
+                    <span class="glyphicon glyphicon-edit"> </span>
+                </button>
+                <button type="button" class="btn btn-success" ng-click="copySchema(schema)" ng-hide="muestraeditar">
+                    <span class="glyphicon glyphicon-copy"> </span>
+                </button>
+                <button type="button" class="btn btn-danger" ng-disabled="esquema.numAsignado > 0" ng-click="deleteSchema(schema)" ng-hide="muestraborrar">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<!--===================================================-->
+<!--Modal modalcopiarEsquema-->
+<!--===================================================-->
+<div class="modal fade" id="modalcopiarEsquema" role="dialog" tabindex="-1" data-focus-on="input:first" data-backdrop="static" aria-labelledby="demo-default-modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="row jumbotron">
+            <div class="modal-content">
+                <div class="media-body pad-lft">
+                    <div class="modal-body" style="height:650px">
+                        <h3 class="text-title">Copiar esquema {{esquema}} a la financiera: {{currentFinancialNameCopy}}</h3>
+                        <div class="col-sm-12">
+                            Empresa:
+                            <div class="dropdown" >
+                                <button class="btn btn-warning dropdown-toggle" type="button" data-toggle="dropdown">
+                                    {{currentEmpresaNameCopy}}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li ng-repeat="Empresacopy in lstEmpresaCopy">
+                                        <a ng-click="setCurrentEmpresaCopy(Empresacopy)">{{Empresacopy.emp_nombre}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                       
+                        <div class="col-sm-12">
+                            Financiera:
+                            <div class="dropdown" >
+                                <button class="btn btn-warning dropdown-toggle" type="button" data-toggle="dropdown">
+                                    {{currentFinancialNameCopy}}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li ng-repeat="financialcopy in lstFinancialCopy">
+                                        <a ng-click="setCurrentFinancialCopy(financialcopy)">{{financialcopy.nombre}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                       
+                    </div>
+                    <a class="btn btn-primary pull-right" ng-click="GuardarCopy()"> Guardar </a>
+                    <a class="btn btn-default pull-right" data-dismiss="modal"> Cerrar </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!--===================================================-->
+<!--End Modal modalcopiarEsquema-->
+<!--===================================================-->

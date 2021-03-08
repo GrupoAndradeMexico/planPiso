@@ -1,0 +1,26 @@
+<div style="padding-top:15px">
+
+
+</div>
+<table id="tblAddByDate" class="table table-striped">
+    <tr>
+        <th>Financiera</th>
+        <th>Tipo Pago Interes</th>
+        <th>Tipo Pago Interes fin de Mes</th>
+        <th>Tipo SOFOM</th>
+        <th>Tipo Cobro Interes</th>
+         <th>Edicion</th>
+    </tr>
+    <tr ng-repeat="itemDetail in lstFinancial">
+        <td>{{itemDetail.nombre}}</td>
+        <td>{{itemDetail.tipoPagoInteres}}</td>
+        <td>{{itemDetail.tipoPagoInteresFinMes}}</td>
+        <td>{{itemDetail.tipoSOFOM}}</td>
+        <td>{{itemDetail.tipoCobroInteres}}</td>
+        <td>
+            <button type="button" class="btn btn-success" ng-click="editDetail(itemDetail)" ng-hide="muestraeditar">
+                <span class="glyphicon glyphicon-edit"></span>
+            </button>
+        </td>
+    </tr>
+</table>

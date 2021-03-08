@@ -1,0 +1,131 @@
+<hr>
+<div class="row">
+
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label for="tipoPagoInteres">Tipo Pago Interes:</label>
+            <select id="tipoPagoInteres" ng-options="lst.tipoPagoInteres for lst in lsttipoPagoInteres" ng-model="financieraHeader.selectedtipoPagoInteres" class="form-control"></select>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label for="tipoPagoInteresFinMes">Tipo Pago Interes fin de Mes:</label>
+            <select id="tipoPagoInteresFinMes" ng-options="lst.tipoPagoInteresFinMes for lst in lsttipoPagoInteresFinMes" ng-model="financieraHeader.selectedtipoPagoInteresFinMes" class="form-control"></select>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label for="tipoSOFOM">Iva Interes:</label>
+            <select id="tipoSOFOM" ng-options="lst.tipoSOFOM for lst in lsttipoSOFOM" ng-model="financieraHeader.selectedtipoSOFOM" class="form-control"></select>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label for="tipoCobroInteres">Tipo Cobro Interes:</label>
+            <select id="tipoCobroInteres" ng-options="lst.tipoCobroInteres for lst in lsttipoCobroInteres" ng-model="financieraHeader.selectedtipoCobroInteres" class="form-control"></select>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="row jumbotron" >
+   
+        <div class="col-sm-6">
+            <h3>Tabla de linea de crédito por colateral</h3> 
+            <button type="button" class="btn btn-default" ng-click="AgregarDetail()">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+            <table id="tblAddByDate" class="table table-striped">
+                <tr>
+                    <th>Colateral</th>
+                    <th>Importe</th>
+                    <th>Num de unidades</th>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Fin</th>
+                   <th></th>
+                </tr>
+                <tr ng-repeat="itemDetail in lstLista">
+                    <td>{{itemDetail.tipoColateral }} </td>
+                    <td>{{itemDetail.LineaCredito | number:2 }}</td>
+                    <td>{{itemDetail.NumUnidades }}</td>
+                    <td>{{itemDetail.fechainicio }}</td>
+                    <td>{{itemDetail.fechafin }}</td>
+
+                  
+                    <td>
+                        <button type="button" class="btn btn-default" ng-click="EditarDetail(itemDetail)">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </button>
+                        <button type="button" class="btn btn-default" ng-click="BorrarDetail(itemDetail)">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+       
+        <div class="col-sm-2" ng-show="agregareditar">
+
+            <div class="form-group">
+                <div class="form-group">
+                     <div class="form-group">
+                        <label for="fColateral">Colateral:</label>
+                        <select id="tipoColateral" ng-options="lst.tipoColateral for lst in lstTipoColateral" ng-model="ctrl.selectedtipoColateral" class="form-control"></select>
+                    </div>
+                    <label for="funidades">Número de unidades:</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="funidades" ng-model="ctrl.NumUnidades" placeholder="Ej.: 10">
+                    </div>
+                    <label for="fporcentaje">Importe:</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="fporcentaje" ng-model="ctrl.LineaCredito" placeholder="Ej.: 10">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-group" id="calendar">
+                        <label for="fInicio">Fecha Inicio:</label>
+                        <div class="input-group date" data-provide="datepicker" data-date-format="dd/mm/yyyy" ng-model="ctrl.fechainicio">
+                            <input type="text" id="fInicio" class="form-control" ng-model="ctrl.fechainicio">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-group" id="calendar">
+                        <label for="fFin">Fecha Fin:</label>
+                        <div class="input-group date" data-provide="datepicker" data-date-format="dd/mm/yyyy" ng-model="ctrl.fechafin">
+                            <input type="text" class="form-control" id="fFin" ng-model="ctrl.fechafin">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </div>
+                        </div>
+            
+                    </div>
+                </div>
+                <div class="form-group">
+               
+                <button type="button" class="btn btn-default" ng-click="CancelarDetail()">
+                    <span class="glyphicon glyphicon-floppy-remove"></span>
+                </button>
+                <button type="button" class="btn btn-default" ng-click="GuardarDetail()">
+                    <span class="glyphicon glyphicon-floppy-disk"></span>
+                </button>
+            </div>
+            </div>
+        </div>
+       
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-sm-6">
+        <button type="button" class="btn btn-success" ng-click="backToPrincipal()">Regresar</button>
+    </div>
+    <div class="col-sm-6">
+        <button type="button" ng-hide="showEditBtn" class="btn btn-primary pull-right" ng-click="validateSchemaHeader()">Guardar</button>
+        <button type="button" ng-show="showEditBtn" class="btn btn-primary pull-right" ng-click="validateSchemaHeaderEdit()">Guardar Edición</button>
+    </div>
+</div>

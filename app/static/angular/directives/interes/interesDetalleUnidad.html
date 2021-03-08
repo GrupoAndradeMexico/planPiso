@@ -1,0 +1,369 @@
+<style>
+    .detailCol {
+    padding-right: 20px;
+    padding-bottom: 5px;
+    font-weight: bold;
+}
+</style>
+<h2>Detalle Unidad</h2>
+<hr>
+<div class="row">
+    <div class="col-md-4">
+        <h2><span class="glyphicon glyphicon-list m-r-xs"></span> Ficha Técnica</h2>
+    </div>
+    <div class="col-md-4">
+        <h2><span class="glyphicon glyphicon-calendar m-r-xs"></span> Ingreso Inventario</h2>
+    </div>
+    <div class="col-md-4">
+        <h2><span class="glyphicon glyphicon-eye-open m-r-xs"></span> Datos Plan Piso</h2>
+    </div>
+    <!-- <div class="col-md-3">
+        <h2><span class="glyphicon glyphicon-list-alt m-r-xs"></span>Ultimo Esquema</h2>
+    </div> -->
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <table>
+            <tr>
+                <td class="detailCol">Marca:</td>
+                <td>{{unitDetail.MARCA}}</td>
+            </tr>
+            <tr>
+                <td class="detailCol">Modelo:</td>
+                <td>{{unitDetail.VEH_TIPOAUTO}}</td>
+            </tr>
+            <tr>
+                <td class="detailCol">Color:</td>
+                <td>{{unitDetail.VEH_COLOEXTE}}</td>
+            </tr>
+            <tr>
+                <td class="detailCol">Año:</td>
+                <td>{{unitDetail.VEH_ANMODELO}}</td>
+            </tr>
+            <tr>
+                <td class="detailCol">Transmisión:</td>
+                <td>{{unitDetail.VEH_QCTRANSMISION}}</td>
+            </tr>
+            <tr>
+                <td class="detailCol">Tipo Unidad </td>
+                <td>{{unitDetail.UNC_TIPO}}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-4">
+        <table>
+            <tr>
+                <td class="detailCol">Fecha Ingreso:</td>
+                <td>{{unitDetail.VEH_FECHOPE}}</td>
+            </tr>
+            <tr>
+                <td class="detailCol">Valor Inventario:</td>
+                <td>{{unitDetail.VEH_IMPFACTPLAN}}</td>
+            </tr>
+            <tr>
+                <td class="detailCol">Factura:</td>
+                <td>{{unitDetail.VEH_NOFACTPLAN}}</td>
+            </tr>
+            <tr>
+                <td class="detailCol">Situación:</td>
+                <td>{{unitDetail.VEH_SITUACION}}</td>
+            </tr>
+            <tr>
+                <td class="detailCol">Días Inventario: </td>
+                <td>{{unitDetail.diasInventario}}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-4">
+        <table>
+            <tr>
+                <td class="detailCol">Documento: </td>
+                <td>{{unitDetail.CCP_IDDOCTO}}</td>
+            </tr>
+            <tr>
+                <td class="detailCol">VIN: </td>
+                <td>{{unitDetail.VEH_NUMSERIE}}</td>
+            </tr>
+            <tr>
+                <td class="detailCol">Nombre Esquema:</td>
+                <td>{{unitDetailEsquema.nombre}}</td>
+            </tr>
+            <tr>
+                <td class="detailCol">Plazo:</td>
+                <td>{{unitDetailEsquema.plazo}} días</td>
+            </tr>
+            <tr>
+                <td class="detailCol">Días Gracia:</td>
+                <td>{{unitDetailEsquema.diasGracia}}</td>
+            </tr>
+            <!-- <tr>
+                <td class="detailCol">Descripción: </td>
+                <td>{{unitDetailEsquema.descripcion}}</td>
+            </tr> -->
+        </table>
+    </div>
+    <!-- <div class="col-md-3">
+        <table>
+            <tr>
+                <td class="detailCol">Nombre:</td>
+                <td>{{unitDetailEsquema.nombre}}</td>
+            </tr>
+            <tr>
+                <td class="detailCol">Días Gracia:</td>
+                <td>{{unitDetailEsquema.diasGracia}} días</td>
+            </tr>
+            <tr>
+                <td class="detailCol">Plazo:</td>
+                <td>{{unitDetailEsquema.plazo}} días</td>
+            </tr>
+            <tr>
+                <td class="detailCol">Intéres Moratorio: </td>
+                <td>{{unitDetailEsquema.interesMoratorio}} %</td>
+            </tr>
+        </table>
+    </div> -->
+</div>
+<hr>
+<!-- <div class="row">
+    <div class="col-md-4">
+        <h2><span class="glyphicon glyphicon-list-alt m-r-xs"></span>Ultimo Esquema</h2>
+    </div>
+    <div class="col-md-8">
+        <h2><span class="glyphicon glyphicon-stats m-r-xs"></span>Movimientos</h2>
+    </div>
+</div> -->
+<!-- <div class="col-md-4">
+        <table>
+            <tr>
+                <td class="detailCol">Nombre:</td>
+                <td>{{unitDetailEsquema.nombre}}</td>
+            </tr>
+            <tr>
+                <td class="detailCol">Días Gracia:</td>
+                <td>{{unitDetailEsquema.diasGracia}} días</td>
+            </tr>
+            <tr>
+                <td class="detailCol">Plazo:</td>
+                <td>{{unitDetailEsquema.plazo}} días</td>
+            </tr>
+            <tr>
+                <td class="detailCol">Intéres Moratorio: </td>
+                <td>{{unitDetailEsquema.interesMoratorio}} %</td>
+            </tr>
+        </table>
+    </div> -->
+<!-- <div class="col-md-8">
+        <table id="tblAddByDate" class="table table-striped">
+            <tr>
+                <th>Tipo Movimiento</th>
+                <th>Sucursal Destino</th>
+                <th>Sucursal Origen</th>
+                <th>Financiera</th>
+                <th>Esquema</th>
+                <th>Interes acumulado</th>
+                <th>Fecha</th>
+            </tr>
+            <tr ng-repeat="itemDetail in lstSchemeDetail ">
+                <td>{{itemDetail.tipoMovimiento }}</td>
+                <td>{{itemDetail.sucorigen }}</td>
+                <td>{{itemDetail.sucdestino }}</td>
+                <td>{{itemDetail.financiera }}</td>
+                <td>{{itemDetail.esquema }}</td>
+                <td>{{itemDetail.monto | number:2}}</td>
+                <td>{{itemDetail.fecha | date:'dd/MM/yyyy' : 'UTC'}}</td>
+            </tr>
+        </table>
+    </div> -->
+<div class="row">
+    <!-- <hr> -->
+    <div class="col-md-12">
+        <div class="col-md-12">
+            <h2><span class="glyphicon glyphicon-stats m-r-xs"></span>Intereses</h2>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <table id="tblInteres" class="table table-striped">
+            <tr>
+                <th>Documento</th>
+                <th>Saldo</th>
+                <th>Puntos</th>
+                <th>Tiie</th>
+                <th>Fecha tiie</th>
+                <th>Penetracion</th>
+                <th>Plazo</th>
+                <th>Fecha inicio</th>
+                <th>Fecha fin</th>
+                <th>Interes</th>
+                <th>Dias</th>
+                <th>Total Interes</th>
+                <th>Fecha ejecución</th>
+            </tr>
+            <tr ng-repeat="item in lstInteresesMov">
+                <td>{{item.documento }}</td>
+                <td>{{item.saldo | number:2 }}</td>
+                <td>{{item.puntos | number:2}}</td>
+                <td>{{item.tiie | number:4}}</td>
+                <td>{{item.fechatiie | date:'dd/MM/yyyy' : 'UTC'}}</td>
+                <td>{{item.penetracion | number:2}}</td>
+                <td>{{item.plazo }}</td>
+                <td>{{item.fechainicio | date:'dd/MM/yyyy' : 'UTC'}}</td>
+                <td>{{item.fechafin | date:'dd/MM/yyyy' : 'UTC'}}</td>
+                <td>{{item.Interes | number:2 }}</td>
+                <td>{{item.dias }}</td>
+                <td>{{item.totalInteres | number:2}}</td>
+                <td>{{item.fechaejecucion | date:'dd/MM/yyyy' : 'UTC'}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div>
+    <div class="row">
+        <div class="col-md-12">
+            <h2><span class="fa fa-cart-arrow-down m-r-xs"></span> Cuentas por pagar </h2>
+        </div>
+        <div class="col-md-12" ng-show="ocHistorial.length > 0">
+            <table id="tblAddByDate" class="table table-striped">
+                <tr>
+                    <th>Folio</th>
+                    <th>Tipo Movimiento</th>
+                    <th>Sucursal Destino</th>
+                    <th>Sucursal Origen</th>
+                    <th>Financiera</th>
+                    <th>Esquema</th>
+                    <th>Interes acumulado</th>
+                    <th>Fecha</th>
+                </tr>
+                <tr ng-repeat="detalleHistorial in ocHistorial | orderBy:'fecha' ">
+                    <td ng-click="movimientoscxp(detalleHistorial.CCP_IDDOCTO)">{{detalleHistorial.CCP_IDDOCTO}}</td>
+                    <td>{{detalleHistorial.tipoMovimiento }}</td>
+                    <td>{{detalleHistorial.sucorigen }}</td>
+                    <td>{{detalleHistorial.sucdestino }}</td>
+                    <td>{{detalleHistorial.financiera }}</td>
+                    <td>{{detalleHistorial.esquema }}</td>
+                    <td>{{detalleHistorial.monto | number:2}}</td>
+                    <td>{{detalleHistorial.fecha | date:'dd/MM/yyyy' : 'UTC'}}</td>
+                </tr>
+            </table>
+        </div>
+        <!-- <div ng-repeat="historialFolio in historialFolios">
+            <div class="col-md-12 cursor" ng-click="movimientoscxp(historialFolio.oce_folioorden)">
+                <h3> {{historialFolio.oce_folioorden}} </h3>
+            </div>
+            <div class="col-md-12" ng-show="historialFolio.detalle.length > 0">
+                <table id="tblAddByDate" class="table table-striped">
+                    <tr>
+                        <th>Tipo Movimiento</th>
+                        <th>Sucursal Destino</th>
+                        <th>Sucursal Origen</th>
+                        <th>Financiera</th>
+                        <th>Esquema</th>
+                        <th>Interes acumulado</th>
+                        <th>Fecha</th>
+                    </tr>
+                    <tr ng-repeat="detalleHistorial in historialFolio.detalle ">
+                        <td>{{detalleHistorial.tipoMovimiento }}</td>
+                        <td>{{detalleHistorial.sucorigen }}</td>
+                        <td>{{detalleHistorial.sucdestino }}</td>
+                        <td>{{detalleHistorial.financiera }}</td>
+                        <td>{{detalleHistorial.esquema }}</td>
+                        <td>{{detalleHistorial.monto | number:2}}</td>
+                        <td>{{detalleHistorial.fecha | date:'dd/MM/yyyy' : 'UTC'}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div> -->
+    </div>
+</div>
+<div>
+    <div class="row" ng-show="cotizacionHistorial.length > 0">
+        <h2><span class="fa fa-credit-card m-r-xs"></span> Cuentas por cobrar </h2>
+        <div ng-repeat="cotizacion in cotizacionHistorial">
+            <div class="col-md-12">
+                <h3> {{cotizacion.ucu_foliocotizacion}} </h3>
+            </div>
+            <div class="col-md-12">
+                <table id="tblAddByDate" class="table table-striped">
+                    <tr>
+                        <th>Tipo Factura</th>
+                        <th>Factura</th>
+                        <th>Monto</th>
+                        <th>Saldo</th>
+                        <th>Fecha</th>
+                    </tr>
+                    <tr ng-repeat="detalleCotiza in cotizacion.detalle | orderBy:'fecha'">
+                        <td>{{detalleCotiza.tipoFactura }}</td>
+                        <td class="cursor" ng-click="movimientocxc(cotizacion.ucu_foliocotizacion, detalleCotiza.factura)">{{detalleCotiza.factura }}</td>
+                        <td>{{detalleCotiza.total }}</td>
+                        <td>{{detalleCotiza.saldo }}</td>
+                        <td>{{detalleCotiza.fecha | date:'dd/MM/yyyy' : 'UTC'}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-md-6">
+        <button class="btn btn-primary" ng-click="setPnlInteres()"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Regresar</button>
+    </div>
+    <!-- <div class="col-md-6">
+        <button class="btn btn-primary pull-right" ng-click="setPnlInteresMovimientos()"> Ver Movimientos</button>
+    </div> -->
+</div>
+<!--===================================================-->
+<!--Modal Detalle Movimiento-->
+<!--===================================================-->
+<div class="modal fade" id="movimientoDocumento" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Movimientos del documento: {{documentoModal}}
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table id="tblAddByDate" class="table table-striped">
+                            <tr>
+                                <th>Movimiento</th>
+                                <th>Fecha Documento</th>
+                                <th>Fecha Vencimiento</th>
+                                <th>Cargo</th>
+                                <th>Abono</th>
+                                <th>Cartera</th>
+                                <th>Id Persona</th>
+                                <th>RFC</th>
+                                <th>Nombre</th>
+                                <th>Factura</th>
+                            </tr>
+                            <tr ng-repeat="movimiento in movimientos">
+                                <td>{{movimiento.Movimiento}}</td>
+                                <td>{{movimiento.FechaDocumento}}</td>
+                                <td>{{movimiento.FechaVencimiento}}</td>
+                                <td>{{movimiento.Cargo}}</td>
+                                <td>{{movimiento.Abono}}</td>
+                                <td>{{movimiento.Cartera}}</td>
+                                <td>{{movimiento.Idpersonas}}</td>
+                                <td>{{movimiento.RFC}}</td>
+                                <td>{{movimiento.Nombre}}</td>
+                                <td>{{movimiento.Factura}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--===================================================-->
+<!--Modal Detalle Movimiento-->
+<!--===================================================-->

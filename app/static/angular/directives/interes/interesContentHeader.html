@@ -1,0 +1,87 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="col-sm-8">
+            <button class="btn btn-primary" ng-click="setPnlRecalcular()" ><span class="glyphicon glyphicon-usd"></span> Recalcular Intereses</button>
+            <div ng-show="showwarningspread">
+                <button class="btn btn-danger" ng-click="setPnlSpread()"  ng-hide="muestraCargarSpreadTiie"><span class="glyphicon glyphicon-usd"></span> Cargar Spread TIEE</button>
+            </div>
+            <div ng-show="!showwarningspread">
+                <button class="btn btn-primary" ng-click="setPnlSpread()"  ng-hide="muestraCargarSpreadTiie"><span class="glyphicon glyphicon-usd"></span> Cargar Spread TIEE</button>
+            </div>
+            <div ng-show="showButtons">
+                <button class="btn btn-primary" ng-click="setPnlTraspasoFinanciero(4)" ng-hide="muestracambiarEsquema"><span class="glyphicon glyphicon-usd" aria-hidden="true"></span> Cambiar Esquema</button>
+                <button class="btn btn-primary" ng-click="setPnlTraspasoFinanciero(3)" ng-hide="muestratraspasoFinanciera"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> Traspaso Financiera</button>
+                <button class="btn btn-primary" ng-click="callPayCapital()" ng-hide="muestrapagarReduccion"><span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"></span> Pagar Reducción </button>
+                <button class="btn btn-primary" ng-click="callPayInteres()" ng-hide="muestragenerarPolizaInteres"><span class="glyphicon glyphicon-usd" aria-hidden="true"></span> Generar Poliza Interes</button>
+                <!-- <button class="btn btn-primary" ng-click="callPay()"><span class="glyphicon glyphicon-usd" aria-hidden="true"></span> Generar Pago</button> -->
+                <button class="btn btn-primary" ng-click="callCompensation()" ng-hide="muestracompensacion"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> Compensación</button>
+            </div>
+        </div class="col-sm-4">
+        <div>
+            <div class="pull-right" style="margin:-5px;">
+                <button class="btn btn-info setInline" type="button" ng-click="filterDay(30)"><i class="glyphicon glyphicon-sort"></i>&nbsp;30</button>
+                <button class="btn btn-info setInline" type="button" ng-click="filterDay(60)"><i class="glyphicon glyphicon-sort"></i>&nbsp;60</button>
+                <button class="btn btn-info setInline" type="button" ng-click="filterDay(90)"><i class="glyphicon glyphicon-sort"></i>&nbsp;90</button>
+                <button class="btn btn-info setInline" type="button" ng-click="filterDay(1000)"><i class="glyphicon glyphicon-sort"></i>&nbsp;90+</button>
+                <button class="btn btn-info setInline" type="button" ng-click="filterDay(2000)"><i class="glyphicon glyphicon-sort"></i>&nbsp;Reducción</button>
+                <button class="btn btn-info setInline" type="button" ng-click="filterDay(3000)"><i class="glyphicon glyphicon-wrench"></i>&nbsp;Refacciones</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <ul class="nav nav-tabs">
+            <li role="presentation" ng-click="activoSeminuevos = false; activoNuevos = false; todos = true; ObtenUnidadesInteres() " ng-class="{'active': todos}"><a>Todos</a></li>
+            <li role="presentation" ng-click="activoSeminuevos = false; activoNuevos = true; todos = false; ObtenUnidadesInteresNuevas() " ng-class="{'active': activoNuevos}"><a>Nuevos</a></li>
+            <li role="presentation" ng-click="activoNuevos = false; activoSeminuevos = true; todos = false; ObtenUnidadesInteresSeminuevas()" ng-class="{'active': activoSeminuevos}"><a>Seminuevos</a></li>
+        </ul>
+        <!-- <button class="btn btn-info btn-outline tabInteres">Nuevas</button>
+        <button class="btn btn-info btn-outline tabInteres">Seminuevas</button> -->
+    </div>
+</div>
+<!-- ===================================================-->
+<!--Modal modalcopiarEsquema-->
+<!--===================================================-->
+<div class="modal fade" id="modaltraspasoSucursal" role="dialog" tabindex="-1" data-focus-on="input:first" data-backdrop="static" aria-labelledby="demo-default-modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="row jumbotron">
+            <div class="modal-content">
+                <div class="media-body pad-lft">
+                    <div class="modal-body" style="height:250px">
+                        <h3 class="text-title">Refacciones de cotizacion</h3>
+                        <div class="col-sm-12">
+                           <div class="col-md-12" ng-show="lstNewUnits.length > 0">
+                                <table id="tblUnidadesNuevas2" class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>VIN</th>
+                                            <th>Factura</th>
+                                            <th>Importe</th>
+                                            <th>Estatus</th>
+                                            <th>Almacen</th>
+                                        
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="unidad in lstRefacciones" ng-class="{'alert alert-warning':unidad.ccs==1,'alert alert-danger':unidad.ccs==2}">
+                                            <td>{{unidad.PMM_NUMSERIE}}</td>
+                                            <td>{{unidad.PMM_REF2}}</td>
+                                            <td>{{unidad.pmm_total}}</td>
+                                            <td>{{unidad.PAR_DESCRIP1}}</td>
+                                            <td>{{unidad.PMM_IDALMA}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                       
+                    </div>
+                    <a class="btn btn-default pull-right" data-dismiss="modal"> Cerrar </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!--===================================================-->
+<!--End Modal modalcopiarEsquema-->
+<!--=================================================== -->

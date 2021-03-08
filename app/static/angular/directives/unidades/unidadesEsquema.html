@@ -1,0 +1,26 @@
+<table id="tblSchemas" class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id Esquema</th>
+            <th>Días de Gracia</th>
+            <th>Plazo</th>
+            <th>Id Financiera</th>
+            <th>Nombre</th>
+            <th>Descripcion</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="schema in lstSchemas" repeat-end="setTableStyle('#tblSchemas')">
+            <td>{{schema.esquemaID}}</td>
+            <td>{{schema.diasGracia}}</td>
+            <td>{{schema.plazo}}</td>
+            <td>{{schema.idFinanciera}}</td>
+            <td>{{schema.nombre}}</td>
+            <td>{{schema.descripcion}}</td>
+            <td>
+                <input type="checkbox" ng-model="schema.isChecked" ng-click="uncheckSchemas(schema)">
+            </td>
+        </tr>
+    </tbody>
+</table>

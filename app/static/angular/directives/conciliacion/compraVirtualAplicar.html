@@ -1,0 +1,28 @@
+<table id="tblUnidadesInventario" class="table table-striped">
+    <thead>
+        <tr>
+          
+            <th>VIN</th>
+            <th>Marca</th>
+            <th>Descripción Modelo</th>
+            <th>Año</th>
+            <th>Costo</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="unidadSeleccion in lstNewUnits " repeat-end="setTableStyle('#tblSelectedUnits')">
+            <td>{{unidadSeleccion.VIN}}</td>
+            <td>{{unidadSeleccion.Marca}}</td>   
+            <td>{{unidadSeleccion.descModelo}}</td>   
+            <td>{{unidadSeleccion.Modelo}}</td>   
+            <td>{{unidadSeleccion.valor}}</td>   
+
+            <td ng-style="unidadSeleccion.isValid=1;unidadSeleccion.isValid ?  
+            {'background-color':'#1A7BB9', 'color':'white'} : 
+            {'background-color':'#EC4758', 'color':'white'} ">
+                {{unidadSeleccion.isValid ? 'Se asignara' : 'No se asignara'}}
+            </td>
+        </tr>
+    </tbody>
+</table>

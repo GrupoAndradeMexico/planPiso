@@ -1,0 +1,43 @@
+<table id="tblUnidadesProveedores" class="table table-striped">
+    <thead>
+        <tr>
+            <th>Num Documento</th>
+            <th>VIN</th>
+            <th>Tipo Unidad</th>
+            <th>Marca</th>
+            <th>Proveedor</th>
+            <th>Descripción Modelo</th>
+            <th>Modelo</th>
+            <th>Precio venta</th>
+            <th>Saldo Inicial</th>
+            <th>Porcentaje</th>
+            <th>Monto a financiar</th>
+            <th>
+                <input type="checkbox" ng-click="checkAllUnits()" ng-model="allUnits.isChecked" style="margin-left: 20px;">
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="unidad in lstNewUnits">
+            <td>{{unidad.CCP_IDDOCTO}}</td>
+            <td>{{unidad.veh_numserie}}</td>
+            <td>{{unidad.tipoUnidad}}</td>
+            <td>{{unidad.marca}}</td>
+            <td>{{unidad.nombreFinanciera}}</td>
+            <td>{{unidad.descModelo}}</td>
+            <td>{{unidad.modelo}}</td>
+            <td class="text-right">{{unidad.IMPORTE | currency}}</td>
+            <td class="text-right">{{unidad.SALDO | currency}}</td>
+            <td>
+                <input type="text" ng-init="unidad.porcentaje = 100" ng-model="unidad.porcentaje" style="width: 50px" ng-change="validaPorcentaje(unidad.porcentaje,{{unidad.porcentaje}}, $index)">
+            </td> 
+            <td>
+                <input type="text" class="form-control" ng-init="unidad.montoFinanciar = unidad.SALDO" ng-model="unidad.montoFinanciar" 
+                ng-change="validaMonto(unidad.montoFinanciar, {{unidad.montoFinanciar}}, unidad.SALDO, $index)" style="width: 100px">
+            </td>
+            <td style="text-align: center;">
+                <input type="checkbox" ng-model="unidad.isChecked" ng-init="unidad.isValid=true">
+            </td>
+        </tr>
+    </tbody>
+</table>

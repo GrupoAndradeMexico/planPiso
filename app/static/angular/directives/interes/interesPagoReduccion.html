@@ -1,0 +1,35 @@
+<h2><span class="text-navy">Pago por reducción</span></h2>
+<hr>
+<table id="tblUnidadesNuevas" class="table table-striped">
+    <thead>
+        <tr>
+            <th>Numero Serie</th>
+            <th>Modelo</th>
+            <th>Año</th>
+            <th>Importe</th>
+            <th>Saldo</th>
+            <th>Pago Reducción</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="unidad in lstNewUnits | filter:{isChecked:true}" repeat-end="setTableStyle('#tblUnidadesNuevas')">
+            <td>{{unidad.vehNumserie}}</td>
+            <td>{{unidad.descModelo}}</td>
+            <td>{{unidad.modelo}}</td>
+            <td>{{unidad.importe}}</td>
+            <td>{{unidad.saldo}}</td>            
+            <td>
+                <input type="text" ng-model="unidad.pagoReduccion" class="form-control" style="width:100px;">
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div class="row">
+    <div class="col-sm-4">
+        <button class="btn btn-danger" ng-click="setPnlInteres()">Cancelar</button>
+    </div>
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4">
+        <button class="btn btn-primary pull-right" ng-click="PagoReduccion()">Finalizar</button>
+    </div>
+</div>

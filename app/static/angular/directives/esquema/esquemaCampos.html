@@ -1,0 +1,181 @@
+<hr>
+<div class="row">
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label for="fColateral">Colateral:</label>
+            <select id="tipoColateral" ng-options="lst.tipoColateral for lst in lstTipoColateral" ng-model="esquemaHeader.selectedtipoColateral" ng-change="ColateralChange()" class="form-control"></select>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+            <label for="eNombre">Nombre:</label>
+            <input type="text" class="form-control" id="eNombre" ng-model="esquemaHeader.nombre" ng-disabled="!isAddMode" placeholder="Nombre del nuevo esquema">
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label for="tipoTiie">Tipo Tiie:</label>
+            <select id="tipoTiie" ng-options="lst.tipoTiie for lst in lstTiie" ng-model="esquemaHeader.selectedOption" class="form-control"></select>
+        </div>
+    </div>
+    <div class="col-sm-2">
+        <div class="form-group" ng-show="esquemaHeader.selectedOption.textbox==1">
+            <label for="fTiie">Tiie utilizada:</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="fTiie" ng-model="esquemaHeader.tiie" placeholder="Ej.: 10.0">
+                <div class="input-group-addon">%</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-4">
+        <div class="form-group">
+            <label for="eDiasGracia">Días Gracia:</label>
+            <input type="text" class="form-control" id="eDiasGracia" ng-model="esquemaHeader.diasGracia" ng-disabled="!isAddMode" placeholder="Días libres de interes">
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+            <label for="ePlazo">Plazo:</label>
+            <input type="text" class="form-control" id="ePlazo" ng-model="esquemaHeader.plazo" ng-disabled="!isAddMode" placeholder="Días de financiamiento">
+        </div>
+    </div>
+    <div class="col-sm-2">
+        <div class="form-group">
+            <label for="ePlazo">Recalendarización:</label>
+            <input type="text" class="form-control" id="erecalendarizacion" ng-model="esquemaHeader.recalendarizacion"  placeholder="Recalendarizacion">
+        </div>
+    </div>
+    <div class="col-sm-2">
+        <div class="form-group">
+            <label for="ePlazo">Tasa Recalendarización:</label>
+            <input type="text" class="form-control" id="etasarecalendarizacion" ng-model="esquemaHeader.tasarecalendarizacion"  placeholder="Tasa Recalendarizacion">
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group" ng-show="verTasaInteres">
+            <label for="fTasa">Spread:</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="fTasa" ng-model="esquemaHeader.tasaInteres" placeholder="Ej.: 10.0">
+                <div class="input-group-addon">%</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+   
+   
+   
+    <div class="col-sm-3">
+        <div class="form-group" id="calendar">
+            <label for="fInicio">Fecha Inicio:</label>
+            <div class="input-group date" data-provide="datepicker" data-date-format="dd/mm/yyyy" ng-model="esquemaHeader.fechaInicio">
+                <input type="text" id="fInicio" class="form-control" ng-model="esquemaHeader.fechaInicio">
+                <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group" id="calendar">
+            <label for="fFin">Fecha Fin:</label>
+            <div class="input-group date" data-provide="datepicker" data-date-format="dd/mm/yyyy" ng-model="esquemaHeader.fechaFin">
+                <input type="text" class="form-control" id="fFin" ng-model="esquemaHeader.fechaFin">
+                <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label for="ftienereduccion">Tiene Reduccción:</label>
+            <div class="input-group">
+                <input type="checkbox" ng-checked="esquemaHeader.tieneReduccion" ng-model="reducc" ng-click= "CambiarReduccion(reducc)">
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group" >
+            <label for="ftieneDPP">Tipo DPP:</label>
+            <div class="input-group">
+                <input type="checkbox"  ng-checked="esquemaHeader.tieneDPP" >
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row jumbotron" ng-show="esquemaHeader.tieneReduccion">
+   
+    <div class="col-sm-6">
+        <h3>Tabla de reducción</h3> 
+        <button type="button" class="btn btn-default" ng-click="AgregarDetail()">
+            <span class="glyphicon glyphicon-plus"></span>
+        </button>
+        <table id="tblAddByDate" class="table table-striped">
+            <tr>
+                <th>Días</th>
+                <th>Porcentaje</th>
+               <th></th>
+            </tr>
+            <tr ng-repeat="itemDetail in esquemaHeader.lstreduccion">
+                <td>{{itemDetail.dia }} </td>
+                <td>{{itemDetail.porcentaje | number:2 }}%</td>
+              
+                <td>
+                    <button type="button" class="btn btn-default" ng-click="EditarDetail(itemDetail)">
+                        <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                    <button type="button" class="btn btn-default" ng-click="BorrarDetail(itemDetail)">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </button>
+                </td>
+            </tr>
+            <tr><td>Total</td>
+            <td>
+{{SumaPorcentaje| number:2 }}%
+            </td>
+            <td></td>
+            </tr>
+        </table>
+    </div>
+   
+    <div class="col-sm-6" ng-show="agregareditar">
+        <div class="form-group">
+            <div class="form-group">
+                <label for="fdia">Días:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="fdia" ng-model="ctrl.dia" ng-disabled="nuevo==0" placeholder="Ej.: 10">
+                </div>
+                <label for="fporcentaje">Porcentaje:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="fporcentaje" ng-model="ctrl.porcentaje" placeholder="Ej.: 10">
+                </div>
+            </div>
+            
+            <div class="form-group">
+           
+            <button type="button" class="btn btn-default" ng-click="CancelarDetail()">
+                <span class="glyphicon glyphicon-floppy-remove"></span>
+            </button>
+            <button type="button" class="btn btn-default" ng-click="GuardarDetail()">
+                <span class="glyphicon glyphicon-floppy-disk"></span>
+            </button>
+        </div>
+        </div>
+    </div>
+   
+</div>
+
+
+<div class="row">
+    <div class="col-sm-6">
+        <button type="button" class="btn btn-success" ng-click="backToPrincipal()">Regresar</button>
+    </div>
+    <div class="col-sm-6">
+        <button type="button" ng-hide="showEditBtn" class="btn btn-primary pull-right" ng-click="validateSchemaHeader()">Guardar</button>
+        <button type="button" ng-show="showEditBtn" class="btn btn-primary pull-right" ng-click="validateSchemaHeaderEdit()">Guardar Edición</button>
+    </div>
+</div>

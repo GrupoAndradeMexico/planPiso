@@ -1,0 +1,106 @@
+<top-bar></top-bar>
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="dropdown setInline">
+                                <button class="btn btn-warning" type="button" data-toggle="dropdown">{{currentSucursalName}}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li ng-repeat="sucursal in lstSucursal">
+                                        <a ng-click="setCurrentSucursal(sucursal)">{{sucursal.nombreSucursal}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="dropdown setInline" ng-show="financieras">
+                                <button class="btn btn-warning" type="button" data-toggle="dropdown">{{nombreFinanciera}}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li ng-repeat="financiera in financieras">
+                                        <a ng-click="seleccionFinanciera(financiera)">{{financiera.nombre}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="dropdown setInline" ng-show="financieraSeleccionada">
+                                <button class="btn btn-primary" ng-click="getCartera()" type="button" data-toggle="dropdown">Buscar Cartera
+                                </button>
+                            </div>
+                            <div class="dropdown setInline" ng-show="financieraSeleccionada">
+                                <button class="btn btn-primary" ng-click="getCarteraVencida()" type="button" data-toggle="dropdown">Buscar Cartera Vencida
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row" ng-show="carteras">
+                        <div class="col-sm-12">
+                            <label class="positionRight m-l-sm">Seleccionar todo
+                                <input type="checkbox" ng-click="SeleccionarTodo()" ng-model="seleccionarTodo" class="inputCenter">
+                            </label>
+                            <label class="positionRight m-l-sm" id="selecionS">Mostrar sólo seleccionados
+                                <input type="radio" name="radio" class="inputCenter">
+                            </label>
+                            <label class="positionRight" id="selecionT">Mostrar todos
+                                <input type="radio" name="radio" class="inputCenter">
+                            </label>
+                        </div>
+                        <div class="col-sm-12 m-t-sm">
+                            <div class="table-responsive">
+                                <table id="carteras" class="table table-hover" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Id Cartera</th>
+                                            <th>Empresa</th>
+                                            <th>Documento</th>
+                                            <th>Tipo Documento</th>
+                                            <th>Cartera</th>
+                                            <th>Monto</th>
+                                            <th>Saldo</th>
+                                            <th>Fecha Vencimiento</th>
+                                            <th>Fecha Promesa Pago</th>
+                                            <th>Fecha Factura</th>
+                                            <th>Año Poliza</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="cartera in carteras" ng-class="{'selected': cartera.seleccionada == true, 'unSelect': cartera.unSelect == true}" class="cursor" ng-click="select(cartera)">
+                                            <td>{{cartera.pbp_consCartera}}</td>
+                                            <td>{{cartera.Empresa}}</td>
+                                            <td>{{cartera.pbp_documento}}</td>
+                                            <td>{{cartera.pbp_tipoDocto}}</td>
+                                            <td>{{cartera.pbp_cartera}}</td>
+                                            <td>{{cartera.pbp_monto | currency}}</td>
+                                            <td>{{cartera.pbp_saldo | currency}}</td>
+                                            <td>{{cartera.pbp_fechaVencimiento}}</td>
+                                            <td>{{cartera.pbp_fechaPromesaPago}}</td>
+                                            <td>{{cartera.pbp_fechaFactura}}</td>
+                                            <td>{{cartera.pbp_polAnnio}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" ng-show="carteras">
+                        <div class="col-sm-offset-8 col-sm-4">
+                            <label>Seleccione Fecha Promesa de Pago</label>
+                            <div class="input-group date" data-provide="datepicker" data-date-format="dd/mm/yyyy">
+                                <input type="text" class="form-control" ng-model="fechaPromesa">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </div>
+                                <button type="submit" class="btn btn-primary pull-right" ng-click="MostrarMensaje()" ng-disabled="!fechaPromesa">Cambiar Fecha</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

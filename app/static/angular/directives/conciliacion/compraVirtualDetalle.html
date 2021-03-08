@@ -1,0 +1,22 @@
+<table id="tblUnidadesInventario" class="table table-striped">
+    <thead>
+        <tr>
+          
+            <th>VIN</th>
+            <th>Marca</th>
+            <th>Descripción Modelo</th>
+            <th>Año</th>
+            <th>Costo</th>
+
+        </tr>
+    </thead>
+    <tbody>
+            <tr ng-repeat="unidad in lstNewUnits">
+            <td>{{unidad.VIN}}</td>
+            <td><input type="text" class="form-control" ng-model="unidad.Marca" style="width: 100px"></td>
+            <td><input type="text" class="form-control" ng-model="unidad.descModelo" style="width: 200px"></td>
+            <td><input type="text" class="form-control" ng-model="unidad.Modelo" style="width: 100px"></td>
+            <td>{{unidad.valor}}</td>            
+        </tr>
+    </tbody>
+</table>

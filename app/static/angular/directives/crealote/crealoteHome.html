@@ -1,0 +1,53 @@
+<h2>
+    <span class="text-navy">Crear Lote</span>
+    <!-- <button class="btn btn-warning pull-right" ng-click="openModalConciliacion()"><i class="fa fa-copy"></i> Nueva Conciliación </button> -->
+</h2>
+<hr>
+<hr> 
+<div class="row row_dropzone onlyPrint" ng-init="obtieneTodos()();">
+    <div class="col-sm-12">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Tipo Lote</th>
+                    <th>Financiera Origen</th>
+                    <th>Financiera Destino</th>
+                    <th>Fecha de Solicitud</th>
+                    <th>Estatus</th>
+                    <th>-</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="(key, item) in Datos">
+                    <td> <b style="text-transform: uppercase;">{{item.tipoLote}}</b> </td>
+                    <td> {{ item.FinancieraOrigen }} </td>
+                    <td> {{ item.FinancieraDestino }} </td>
+                    <td> {{ item.fechaSolicitud.split('T')[0] }}</td>
+                    <td> 
+                        <span ng-show="item.estatus == 0" class="label label-danger">
+                            <i class="fa fa-ban" aria-hidden="true"></i> Cancelada
+                        </span>
+
+                        <span ng-show="item.estatus == 1" class="label label-primary">
+                            <i class="fa fa-clock-o"></i> Pediente
+                        </span>
+                        
+                        <span ng-show="item.estatus == 2" class="label label-info">
+                            <i class="fa fa-check"></i> Realizada
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-default btn-sm" ng-click="Detalle( item.idLoteFinanciera )">
+                            Ver Detalle <i class="fa fa-angle-right" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr ng-show="lstConciliacion.length == 0">
+                    <td colspan="7">
+                        <i class="fa fa-tag" aria-hidden="true"></i> No hay cociliaciones realizadas o pendientes
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

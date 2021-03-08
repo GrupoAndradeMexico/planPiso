@@ -1,0 +1,112 @@
+<h2>
+    <span class="text-navy">Conciliación</span>
+    <button class="btn btn-warning pull-right" ng-show="MuestranuevaAuditoria" ng-click="openModalConciliacion()"><i class="fa fa-copy"></i> Nueva Conciliación </button>
+</h2>
+<hr>
+<!-- <div class="row row_dropzone onlyPrint" ng-init="porAutorizar();">
+    <div class="col-sm-12">
+        <h1>Hola</h1>
+    </div>
+</div>-->
+<div ng-show="lstPendiente.length != 0" class="row row_dropzone onlyPrint" ng-init="porAutorizar();">
+    <div class="col-sm-12">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Financiera</th>
+                    <th>Periodo Contable</th>
+                    <th>Fecha de Solicitud</th>
+                    <th>Estatus</th>
+                    <th>-</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="(key, item) in lstPendiente">
+                    <td>{{ item.nombre }}</td>
+                    <td>{{ lstMonth[ item.periodoContable - 1 ] }}</td>
+                    <td>{{ item.fechaSolicitud.split('T')[0] }}</td>
+                    <td>
+                        <span class="" ng-class="{ 'text-danger': item.estatus == 0, 'text-default' : item.estatus == 1, 'text-success' : item.estatus == 2}" style="overflow: hidden;">
+                            <table width="100%">
+                                <tr>
+                                    <td width="30">
+                                        <i ng-show="item.estatus == 0" style="font-size: 25px;" class="fa fa-ban"></i>
+                                        <i ng-show="item.estatus == 1" style="font-size: 25px;" class="fa fa-clock-o"></i>
+                                        <i ng-show="item.estatus == 2" style="font-size: 25px;" class="fa fa-check-circle-o"></i>
+                                        <i ng-show="item.estatus == 3" style="font-size: 25px;" class="fa fa-floppy-o"></i>
+                                    </td>
+                                    <td> {{ item.descripcion }} </td>
+                                </tr>
+                            </table>                            
+                        </span>                        
+                    </td>
+                    <td>
+                        <button class="btn btn-default btn-sm" ng-click="muestraConciliacionPendiente( item.periodoContable, item.consecutivo, item.idFinanciera );">
+                            <i class="fa fa-file-text" aria-hidden="true"></i> Aplicar
+                        </button>
+                    </td>
+                </tr>
+                <tr ng-show="lstPendiente.length == 0">
+                    <td colspan="5">
+                        <i class="fa fa-tag" aria-hidden="true"></i> No hay cociliaciones pendientes
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<hr> 
+<div class="row row_dropzone onlyPrint" ng-init="obtieneCociliacion();">
+    <div class="col-sm-12">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Descripción</th>
+                    <th>Financiera</th>
+                    <th>Periodo Contable</th>
+                    <th>Año</th>
+                    <th>Fecha de Solicitud</th>
+                    <th>Estatus</th>
+                    <th>-</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="(key, item) in lstConciliacion">
+                    <td> <b>{{item.Descipcion}}</b> </td>
+                    <td> {{ item.nombre }} </td>
+                    <td> {{ item.mes }} </td>
+                    <td> {{ item.anio }}</td>
+                    <td> {{ item.fechaCreacion.split('T')[0] }}</td>
+                    <td> 
+                        <span ng-show="item.estatus == 0" class="label label-danger">
+                            <i class="fa fa-ban" aria-hidden="true"></i> Cancelada
+                        </span>
+
+                        <span ng-show="item.estatus == 2" class="label label-info">
+                            <i class="fa fa-floppy-o" aria-hidden="true"></i> Guardada
+                        </span>
+
+                        <span ng-show="item.estatus == 1" class="label label-primary">
+                            <i class="fa fa-check-circle" aria-hidden="true"></i> Aplicada
+                        </span>
+                    </td>
+                    <td>
+                        <!-- <button class="btn btn-default btn-sm" ng-click="muestraConciliacionPendiente( item.periodoContable, item.consecutivo );">
+                            <i class="fa fa-file-text" aria-hidden="true"></i> Aplicar
+                        </button> -->
+
+                        <button class="btn btn-default btn-sm" ng-click="muestraDetalleDocumentos(item);">
+                            <i class="fa fa-file-text" aria-hidden="true"></i> Detalle
+                        </button>
+                    </td>
+                </tr>
+                <tr ng-show="lstConciliacion.length == 0">
+                    <td colspan="7">
+                        <i class="fa fa-tag" aria-hidden="true"></i> No hay cociliaciones realizadas o pendientes
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
