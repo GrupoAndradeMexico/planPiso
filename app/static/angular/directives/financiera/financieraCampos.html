@@ -127,5 +127,38 @@
     <div class="col-sm-6">
         <button type="button" ng-hide="showEditBtn" class="btn btn-primary pull-right" ng-click="validateSchemaHeader()">Guardar</button>
         <button type="button" ng-show="showEditBtn" class="btn btn-primary pull-right" ng-click="validateSchemaHeaderEdit()">Guardar Edición</button>
+        <button type="button" ng-show="showEditBtn" class="btn btn-primary pull-right" ng-click="guardaArchivofinanciera()">Guardar archivo</button>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalFinancieraCargarArchivo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"> <span class="text-navy">Carga de Archivo</span> </h2>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label>Carga Archivo</label>
+                        <div id="templateDropzone"></div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div ng-show="!loadingPanel">
+                                      
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" ng-click="readArchivoFinanciera()">Guardar</button>
+                </div>
+                <div ng-show="loadingPanel">
+                    <center>
+                        <img src="assets/img/loading-light.gif" width="30"> Cargando ...
+                    </center>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

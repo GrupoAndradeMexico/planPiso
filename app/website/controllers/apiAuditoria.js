@@ -272,6 +272,7 @@ ApiAuditoria.prototype.get_insExcelData = function(req, res, next) {
         });
     });
 };
+
 ApiAuditoria.prototype.get_ConciliacionAuditoria = function(req, res, next) {
 
     var self = this;
@@ -304,6 +305,35 @@ ApiAuditoria.prototype.get_TiposColateral = function(req, res, next) {
     var params = [];
     params = [{ name: 'financieraID', value: req.query.financieraID, type: self.model.types.INT }];
     self.model.query('GET_TiposColateral_SP', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+ApiAuditoria.prototype.get_insExcelData2 = function(req, res, next) {
+
+    var self = this;
+    var itemObject = JSON.parse(req.query.lstUnidades);
+  
+        if(itemObject.dato1==undefined)
+        itemObject.dato1=0;
+        if(itemObject.dato2==undefined)
+         itemObject.dato2=0;
+        if(itemObject.dato3==undefined)
+        itemObject.dato3='';
+        if(itemObject.dato4==undefined)
+        itemObject.dato4='';
+        if(itemObject.consecutivo==undefined)
+        itemObject.consecutivo=0;
+    var params = [{ name: 'idAuditoria', value: itemObject.dato1, type: self.model.types.INT },
+        { name: 'CCP_Iddocto', value: itemObject.dato2, type: self.model.types.STRING},
+        { name: 'encontrado', value: itemObject.dato3, type: self.model.types.STRING },
+        { name: 'observaciones', value: itemObject.dato4, type: self.model.types.STRING },
+        { name: 'consecutivo', value: itemObject.consecutivo, type: self.model.types.INT }      
+    ];
+
+    self.model.query('TEMPORALLAYOUTAuditoriaInterna_SP', params, function(error, result) {
         self.view.expositor(res, {
             error: error,
             result: result

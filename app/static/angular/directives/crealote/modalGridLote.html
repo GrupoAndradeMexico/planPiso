@@ -56,13 +56,13 @@
                                 <div>
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" name="optionsRadios" id="optionsRadios1" ng-value="1" checked ng-model="agrupado">
+                                            <input type="radio" name="optionsRadios" id="optionsRadios1" ng-value="0" checked ng-model="agrupado">
                                             Vencimiento (Agrupa interes y pago de unidad)
                                         </label>
                                     </div>
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" name="optionsRadios" id="optionsRadios2" ng-value="0" ng-model="agrupado">
+                                            <input type="radio" name="optionsRadios" id="optionsRadios2" ng-value="1" ng-model="agrupado">
                                             Pago Usuario (No agrupa interes y pago de unidad)
                                         </label>
                                     </div>
@@ -82,7 +82,7 @@
                                         <th>Días</th>
                                         <th>Intereses</th>
                                     </tr>
-                                     <tr ng-repeat="interesUnidad in arrayInteresUnidad">
+                                    <tr ng-repeat="interesUnidad in arrayInteresUnidad">
                                         <td>{{interesUnidad.documento}}</td>
                                         <td>{{interesUnidad.documento}}</td>
                                         <td class="text-right"><input type="text" class="form-control" ng-model="interesUnidad.tasa" style="width: 100px" ng-change="cambioTasa(interesUnidad, $index)"></td>
@@ -99,6 +99,20 @@
                         <div class="col-sm-12 bg-danger" ng-show="mostrarAlerta">
                             <h3>El saldo no corresponde, favor de actualizar su cartera </h3>
                         </div>
+                    </div>
+                    <div class="col-sm-12 bg-danger m-t" ng-show="noMostrarInactivas">
+                        <table class="table ">
+                            <tr>
+                                <th>Documento</th>
+                                <th>Vin</th>
+                                <th>Mensaje</th>
+                            </tr>
+                            <tr ng-repeat="unidadInactiva in unidadesInactiva">
+                                <td>{{unidadInactiva.CCP_IDDOCTO}}</td>
+                                <td>{{unidadInactiva.VIN}}</td>
+                                <td>{{unidadInactiva.msg}}</td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>

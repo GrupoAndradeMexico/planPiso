@@ -1,4 +1,4 @@
-appModule.controller('crealoteController', function($scope, $rootScope, $location, $sce, $interval, crealoteFactory, commonFactory, staticFactory, filterFilter, uiGridConstants, uiGridGroupingConstants, utils, alertFactory, sacarunidadFactory) {
+appModule.controller('crealoteController', function($scope, $rootScope, $location, $sce, $interval, crealoteFactory, commonFactory, staticFactory, filterFilter, uiGridConstants, uiGridGroupingConstants, utils, alertFactory, sacarunidadFactory, conciliacionFactory, $window, $timeout) {
     var sessionFactory = JSON.parse(sessionStorage.getItem("sessionFactory"));
     $scope.lstPermisoBoton = JSON.parse(sessionStorage.getItem("PermisoUsuario"));
     $scope.idUsuario = localStorage.getItem("idUsuario");
@@ -8,6 +8,8 @@ appModule.controller('crealoteController', function($scope, $rootScope, $locatio
     $scope.bancoPago = undefined;
     $scope.BotonGuardarLote = false;
     $scope.agrupado = 1;
+
+    var myDropzone;
     var cargaInfoGridLotes = function() {
         $scope.sumaDocumentos = undefined;
         var valor = _.where($scope.lstPermisoBoton, { idModulo: 11, Boton: "guardarLote" })[0];
@@ -502,6 +504,7 @@ appModule.controller('crealoteController', function($scope, $rootScope, $locatio
             ',\'docIncompletos\': (!row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20) && row.entity.ordenBloqueada==\'False\')' +
             ',\'bloqDocIncom\': (!row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20) && row.entity.ordenBloqueada==\'True\')' +
             ',\'ordenBloqueada\':(row.entity.ordenBloqueada==\'True\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20) && !row.isSelected)' +
+            ',\'pruebaLAu\': (row.entity.procesoPendiete == 1) ' +
             '}"> <div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader == \'True\'}" ui-grid-cell></div></div>',
         onRegisterApi: function(gridApi1) {
             $scope.gridApi1 = gridApi1;
@@ -531,13 +534,15 @@ appModule.controller('crealoteController', function($scope, $rootScope, $locatio
                     if (ctrCuentaDestinoArr.length > 1) {
                         // proveedorcuentaDestino = row.proveedor;
                         var rowCol = $scope.gridApi1.cellNav.getFocusedCell();
-                        alertFactory.warningCenter('El proveedor tiene mas de una cuenta destino');
-                        $scope.gridApi1.core.scrollTo($scope.gridOptions.data[rowCol.row.entity.id], $scope.gridOptions.columnDefs[32]);
-                        $interval(function() {
-                            $scope.gridApi1.core.handleWindowResize();
-                        }, 100, 10);
-                        // return true;
-                        console.log('tiene mas de una cuenta destino ')
+                        if (rowCol) {
+                            alertFactory.warningCenter('El proveedor tiene mas de una cuenta destino');
+                            $scope.gridApi1.core.scrollTo($scope.gridOptions.data[rowCol.row.entity.id], $scope.gridOptions.columnDefs[32]);
+                            $interval(function() {
+                                $scope.gridApi1.core.handleWindowResize();
+                            }, 100, 10);
+                            // return true;
+                            console.log('tiene mas de una cuenta destino ')
+                        }
                     } else {
                         var childRows = row.treeNode.parentRow.treeNode.children;
                         var numchilds = row.treeNode.parentRow.treeNode.aggregations[0].value;
@@ -753,6 +758,7 @@ appModule.controller('crealoteController', function($scope, $rootScope, $locatio
         $scope.mostrarAlerta = false;
         $scope.noMostrar = false;
         $scope.muestraInteresesBanamex = false;
+        $scope.noMostrarInactivas = false;
         var contador = 0;
         console.log($scope.bancoPago, 'BANCO')
         $scope.montoIgual = 0;
@@ -761,6 +767,9 @@ appModule.controller('crealoteController', function($scope, $rootScope, $locatio
         $scope.arrayInteresUnidadOriginal = [];
         var rows = $scope.gridApi1.selection.getSelectedRows();
         if (rows.length > 0) {
+            var idProveedorUnico = rows[0].idProveedor;
+            var proveedorDiferente = false;
+            console.log('SOY EL PROVEEDOR', idProveedorUnico)
             if ($scope.bancoPago) {
                 //$scope.gridOptions2.data = rows;
                 console.log(rows);
@@ -769,7 +778,11 @@ appModule.controller('crealoteController', function($scope, $rootScope, $locatio
                 var pasaxbancoDestino = true;
                 var proveedorcuentaDestino = '';
                 var unaCuenta = true;
+                $scope.unidadesInactiva = [];
                 rows.some(function(row, i, j) {
+                    if (idProveedorUnico != row.idProveedor) {
+                        proveedorDiferente = true;
+                    }
                     if (row.saldo == row.Pagar) {
                         $scope.montoIgual = 1;
                         $scope.noMostrar = true;
@@ -780,14 +793,36 @@ appModule.controller('crealoteController', function($scope, $rootScope, $locatio
                                 contador++;
                             } else if (result.data[0][0].success == 2) {
                                 $scope.noMostrar = false;
+                            } else if (result.data[0][0].success == 3) {
+                                $scope.noMostrar = false;
+                                $scope.noMostrarInactivas = true;
+                                $scope.unidadesInactiva.push(result.data[0][0]);
                             } else {
                                 var banderaIntereses = result.data[0][0].bandera;
                                 $scope.muestraInteresesBanamex = banderaIntereses == 2 ? true : false;
                                 $scope.interesesUnidades.push(row);
                                 if (result.data[1]) {
-                                    $scope.arrayInteresUnidad.push(result.data[1][0]);
-                                    $scope.arrayInteresUnidadOriginal = angular.copy($scope.arrayInteresUnidad);
-                                    console.log($scope.arrayInteresUnidad, 'Soy los intereses')
+                                    if (execelFields.length > 0) {
+                                        var unidadesInteres = result.data[1];
+                                        var excelUnidad;
+                                        angular.forEach(execelFields, function(value, key) {
+                                            excelUnidad = value;
+                                            angular.forEach(unidadesInteres, function(value, key) {
+                                                if (excelUnidad.dato1 == value.vin) {
+                                                    if (excelUnidad.dato3 != value.totalInteres) {
+                                                        value.totalInteres = excelUnidad.dato3;
+                                                    }
+                                                }
+                                            });
+                                        });
+                                        $scope.arrayInteresUnidad.push(unidadesInteres[0]);
+                                        $scope.arrayInteresUnidadOriginal = angular.copy($scope.arrayInteresUnidad);
+                                        console.log($scope.arrayInteresUnidad, 'Soy los intereses')
+                                    } else {
+                                        $scope.arrayInteresUnidad.push(result.data[1][0]);
+                                        $scope.arrayInteresUnidadOriginal = angular.copy($scope.arrayInteresUnidad);
+                                        console.log($scope.arrayInteresUnidad, 'Soy los intereses')
+                                    }
                                 }
 
                             }
@@ -832,11 +867,15 @@ appModule.controller('crealoteController', function($scope, $rootScope, $locatio
                 });
                 if (unaCuenta) {
                     if (pasaxCIE) {
-                        $('#modalGridLote').modal('show');
-                        $scope.gridOptions2.data = rows;
-                        $interval(function() {
-                            $scope.gridApi2.core.handleWindowResize();
-                        }, 500, 10);
+                        if (proveedorDiferente == true) {
+                            alertFactory.warning('No puede seleccionar documentos de diferentes proveedores');
+                        } else {
+                            $('#modalGridLote').modal('show');
+                            $scope.gridOptions2.data = rows;
+                            $interval(function() {
+                                $scope.gridApi2.core.handleWindowResize();
+                            }, 500, 10);
+                        }
                     } else {
                         alertFactory.warning('Existe un documento del proveedor ' + proveedorCIE + ' con convenio CIE sin referencia');
                     };
@@ -976,8 +1015,8 @@ appModule.controller('crealoteController', function($scope, $rootScope, $locatio
                                             var promisesBitacora = [];
                                             arrayBitacora.map((value) => {
                                                 var tasa = 0;
-                                                if(value.tasa){
-                                                    tasa =  value.tasa;
+                                                if (value.tasa) {
+                                                    tasa = value.tasa;
                                                 }
                                                 var objetoBitacora = {
                                                     'idmovimiento': value.idmovimiento,
@@ -1350,6 +1389,206 @@ appModule.controller('crealoteController', function($scope, $rootScope, $locatio
         $scope.arrayInteresUnidad[index].totalInteres = intereses.saldo * ((intereses.tasa / 100) / 360) * intereses.dias;
         console.log($scope.arrayInteresUnidad[index].totalInteres, 'cual es el interes???')
     };
+    $scope.VerArchivo = function() {
+        $('#mdlLoading').modal('show');
+        var arregloBytes = [];
+        $rootScope.pdf = undefined;
+        conciliacionFactory.getreadFile().then(function(result) {
+            arregloBytes = result.data;
+            if (arregloBytes.length == 0) {
+                $rootScope.NohayPdf = 1;
+                $rootScope.pdf = [];
+            } else {
+                $rootScope.NohayPdf = undefined;
+                $rootScope.excel = URL.createObjectURL(utils.b64toBlob(arregloBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+            }
+            setTimeout(function() {
+                $window.open($rootScope.excel);
+            }, 100);
+            $('#mdlLoading').modal('hide');
+            console.log($rootScope.excel, 'Soy el arreglo ')
+        }, function(error) {
+            console.log("Error", error);
+        });
+    };
+    $scope.cargarLayout = function() {
+        $('#modalCargaLayout').modal('show');
+        $scope.Dropzone();
+    };
+    $scope.Dropzone = function() {
+        $("#cargaLotout").html('')
+
+        var html = `<form action="/file-upload" class="dropzone" id="idDropzone">
+                        <div class="fallback">
+                            <input name="file" type="file" accept="text/csv, .csv" />
+                        </div>
+                    </form>`;
+
+        $("#cargaLotout").html(html);
+        myDropzone = new Dropzone("#idDropzone", {
+            url: "api/apiConciliacion/upload",
+            uploadMultiple: 0,
+            maxFiles: 1,
+            autoProcessQueue: false,
+            acceptedFiles: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            webkitRelativePath: "/uploads"
+        });
+
+        myDropzone.on("success", function(req, xhr) {
+            var _this = this;
+
+            var filename = xhr + '.xlsx';
+            $scope.loadingPanel = true;
+            $('#mdlLoading').modal('show');
+            $scope.readLayout(filename);
+
+            $scope.limpiarDropzone = function() {
+                _this.removeAllFiles();
+                myDropzone.enable()
+                // $scope.frmConciliacion.loadLayout = true;
+            }
+        });
+
+        myDropzone.on("addedfile", function() {
+            // $scope.frmConciliacion.loadLayout = true;
+        });
+    };
+    $scope.procesaDocumentos = function() {
+        myDropzone.processQueue();
+    };
+    var execelFields = [];
+    $scope.readLayout = function(filename) {        
+        $scope.gridApi1.selection.clearSelectedRows();
+        conciliacionFactory.readLayout(filename).then(function(result) {
+            var LayoutFile = result.data;
+
+            var aux = [];
+            for (var i = 0; i < LayoutFile.length; i++) {
+                aux.push(LayoutFile[i]);
+
+            }
+
+            execelFields = $scope.arrayToObject(aux);
+            guardaBitacoraExcel();            
+        }, function(error) {
+            console.log("Error", error);
+        });
+    };
+    $scope.arrayToObject = function(array) {
+        var lst = [];
+        for (var i = 0; i < array.length; i++) {
+            var obj = { dato1: array[i].Numeroserie, dato2: array[i].Valor, dato3: array[i].Interes };
+            lst.push(obj);
+        }
+        return lst;
+    };
+    var guardaBitacoraExcel = function() {
+        crealoteFactory.insIdBitacora().then(function success(result) {
+            console.log(result.data[0].idBitacora, 'Id Bitacora')
+            $scope.idBitacora = result.data[0].idBitacora;
+            var promisesBitacora = [];
+            var objetoBitacora = {};
+            angular.forEach(execelFields, function(value, key) {
+                objetoBitacora = {
+                    'idBitacoraCrearLote': $scope.idBitacora,
+                    'vin': value.dato1,
+                    'montoPagar': value.dato2,
+                    'interes': value.dato3,
+                    'idUsuario': $scope.idUsuario,
+                    'idEmpresa': sessionFactory.empresaID
+                };
+                console.log($scope.idBitacora, value.dato1, value.dato2, value.dato3, sessionFactory.empresaID, $scope.idUsuario)
+                promisesBitacora.push(crealoteFactory.idBitacoraCrearLote(objetoBitacora));
+            });
+            Promise.all(promisesBitacora).then(function response(result) {
+                console.log(result, 'TERMINE');
+                $scope.buscaDocumentos();
+            });
+        }, function error(err) {
+            console.log('Ocurrio un error al intentar insertar el id de la bitacora ')
+        });
+    };
+    $scope.buscaDocumentos = function() {
+        console.log(execelFields, 'Lodel excel');
+        console.log($scope.gridOptions.data, 'DATA')
+        var vinExcel = '';
+        var importeExcel = 0;
+        var interesExcel = 0;
+        var vinKey = 0;
+        var ctrCuentaDestinoArr;
+        $scope.financieraMasCuenta = [];
+        $scope.saldoMenor = [];
+        $scope.noSeleccionable = [];
+        $scope.documenosNoEncontrados = [];
+        var objetoExcel;
+        angular.forEach(execelFields, function(value, key) {
+            objetoExcel = value;
+            vinExcel = value.dato1;
+            importeExcel = value.dato2;
+            interesExcel = value.dato3;
+            vinKey = key;
+            var auxContador = 1;
+            var auxMax = $scope.gridOptions.data.length;
+            var unidadEncontrada = false;
+            angular.forEach($scope.gridOptions.data, function(value, key) {
+                auxContador++;
+                if (value.numeroSerie == vinExcel || value.documento == vinExcel) {
+                    unidadEncontrada = true;
+                    if (importeExcel > value.saldo || importeExcel <= 0 || value.seleccionable == "True") {
+                        if (value.seleccionable == "True") {
+                            value.PagarExcel = importeExcel;
+                            $scope.noSeleccionable.push(value);
+                        } else {
+                            value.PagarExcel = importeExcel;
+                            $scope.saldoMenor.push(value);
+                        }
+                    } else {
+                        value.Pagar = importeExcel;
+                        var ctrCuentaDestinoArr = value.cuentaDestino.split(',');
+                        if (ctrCuentaDestinoArr.length > 1) {
+                            $scope.financieraMasCuenta.push(value);
+                        }
+                        $timeout(function() {
+                            if ($scope.gridApi1.selection.selectRow) {
+                                $scope.gridApi1.selection.selectRow($scope.gridOptions.data[key]);
+
+                            }
+                        });
+
+                    }
+                }
+                // if(){
+
+                // }
+            });
+            if (unidadEncontrada == false) {
+                $scope.documenosNoEncontrados.push(objetoExcel);
+            }
+        });
+        if ($scope.financieraMasCuenta.length > 0) {
+            $scope.cuentasRepetidas = Array.from(new Set($scope.financieraMasCuenta.map(s => s.proveedor))).map(proveedor => {
+                return {
+                    proveedor: proveedor,
+                    currentCuentaDestino: 'Seleccione cuenta destino',
+                    cuentaDestino: $scope.financieraMasCuenta.find(s => s.proveedor === proveedor).cuentaDestino.split(',')
+                }
+            });
+            console.log($scope.cuentasRepetidas, 'MMM SI QUEDARA???')
+        }
+        $('#mdlLoading').modal('hide');
+        $('#modalCargaLayout').modal('hide');
+        $scope.loadingPanel = false;
+        // $scope.gridApi1.selection.selectRow($scope.gridOptions.data[1]);
+    };
+    $scope.cambioCuentasGrid = function(cuenta, financiera) {
+        console.log($scope.gridOptions.data, 'POR QUE NOOO')
+        var financieraSeleccion = financiera;
+        angular.forEach($scope.gridOptions.data, function(value, key) {
+            if (financieraSeleccion == value.proveedor) {
+                value.cuentaDestino = cuenta;
+            }
+        });
+    }
     /////////-----------------------------
     //FAL crea los campos del grid y las rutinas en los eventos del grid.
 

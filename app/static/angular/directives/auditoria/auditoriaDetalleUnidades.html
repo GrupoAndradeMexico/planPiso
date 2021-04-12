@@ -27,10 +27,10 @@
             <div class="col-md-2 text-right">
                 <h2><small>Unidades por auditar:</small> <br>{{ctrl.numvehaud}}</h2>
             </div>
-            <div class="col-md-2 text-right">
+            <div class="col-md-2 text-right" ng-show="MuestraEstrella">
                 <h2><small>Unidades estrella:</small> <br>{{ctrl.numvehestre}}</h2>
             </div>
-            <div class="col-md-2 text-right">
+            <div class="col-md-2 text-right" ng-show="MuestraEstrella">
                 <h2><small>Unidades doble estrella:</small> <br>{{ctrl.numvehedoblestre}}</h2>
             </div>
         </div>
@@ -49,13 +49,19 @@
     Buscar unidad <span class="glyphicon glyphicon-search"></span>
 </button>
 <button type="button" class="btn btn-primary" ng-show='ctrl.idtipoAuditoria==2' ng-click="generaReporte()">
-    Generar Reporte <span class="fa fa-file-pdf-o"></span>
+    Generar Reporte <span class="fa fa-file-excel-o"></span>
+</button>
+<button type="button" class="btn btn-primary" ng-show='ctrl.idtipoAuditoria==2' ng-click="generaReportePdf()">
+    Generar Reporte Pdf<span class="fa fa-file-pdf-o"></span>
 </button>
 <button type="button" class="btn btn-default" ng-show='ctrl.idtipoAuditoria==1' ng-click="CargarAuditoria()">
     Cargar auditoria en excel <span class="glyphicon glyphicon-search"></span>
 </button>
+<button type="button" class="btn btn-default" ng-show='ctrl.idtipoAuditoria==2' ng-click="CargarAuditoriaExcel()">
+    Cargar auditoria en excel <span class="glyphicon glyphicon-search"></span>
+</button>
 <h2>Unidades Plan Piso Normales</h2>
-<table id="tblNormales" class="table table-hover borderless">
+<table id="tblNormales" class="table tblNormales">
     <thead>
         <tr>
             <th></th>
@@ -64,6 +70,8 @@
             <th>Colateral</th>
             <th>Documento</th>
             <th>Número serie</th>
+            <th>Cuenta Inventario</th>
+            <th>Cuenta Contable</th>
             <th>Ubicación</th>
             <th>Situación</th>
             <th>Fecha factura</th>
@@ -73,7 +81,7 @@
             <th>Saldo</th>
             <th>Saldo CXC</th>
             <th>Cliente</th>
-            <th>Estrella</th>
+            <th ng-show="MuestraEstrella">Estrella</th>
             <th>Unidad encontrada?</th>
             <th>Unidad por auditar?</th>
             <th width="180">Observaciones</th>
@@ -81,7 +89,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="(key, dato) in lstAuditoria" repeat-end="setTableStyle('#tblNormales')">
+        <tr ng-repeat="(key, dato) in lstAuditoria" >
             <td style="text-align: center;">
                 <input type="checkbox" ng-model="dato.isChecked">
             </td>
@@ -92,6 +100,8 @@
             <td>
                 <b>{{dato.vin}}</b><br>
             </td>
+            <td>{{dato.CTAINVENT}}</td>
+            <td>{{dato.CuentaContable}}</td>
             <td>{{dato.Ubicacion}}</td>
             <td>{{dato.Situacion}}</td>
            
@@ -102,7 +112,7 @@
             <td>{{dato.saldo | currency}}</td>
             <td>{{dato.saldoCXC | currency}}</td>
             <td>{{dato.cliente}}</td>
-            <td>
+            <td ng-show="MuestraEstrella">
                <span ng-if="dato.estrella=='*'">Estrella</span> 
                <span ng-if="dato.dobleEstrella=='**'">Doble Estrella</span> 
                <span ng-if="dato.estrella==''||dato.dobleEstrella==''"></span> 
@@ -244,6 +254,7 @@
         <tr>
             <th>Documento</th>
             <th>Número serie</th>
+       
             <th>Fecha Salida</th>
             <th>Ubicación</th>
             <th>Tipo de auto</th>
@@ -262,6 +273,7 @@
             <td>
                 <b>{{dato.VIN}}</b><br>
             </td>
+         
             <td>{{dato.VEH_FECHSALIDA}}</td>
             <td>{{dato.ubicacion}}</td>
             <td>{{dato.VEH_TIPOAUTO}}</td>
@@ -315,6 +327,45 @@
                     <!-- <div class="progress">
                         <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin={{contador}} aria-valuemax={{maxcontador}} style="width: 75%"></div>
                       </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modalNuevaLayoutExcel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"> <span class="text-navy">Carga de Archivo</span> </h2>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label>Carga Layout</label>
+                        <div id="templeteDropzone3"></div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div ng-show="!loadingPanel">
+                  
+                    
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" ng-click="nexStep3()">Continuar</button>
+                </div>
+                <div>
+                    Registros {{cargandoPro}} ---{{maxPro}}
+                </div>
+                <div ng-show="loadingPanel">
+                    <center>
+                        <img src="assets/img/loading-light.gif" width="30"> Cargando ...{{cargandoPro}}
+                    </center>
+                    <div class="progress">
+<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="25" aria-valuemin={{cargandoPro}} aria-valuemax={{maxPro}} style="width: {{cargandoPro * 100 / maxPro}}%"></div>
+                        <!-- <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin={{cargandoPro}} aria-valuemax={{maxPro}} style="width: 75%"></div> -->
+                      </div>
                 </div>
             </div>
         </div>

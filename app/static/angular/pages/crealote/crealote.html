@@ -5,7 +5,7 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-10">
                             <div class="dropdown setInline">
                                 <button class="btn btn-warning" type="button" data-toggle="dropdown">{{currentCuentaName}}
                                     <span class="caret"></span>
@@ -19,14 +19,45 @@
                             <div class="dropdown setInline">
                                 <button class="btn btn-warning" type="button" ng-click="actualizarCartera()">Actualizar Cartera</button>
                             </div>
+                            <div class="dropdown setInline">
+                                <button class="btn btn-primary" type="button" ng-click="VerArchivo()">Descargar Layout</button>
+                            </div>
+                            <div class="dropdown setInline">
+                                <button class="btn btn-primary" type="button" ng-click="cargarLayout()">Cargar Layout</button>
+                            </div>
                         </div>
-                        <div class="col-md-4 text-right">
+                        <div class="col-md-2 text-right">
                             <h3><strong>{{nombreLote}}</strong></h3>
                         </div>
                     </div>
                 </div>
                 <div class="ibox-content">
                     <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-warning" role="alert" ng-show="financieraMasCuenta.length > 0">
+                                <h4 class="alert-heading">
+                                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Tiene mas de una cuenta destino las siguientes financieras
+                                </h4>
+                                <div class="row mb-0" ng-repeat="cuentaRepetida in cuentasRepetidas">
+                                    <!-- <div class="col-md-4">
+                                        <b>{{cuentaRepetida.proveedor}}</b>
+                                    </div> -->
+                                    <div class="col-md-12">
+                                        <b>{{cuentaRepetida.proveedor}}</b>
+                                        <div class="dropdown setInline m-l-sm">
+                                            <button class="btn btn-warning btn-outline" type="button" data-toggle="dropdown">{{cuentaRepetida.currentCuentaDestino}}
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li ng-repeat="cuentas in cuentaRepetida.cuentaDestino">
+                                                    <a ng-click="cuentaRepetida.currentCuentaDestino = cuentas; cambioCuentasGrid(cuentaRepetida.currentCuentaDestino, cuentaRepetida.proveedor)">{{cuentas}}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-12 text-right">
                             <h3>{{sumaDocumentos | currency}}</h3>
                         </div>
@@ -34,10 +65,81 @@
                             <div id="grid1" ui-grid="gridOptions" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="gridStyle"></div>
                         </div>
                         <div class="col-md-12 m-t-sm">
+                            <div class="alert alert-warning" role="alert" ng-show="saldoMenor.length > 0">
+                                <h4 class="alert-heading">
+                                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> La cantidad que quiere pagar es mayor al saldo del documento 
+                                </h4>
+                                <table class="table table-striped">
+                                    <tr>
+                                        <th>Documento</th>
+                                        <th>Vin</th>
+                                        <th>Saldo</th>
+                                        <th>Pagar</th>
+                                    </tr>
+                                    <tr ng-repeat="saldoM in saldoMenor">
+                                        <td>{{saldoM.documento}}</td>
+                                        <td>{{saldoM.numeroSerie}}</td>
+                                        <td>{{saldoM.saldo}}</td>
+                                        <td>{{saldoM.PagarExcel}}</td>
+                                    </tr>
+                                </table>
+                                <!-- <div class="row mb-0" ng-repeat="saldoM in saldoMenor">
+                                    <div class="col-md-12">
+                                        <b>{{saldoM.documento}}</b>
+                                    </div>
+                                </div> -->
+                            </div>
+                            <div class="alert alert-warning" role="alert" ng-show="noSeleccionable.length > 0">
+                                <h4 class="alert-heading">
+                                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Los siguientes documentos no son seleccionables 
+                                </h4>
+                                <table class="table table-striped">
+                                    <tr>
+                                        <th>Documento</th>
+                                        <th>Vin</th>
+                                        <th>Saldo</th>
+                                        <th>Pagar</th>
+                                    </tr>
+                                    <tr ng-repeat="noSel in noSeleccionable">
+                                        <td>{{noSel.documento}}</td>
+                                        <td>{{noSel.numeroSerie}}</td>
+                                        <td>{{noSel.saldo}}</td>
+                                        <td>{{noSel.PagarExcel}}</td>
+                                    </tr>
+                                </table>
+                                <!-- <div class="row mb-0" ng-repeat="saldoM in saldoMenor">
+                                    <div class="col-md-12">
+                                        <b>{{saldoM.documento}}</b>
+                                    </div>
+                                </div> -->
+                            </div>
+                            <div class="alert alert-warning" role="alert" ng-show="documenosNoEncontrados.length > 0">
+                                <h4 class="alert-heading">
+                                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Los siguientes documentos no fueron encontrados 
+                                </h4>
+                                <table class="table table-striped">
+                                    <tr>
+                                        <th>Documento</th>
+                                        <th>Monto</th>
+                                        <th>Importe</th>
+                                    </tr>
+                                    <tr ng-repeat="documenoNoEncontrado in documenosNoEncontrados">
+                                        <td>{{documenoNoEncontrado.dato1}}</td>
+                                        <td>{{documenoNoEncontrado.dato2}}</td>
+                                        <td>{{documenoNoEncontrado.dato3}}</td>
+                                    </tr>
+                                </table>
+                                <!-- <div class="row mb-0" ng-repeat="saldoM in saldoMenor">
+                                    <div class="col-md-12">
+                                        <b>{{saldoM.documento}}</b>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="col-md-12 m-t-sm">
                             <button class="btn btn-success pull-right" ng-show="BotonGuardarLote" ng-click="validaDocumentosSeleccionados()">Guardar Lote</button>
                         </div>
                     </div>
-
                     <!-- <div ng-switch on="currentPanel" style="padding:10px; background-color: #fff; margin:8px;">
                         <div ng-switch-when="pnlHome" class="animated fadeInRight">
                             <crealote-home></crealote-home>
@@ -54,3 +156,4 @@
 </div>
 <modal-pdf></modal-pdf>
 <modal-grid-lote></modal-grid-lote>
+<modal-cargar-layout></modal-cargar-layout>

@@ -1,0 +1,27 @@
+<div class="modal fade" id="modalCargaLayout" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"> <span class="text-navy">Carga de Archivo</span> </h2>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label>Carga Layout</label>
+                        <div id="cargaLotout"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div ng-show="!loadingPanel">
+                    <button type="button" class="btn btn-primary" ng-click="procesaDocumentos()">Procesar</button>
+                </div>                
+                <div ng-show="loadingPanel">
+                    <center>
+                        <img src="assets/img/loading-light.gif" width="30"> Cargando ...{{cargandoExcel}}
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

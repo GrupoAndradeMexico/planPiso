@@ -154,6 +154,7 @@ ApiConciliacion.prototype.get_ConciliacionGuardada = function(req, res, next) {
         });
     });
 };
+
 ApiConciliacion.prototype.get_AutorizacionDetalle = function(req, res, next) {
 
     var self = this;
@@ -249,9 +250,9 @@ ApiConciliacion.prototype.get_creaConciliacionDetalle = function(req, res, next)
     { name: 'movimientoID', value: req.query.movimientoID, type: self.model.types.INT },
     { name: 'CCP_IDDOCTO', value: req.query.CCP_IDDOCTO, type: self.model.types.STRING },
     { name: 'VIN', value: req.query.VIN, type: self.model.types.STRING },
-    { name: 'interesGrupoAndrade', value: req.query.interesGrupoAndrade, type: self.model.types.INT },
-    { name: 'interesFinanciera', value: req.query.interesFinanciera, type: self.model.types.INT },
-    { name: 'interesAjuste', value: req.query.interesAjuste, type: self.model.types.INT },
+    { name: 'interesGrupoAndrade', value: req.query.interesGrupoAndrade, type: self.model.types.DECIMAL },
+    { name: 'interesFinanciera', value: req.query.interesFinanciera, type: self.model.types.DECIMAL },
+    { name: 'interesAjuste', value: req.query.interesAjuste, type: self.model.types.DECIMAL },
     { name: 'situacion', value: req.query.situacion, type: self.model.types.INT },
     { name: 'checked', value: req.query.checked, type: self.model.types.INT }];
 
@@ -270,9 +271,9 @@ ApiConciliacion.prototype.get_guardaConciliacionDetalle = function(req, res, nex
     { name: 'movimientoID', value: req.query.movimientoID, type: self.model.types.INT },
     { name: 'CCP_IDDOCTO', value: req.query.CCP_IDDOCTO, type: self.model.types.STRING },
     { name: 'VIN', value: req.query.VIN, type: self.model.types.STRING },
-    { name: 'interesGrupoAndrade', value: req.query.interesGrupoAndrade, type: self.model.types.INT },
-    { name: 'interesFinanciera', value: req.query.interesFinanciera, type: self.model.types.INT },
-    { name: 'interesAjuste', value: req.query.interesAjuste, type: self.model.types.INT },
+    { name: 'interesGrupoAndrade', value: req.query.interesGrupoAndrade, type: self.model.types.DECIMAL },
+    { name: 'interesFinanciera', value: req.query.interesFinanciera, type: self.model.types.DECIMAL },
+    { name: 'interesAjuste', value: req.query.interesAjuste, type: self.model.types.DECIMAL },
     { name: 'situacion', value: req.query.situacion, type: self.model.types.INT },
     { name: 'checked', value: req.query.checked, type: self.model.types.INT }];
 
@@ -564,6 +565,94 @@ ApiConciliacion.prototype.get_DatosReporte = function (req, res, next) {
     ];
     
     this.model.queryAllRecordSet('uspGetDatosreporte', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+ApiConciliacion.prototype.get_previoConciliacion = function(req, res, next) {
+
+    var self = this;
+   
+    var params = [{ name: 'idConciliacion', value: req.query.idConciliacion, type: self.model.types.INT }];
+
+    self.model.query('PrevioCONCILIACION_SP', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+ApiConciliacion.prototype.get_cuentas = function(req, res, next) {
+
+    var self = this;
+   
+    var params = [];
+
+    self.model.query('usp_CuentasContables_SP', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+ApiConciliacion.prototype.get_insprevioConciliacion = function(req, res, next) {
+
+    var self = this;
+
+    var params = [{ name: 'idConciliacion', value: req.query.idconciliacion, type: self.model.types.INT },
+    { name: 'sucursalID', value: req.query.idsucursal , type: self.model.types.INT },
+    { name: 'Interes', value: req.query.Interes, type: self.model.types.DECIMAL },
+    { name: 'CTA_NUMCTA', value: req.query.CTA_NUMCTA, type: self.model.types.STRING },
+    { name: 'usuarioID', value: req.query.usuarioID, type: self.model.types.INT }];
+
+    self.model.query('INS_previoConciliacion_SP', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+ApiConciliacion.prototype.get_updprevioConciliacion = function(req, res, next) {
+
+    var self = this;
+
+    var params = [{ name: 'idprevioconciliacion', value: req.query.idprevioconciliacion, type: self.model.types.INT },
+        { name: 'idConciliacion', value: req.query.idconciliacion, type: self.model.types.INT },
+    { name: 'sucursalID', value: req.query.idsucursal , type: self.model.types.INT },
+    { name: 'Interes', value: req.query.Interes, type: self.model.types.DECIMAL },
+    { name: 'CTA_NUMCTA', value: req.query.CTA_NUMCTA, type: self.model.types.STRING }];
+
+    self.model.query('UPD_previoConciliacion_SP', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+ApiConciliacion.prototype.get_delprevioConciliacion = function(req, res, next) {
+
+    var self = this;
+
+    var params = [{ name: 'idprevioconciliacion', value: req.query.idprevioConciliacion, type: self.model.types.INT },
+    ];
+
+    self.model.query('DEL_previoConciliacion_SP', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+ApiConciliacion.prototype.get_ConciliacionGuardadaPasivos = function(req, res, next) {
+
+    var self = this;
+    var params = [{ name: 'idconciliacion', value: req.query.idconciliacion, type: self.model.types.INT }
+    ];
+
+    self.model.query('uspGetConciliacionGuardadaPasivos', params, function(error, result) {
         self.view.expositor(res, {
             error: error,
             result: result

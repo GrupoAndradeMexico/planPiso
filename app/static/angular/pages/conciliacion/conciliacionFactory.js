@@ -315,7 +315,57 @@ appModule.factory('conciliacionFactory', function($http) {
                 }
 
             });
-        }
+        },PrevioConciliacion: function(id) {
+            return $http({
+                url: conciliacionUrl + 'previoConciliacion/',
+                method: "GET",
+                params: {                    
+                    idConciliacion:id
+                },
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },getCuentas: function(params) {
+            return $http({
+                url: conciliacionUrl + 'cuentas/',
+                method: "GET",
+                params: params,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },
+        insprevioConciliacion: function(params) {
+            return $http({
+                url: conciliacionUrl + 'insprevioConciliacion/',
+                method: "GET",
+                params: params,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },
+        updprevioConciliacion: function(params) {
+            return $http({
+                url: conciliacionUrl + 'updprevioConciliacion/',
+                method: "GET",
+                params: params,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },
+        delprevioConciliacion: function(params) {
+            return $http({
+                url: conciliacionUrl + 'delprevioConciliacion/',
+                method: "GET",
+                params: params,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },
+        getConciliacionGuardadaPasivos: function( idconciliacion ) {
+            return $http({
+                url: conciliacionUrl + 'ConciliacionGuardadaPasivos/',
+                method: "GET",
+                params: { 
+                    idconciliacion: idconciliacion, 
+                },
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },
 
     };
 });

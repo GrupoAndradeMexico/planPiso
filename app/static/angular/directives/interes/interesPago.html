@@ -4,32 +4,85 @@
 </div>
 
 <div class="row">
-    <div class="col-md-12">
-        <table id="tblSchemas" class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Sucursal</th>
-                    <th>Colateral</th>
-                    <th>Intereses del mes</th>
-                    <!-- <th>Fecha promesa</th> -->
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="unidad in lstInteresesMes" repeat-end="initTblSchemas()">
-                    <td>{{unidad.nombre_sucursal}}</td>
-                    <td>{{unidad.tipoColateral}}</td>
-                    <td>{{unidad.Interes}}</td>
-                    
-                    <!-- <td><input type="text" class="form-control" ng-model="unidad.InteresMes" style="width: 100px"></td> -->
-
-                </tr>
-            </tbody>
-        </table>
+    <div class="ibox-content">
+        <!-- <step-unidades></step-unidades> -->
+        <div style="padding:10px; background-color: #fff; margin:8px;">
+            <div class="row">
+            <div class="col-sm-6">
+                <h3>Tabla de previo de conciliación</h3> 
+                <button type="button" class="btn btn-default" ng-click="AgregarDetail()">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
+                <table id="tblPrevio" class="table table-striped">
+                    <tr>
+                        <th>Sucursal</th>
+                        <th>Cuenta Contable</th>
+                        <th>Importe</th>
+                       <th></th>
+                    </tr>
+                    <tr ng-repeat="itemDetail in lstInteresesMes">
+                        <td>{{itemDetail.suc_nombre }} </td>
+                        <td>{{itemDetail.CTA_NUMCTA }}</td>
+                        <td>{{itemDetail.Interes | number:2 }}</td>
+                     
+                        <td>
+                            <button type="button" class="btn btn-default" ng-click="EditarDetail(itemDetail)">
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </button>
+                            <button type="button" class="btn btn-default" ng-click="BorrarDetail(itemDetail)">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th>Total:</th>
+                        <th>{{TotalInteres | number:2 }}</th>
+                       <th></th>
+                    </tr>
+                </table>
+            </div>
+           
+            <div class="col-sm-6" ng-show="agregareditar">
+    
+                <div class="form-group">
+                    <div class="form-group">
+                         <div class="form-group">
+                            <label for="fSucursal">Sucursal:</label>
+                            <select id="fsucursal" ng-options="lst.nombreSucursal for lst in lstSucursal" ng-model="ctrl.selectedsucursal" class="form-control"></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="fcuenta">Cuenta Contable:</label>
+                            <select id="fcuenta" ng-options="lst.CTA_NUMCTA for lst in lstCuentas" ng-model="ctrl.selectedcuenta" class="form-control"></select>
+                        </div>
+                       
+                        <label for="fporcentaje">Importe:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="fporcentaje" ng-model="ctrl.Interes" placeholder="Ej.: 10">
+                        </div>
+                    </div>
+                   
+                    <div class="form-group">
+                   
+                        <button type="button" class="btn btn-default" ng-click="CancelarDetail()">
+                            <span class="glyphicon glyphicon-floppy-remove">Borrar</span>
+                        </button>
+                        <button type="button" class="btn btn-default" ng-click="GuardarDetail()">
+                            <span class="glyphicon glyphicon-floppy-disk">Guardar</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="row">
+                <button class="btn btn-primary" ng-click="setPnlInteres()" style="margin:10px"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Regresar</button>
+                <button type="button" class="btn btn-info btn-sm pull-right" ng-click="showMsgpreCierre()">Finalizar</button>
+       
+            </div>
+                
+        </div>
     </div>
 </div>
-<div>
-    <button class="btn btn-primary" ng-click="setPnlInteres()" style="margin:10px"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Regresar</button>
-    <button class="btn btn-primary pull-right" ng-click="CrearProvision()" style="margin:10px">Crear póliza 
-            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-            </button>
-</div>
+
+    
+    

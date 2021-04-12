@@ -20,4 +20,9 @@ appModule.directive('crealoteDetalle', function() {
         restrict: 'E',
         templateUrl: crealotePath + 'modalGridLote.html'
     };
+}).directive('modalCargarLayout', function() {
+    return {
+        restrict: 'E',
+        templateUrl: crealotePath + 'modalCargaArchivos.html'
+    };
 });

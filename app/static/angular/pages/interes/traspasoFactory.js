@@ -61,6 +61,17 @@ appModule.factory('traspasoFactory', function($http) {
                 params: params,
                 headers: { 'Content-Type': 'application/json' }
             });
+        },
+        unidadEnProceso: function( documento, idEmpresa ) {
+            return $http({
+                url: traspasoUrl + 'unidadEnProceso/',
+                method: "GET",
+                params: {
+                    documento: documento,
+                    idEmpresa: idEmpresa
+                },
+                headers: { 'Content-Type': 'application/json' }
+            });
         }
     };
 });

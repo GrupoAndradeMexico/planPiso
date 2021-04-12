@@ -445,7 +445,39 @@ appModule.factory('interesFactory', function($http) {
 
                 headers: { 'Content-Type': 'application/json' }
             });
-        }
+        },getCuentas: function(params) {
+            return $http({
+                url: interesesUrl + 'cuentas/',
+                method: "GET",
+                params: params,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },
+        insprevioConciliacion: function(params) {
+            return $http({
+                url: interesesUrl + 'insprevioConciliacion/',
+                method: "GET",
+                params: params,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },
+        updprevioConciliacion: function(params) {
+            return $http({
+                url: interesesUrl + 'updprevioConciliacion/',
+                method: "GET",
+                params: params,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },
+        delprevioConciliacion: function(params) {
+            return $http({
+                url: interesesUrl + 'delprevioConciliacion/',
+                method: "GET",
+                params: params,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },
+     
 
     };
 });

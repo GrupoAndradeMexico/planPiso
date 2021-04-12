@@ -1,4 +1,4 @@
-appModule.controller('financieraController', function($scope, $rootScope, $filter, $location, commonFactory, staticFactory, financieraFactory) {
+appModule.controller('financieraController', function($scope, $rootScope, $filter, $location, commonFactory, staticFactory, financieraFactory,esquemaFactory) {
 
     var sessionFactory = JSON.parse(sessionStorage.getItem("sessionFactory"));
     $scope.lstPermisoBoton = JSON.parse(sessionStorage.getItem("PermisoUsuario"));
@@ -207,7 +207,7 @@ appModule.controller('financieraController', function($scope, $rootScope, $filte
                 NumUnidades: $scope.ctrl.NumUnidades,
                 fechainicio: $scope.ctrl.fechainicio,
                 fechafin: $scope.ctrl.fechafin
-                //,usuarioID: localStorage.getItem('idUsuario')
+                ,usuarioID: localStorage.getItem('idUsuario')
             };
 
             financieraFactory.insColateralLineaCredito(params).then(function(result) {
@@ -228,7 +228,7 @@ appModule.controller('financieraController', function($scope, $rootScope, $filte
                 NumUnidades: $scope.ctrl.NumUnidades,
                 fechainicio: $scope.ctrl.fechainicio,
                 fechafin: $scope.ctrl.fechafin
-                //,usuarioID: localStorage.getItem('idUsuario')
+                ,usuarioID: localStorage.getItem('idUsuario')
             };
 
             financieraFactory.updColateralLineaCredito(params).then(function(result) {
@@ -266,6 +266,109 @@ appModule.controller('financieraController', function($scope, $rootScope, $filte
             swal('Guardado', 'Financiera guardada con exito', 'success');
             $scope.regresatabla();
 
+        });
+    }
+    $scope.guardaArchivofinanciera = function() {
+        $('#modalFinancieraCargarArchivo').modal('show');
+        //     $('#selectGuardarPDF').modal('show');
+        $scope.Dropzone();
+
+
+    }
+
+    var myDropzone;
+    $scope.Dropzone = function() {
+        $("#templateDropzone").html('')
+
+        var html = `<form action="/file-upload" class="dropzone" id="idDropzone">
+                        <div class="fallback">
+                            <input name="file" type="file" accept=".pdf" />
+                        </div>
+                    </form>`;
+
+        $("#templateDropzone").html(html);
+        myDropzone = new Dropzone("#idDropzone", {
+            url: "api/apiAuditoria/uploadpdf",
+            uploadMultiple: 0,
+            maxFiles: 1,
+            autoProcessQueue: false,
+            acceptedFiles: "application/pdf",
+            webkitRelativePath: "/uploads"
+        });
+
+        myDropzone.on("success", function(req, xhr) {
+            var _this = this;
+
+            var filename = xhr + '.pdf';
+            $scope.loadingPanel = true;
+            $('#mdlLoading').modal('show');
+            $scope.TerminarGuardarFinanciera(filename);
+
+            $scope.limpiarDropzone = function() {
+                _this.removeAllFiles();
+                myDropzone.enable()
+               // $scope.frmauditoria.loadLayout = true;
+            }
+        });
+
+        myDropzone.on("addedfile", function() {
+          //  $scope.frmauditoria.loadLayout = true;
+        });
+    };
+
+    $scope.readArchivoFinanciera = function() {
+        myDropzone.processQueue();
+
+    };
+    $scope.TerminarGuardarFinanciera = function(filename) {
+        var params = {
+            idfinanciera: $scope.financieraHeader.financieraID,
+            idesquema: undefined,
+            LayoutName:filename,
+            idusuario: localStorage.getItem('idUsuario')
+        };
+        esquemaFactory.savePdf(params).then(function(result) {
+            var res = result;
+            $('#mdlLoading').modal('hide');
+            $('#modalFinancieraCargarArchivo').modal('hide');
+            $scope.loadingPanel = false;
+            swal("Ok", "Se guardo con exito el archivo", "success");
+            setTimeout(function() {
+                location.reload();
+            }, 3000);
+        }, function(error) {
+            console.log("Error", error);
+        });
+    }
+
+    $scope.VerArchivoPdf = function(item) {
+
+        var folioEmpresaSucursal = item;
+        var arregloBytes = [];
+        $rootScope.pdf = undefined;
+        esquemaFactory.getreadPdf(item.ruta).then(function(result) {
+            arregloBytes = result.data;
+
+            if (arregloBytes.length == 0) {
+                $rootScope.NohayPdf = 1;
+                $rootScope.pdf = [];
+            } else {
+
+                $rootScope.NohayPdf = undefined;
+                $rootScope.pdf = URL.createObjectURL(utils.b64toBlob(arregloBytes, "application/pdf"));
+
+                $('#polizaCancelada').modal('show');
+            }
+
+            setTimeout(function() {
+                $("#pdfArchivo").html('');
+                $("<object class='filesInvoce' data='" + $scope.pdf + "' width='100%' height='500px' >").appendTo('#pdfArchivo');
+
+            }, 100);
+            $('#loading').modal('hide');
+            console.log($scope.pdf, 'Soy el arreglo ')
+        }, function(error) {
+            console.log("Error", error);
         });
     }
 });

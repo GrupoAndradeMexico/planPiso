@@ -1,11 +1,11 @@
-appModule.controller('unuevasController', function($scope, $rootScope, $location, unuevasFactory, commonFactory, staticFactory,utils,$window) {
+appModule.controller('unidadesvinController', function($scope, $rootScope, $location, unidadesvinFactory, commonFactory, staticFactory,utils,$window) {
     var sessionFactory = JSON.parse(sessionStorage.getItem("sessionFactory"));
     $scope.idUsuario = localStorage.getItem("idUsuario");
     $scope.lstPermisoBoton = JSON.parse(sessionStorage.getItem("PermisoUsuario"));
 
     $scope.currentEmpresa = sessionFactory.nombre;
-    $scope.topBarNav = unuevasFactory.topNavBar();
-    $scope.steps = unuevasFactory.stepsBar();
+    $scope.topBarNav = unidadesvinFactory.topNavBar();
+    $scope.steps = unidadesvinFactory.stepsBar();
     $scope.totalUnidades = 0;
     $scope.currentStep = 0;
     $scope.userID =  $scope.idUsuario;
@@ -29,60 +29,20 @@ appModule.controller('unuevasController', function($scope, $rootScope, $location
     var increment   = 0;
     $scope.cargandoPro = 0;
     var contador    = 0;
-    $('#mdlLoading').modal('show');
     var finalizar = _.where($scope.lstPermisoBoton, { idModulo: 1, Boton: "finalizar" })[0];
     $scope.muestrafinalizar = finalizar != undefined ? false : true;
 
-
-    commonFactory.getSucursal(sessionFactory.empresaID, $scope.idUsuario).then(function(result) {
-        $scope.lstSucursal = result.data;
-        var promises = [];
-        $scope.lstSucursal.map((value) => {
-            promises.push(unuevasFactory.getNewUnitsBySucursal(sessionFactory.empresaID, value.sucursalID, null,0));
-        })
-        Promise.all(promises).then(function response(result) {
-            console.log(result, 'UNIDADEEEES');
-            angular.forEach(result, function(value, key) {
-                var unidadesFor = value.data;
-                // $scope.lstNewUnits.push(value.data);
-                angular.forEach(unidadesFor, function(value2, key2) {
-                    $scope.lstNewUnits.push(value2);
-                });
-            });
-            console.log($scope.lstNewUnits);
-            $scope.initTblUnidadesNuevas();
-            $scope.$apply(function() {
-                $scope.lstNewUnits;
-            });
-            $('#mdlLoading').modal('hide');
-        });
-    });
-
-    // unuevasFactory.getNewUnits(sessionFactory.empresaID).then(function(result) {
-    //     $scope.lstNewUnits = result.data;
-    //     $scope.initTblUnidadesNuevas();
-    //     $('#mdlLoading').modal('hide');
-    // });
-
-    $scope.setCurrentSucursal = function(sucursalObj) {
-        $scope.SucursalSel = sucursalObj;
-        $('#mdlLoading').modal('show');
-        $scope.totalUnidades = 0;
-        $scope.currentSucursalName = sucursalObj.nombreSucursal;
-        $scope.getNewUnitsBySucursal(sessionFactory.empresaID, sucursalObj.sucursalID, $scope.FinancieraSel.financieraID,0);
-        commonFactory.getFinancial(sessionFactory.empresaID, $scope.idUsuario).then(function(result) {
-            $scope.lstFinancial = result.data;
-            $scope.ddlFinancialShow = true;
-        });
-
-    };
-
-    $scope.getNewUnitsBySucursal = function(empresaID, sucursalID, financieraID,tipo) {
-        $('#tblUnidadesNuevas').DataTable().destroy();
-        unuevasFactory.getNewUnitsBySucursal(empresaID, sucursalID, financieraID,tipo).then(function(result) {
+   
+    
+    $scope.getNewUnitsBySucursal = function(empresaID) {
+        $('#tblUnidadesNuevasVin').DataTable().destroy();
+        unidadesvinFactory.getNewUnitsBySucursal(empresaID).then(function(result) {
             $scope.lstNewUnits = result.data;
-            $scope.initTblUnidadesNuevas();
+            $scope.inittblUnidadesNuevasVin();
             $('#mdlLoading').modal('hide');
+        });
+        commonFactory.getFinancial(empresaID).then(function(result) {
+            $scope.lstFinancial = result.data;
         });
     };
 
@@ -90,7 +50,7 @@ appModule.controller('unuevasController', function($scope, $rootScope, $location
         $scope.FinancieraSel = financialObj;
         $('#mdlLoading').modal('show');
         $scope.currentFinancialName = financialObj.nombre;
-        $scope.getNewUnitsBySucursal(sessionFactory.empresaID, $scope.SucursalSel.sucursalID, $scope.FinancieraSel.financieraID,0);
+        $scope.getNewUnitsBySucursal(sessionFactory.empresaID);
         $scope.getSchemas($scope.FinancieraSel.financieraID);
     };
     $scope.setCurrentFinancial = function() {
@@ -133,7 +93,7 @@ appModule.controller('unuevasController', function($scope, $rootScope, $location
             idColateral:$scope.selectedSchema.tipoColateralId
             };
            
-            unuevasFactory.SaldoFinanciera(data).then(function(result) {
+            unidadesvinFactory.SaldoFinanciera(data).then(function(result) {
                 if(result.data.length>0)
                 {
                     $scope.nombreFinanciera=result.data[0].nombrefinanciera;
@@ -313,8 +273,8 @@ appModule.controller('unuevasController', function($scope, $rootScope, $location
         }
     };
 
-    $scope.initTblUnidadesNuevas = function() {
-        $scope.setTableStyle('#tblUnidadesNuevas');
+    $scope.inittblUnidadesNuevasVin = function() {
+        $scope.setTableStyle('#tblUnidadesNuevasVin');
         $scope.totalUnidades = $scope.lstNewUnits.length;
         $scope.setCalendarStyle();
     };
@@ -343,7 +303,7 @@ appModule.controller('unuevasController', function($scope, $rootScope, $location
         // }
         // else
         // {
-        unuevasFactory.assignMesage($scope.setSchema);
+        unidadesvinFactory.assignMesage($scope.setSchema);
         // }
     };
 
@@ -375,7 +335,7 @@ appModule.controller('unuevasController', function($scope, $rootScope, $location
             vin: item.veh_numserie
         };
 
-        unuevasFactory.setUnitSchema(data).then(function(result) {
+        unidadesvinFactory.setUnitSchema(data).then(function(result) {
 
             var insercion = result;
             console.log("insercion", insercion);
@@ -405,7 +365,7 @@ appModule.controller('unuevasController', function($scope, $rootScope, $location
     $scope.success = function() {
         swal("Ok", "Asignación finalizó con exito", "success");
         setTimeout(function() {
-            window.location = "/unuevas";
+            window.location = "/unidadesvin";
         }, 5000);
     };
 ////////////////////////////////////////Layout
@@ -421,7 +381,7 @@ var myDropzone3;
 
         $("#templeteDropzone3").html( html );
         myDropzone3 = new Dropzone("#idDropzone", {
-            url: "api/apiNewUnits/upload",
+            url: "api/apiunidadesvin/upload",
             uploadMultiple: 0,
             maxFiles: 1,
             autoProcessQueue: false,
@@ -450,7 +410,7 @@ var myDropzone3;
     };
     var execelFields = [];
     $scope.readLayout = function(filename) {
-        unuevasFactory.readLayout(filename).then(function(result) {
+        unidadesvinFactory.readLayout(filename).then(function(result) {
             var LayoutFile = result.data;
             var aux = [];
             for (var i = 0; i < LayoutFile.length; i++) {
@@ -468,7 +428,7 @@ var myDropzone3;
     $scope.insertData = function() {
         try{
             execelFields[increment]['consecutivo'] = contador;
-            unuevasFactory.insExcelData(execelFields[increment]).then(function(result) {
+            unidadesvinFactory.insExcelData(execelFields[increment]).then(function(result) {
                 if( !result.data ){
                     swal("Pendiente de esquema","El archivo que porporciona no contiene el formato que se espera, asegurese de cargar el layout esperado.");
                     $('#mdlLoading').modal('hide');
@@ -489,7 +449,7 @@ var myDropzone3;
                                 //     $scope.currentPanel = 'pnlConciliarUnidades';
                             $scope.conceal();
                             $("#modalNuevaLayout").modal('hide');
-                            var aux = filterFilter($scope.lstFinancial, { financieraID: $scope.frmConciliacion.idFinanciera });
+                            var aux = $scope.lstFinancial[0];
                             $scope.lblFinanciera = aux[0].nombre;
                         }
                         else{
@@ -520,7 +480,7 @@ $scope.VerArchivo=function(){
 
     var arregloBytes = [];
      $rootScope.pdfUnidades = undefined;
-     unuevasFactory.getreadFile().then(function(result) {
+     unidadesvinFactory.getreadFile().then(function(result) {
          arregloBytes = result.data;
  
          if (arregloBytes.length == 0) {
@@ -568,6 +528,6 @@ $scope.arrayToObject = function(array) {
 
 $scope.conceal = function() {
       
-    $scope.getNewUnitsBySucursal(sessionFactory.empresaID, $scope.SucursalSel.sucursalID, $scope.FinancieraSel.financieraID,1);
+    $scope.getNewUnitsBySucursal(sessionFactory.empresaID);
 };
 });

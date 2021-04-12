@@ -144,9 +144,8 @@ ApiInteres.prototype.get_ProvisionFinancieraDetalle = function(req, res, next) {
     var self = this;
 
     var params = [{ name: 'idUsuario', value: req.query.idUsuario, type: self.model.types.INT },
-    { name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
-    { name: 'idtipopoliza', value: req.query.idtipopoliza, type: self.model.types.INT },
-    { name: 'idFinanciera', value: req.query.idFinanciera, type: self.model.types.INT }
+    { name: 'idCierre', value: req.query.idCierre, type: self.model.types.INT },
+    { name: 'totalInteres', value: req.query.totalInteres, type: self.model.types.DECIMAL },
     ];
 
     self.model.query('Pol_Poliza7Detalle_INS', params, function(error, result) {
@@ -569,9 +568,7 @@ ApiInteres.prototype.get_RecalculaInteres = function(req, res, next) {
     var self = this;
 
     var params = [
-        { name: 'financieraId', value: req.query.financieraId, type: self.model.types.INT },
-        { name: 'anio', value: req.query.anio, type: self.model.types.INT },
-        { name: 'mes', value: req.query.mes, type: self.model.types.INT }
+        { name: 'financieraId', value: req.query.financieraId, type: self.model.types.INT }
 
     ];
 
@@ -592,7 +589,7 @@ ApiInteres.prototype.get_ResumenInteresMes = function(req, res, next) {
         { name: 'idfinanciera', value: req.query.idfinanciera, type: self.model.types.INT }
     ];
 
-    self.model.query('UspGetResumenInteresMes', params, function(error, result) { 
+    self.model.query('PreCierre_SP', params, function(error, result) { 
 
         self.view.expositor(res, {
             error: error,
@@ -788,6 +785,66 @@ ApiInteres.prototype.get_buscaFactura = function(req, res, next) {
 
     self.model.query('usp_get_comisionDelear', params, function(error, result) {
 
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+ApiInteres.prototype.get_cuentas = function(req, res, next) {
+
+    var self = this;
+   
+    var params = [];
+
+    self.model.query('usp_CuentasContables_SP', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+ApiInteres.prototype.get_insprevioConciliacion = function(req, res, next) {
+
+    var self = this;
+
+    var params = [{ name: 'idfinanciera', value: req.query.idfinanciera, type: self.model.types.INT },
+    { name: 'sucursalID', value: req.query.idsucursal , type: self.model.types.INT },
+    { name: 'Interes', value: req.query.Interes, type: self.model.types.DECIMAL },
+    { name: 'CTA_NUMCTA', value: req.query.CTA_NUMCTA, type: self.model.types.STRING }];
+
+    self.model.query('INS_preCierreInteres_SP', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+ApiInteres.prototype.get_updprevioConciliacion = function(req, res, next) {
+
+    var self = this;
+
+    var params = [{ name: 'idpreCierreInteres', value: req.query.idpreCierreInteres, type: self.model.types.INT },
+    { name: 'sucursalID', value: req.query.idsucursal , type: self.model.types.INT },
+    { name: 'Interes', value: req.query.Interes, type: self.model.types.DECIMAL },
+    { name: 'CTA_NUMCTA', value: req.query.CTA_NUMCTA, type: self.model.types.STRING }];
+
+    self.model.query('UPD_preCierreInteres_SP', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+ApiInteres.prototype.get_delprevioConciliacion = function(req, res, next) {
+
+    var self = this;
+
+    var params = [{ name: 'idpreCierreInteres', value: req.query.idpreCierreInteres, type: self.model.types.INT },
+    ];
+
+    self.model.query('DEL_preCierreInteres_SP', params, function(error, result) {
         self.view.expositor(res, {
             error: error,
             result: result

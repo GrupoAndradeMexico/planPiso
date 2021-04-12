@@ -45,4 +45,10 @@ appModule.directive('conciliacionDetalle', function() {
             restrict: 'E',
             templateUrl: conciliacionPath + 'compraVirtual.html'
         };
-    });
+}).directive('previoConciliacionDetalle', function() {
+    return {
+        restrict: 'E',
+        templateUrl: conciliacionPath + 'previoConciliacionDetalle.html'
+    };
+})
+;

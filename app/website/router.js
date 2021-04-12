@@ -2,6 +2,7 @@
      apiEmpresa: require('./controllers/apiEmpresa'),
      apiCommon: require('./controllers/apiCommon'),
      apiNewUnits: require('./controllers/apiNewUnits'),
+     apiunidadesvin: require('./controllers/apiunidadesvin'),
      apiinventario: require('./controllers/apiInventario'),
      apiConciliacion: require('./controllers/apiConciliacion'),
      apiAuditoria: require('./controllers/apiAuditoria'),

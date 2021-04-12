@@ -221,6 +221,10 @@ appModule.controller('esquemaController', function($scope, $rootScope, $filter, 
         $scope.reducc = reducc;
         $scope.esquemaHeader.tieneReduccion = reducc;
     };
+    $scope.CambiarDPP = function(tieneDPP) {
+        $scope.tieneDPP = tieneDPP;
+        $scope.esquemaHeader.tieneDPP = tieneDPP;
+    };
     $scope.addSchema = function() {
         $scope.isAddMode = true;
         $scope.showAddBtn = false;
@@ -339,7 +343,7 @@ appModule.controller('esquemaController', function($scope, $rootScope, $filter, 
 
         var params = {
             esquemaID: $scope.currentEsquema,
-            usuarioID: $scope.usuarioID,
+            usuarioID: localStorage.getItem('idUsuario'),
             financieraID: $scope.currentFinancialIDAP,
             diasGracia: $scope.esquemaHeader.diasGracia,
             plazo: $scope.esquemaHeader.plazo,
@@ -409,4 +413,108 @@ appModule.controller('esquemaController', function($scope, $rootScope, $filter, 
 
         return isOk;
     };
+    $scope.guardaArchivoEsquema = function() {
+        $('#modalEsquemaCargarArchivo').modal('show');
+        //     $('#selectGuardarPDF').modal('show');
+        $scope.Dropzone();
+
+
+    }
+
+    var myDropzone;
+    $scope.Dropzone = function() {
+        $("#templateDropzone").html('')
+
+        var html = `<form action="/file-upload" class="dropzone" id="idDropzone">
+                        <div class="fallback">
+                            <input name="file" type="file" accept=".pdf" />
+                        </div>
+                    </form>`;
+
+        $("#templateDropzone").html(html);
+        myDropzone = new Dropzone("#idDropzone", {
+            url: "api/apiAuditoria/uploadpdf",
+            uploadMultiple: 0,
+            maxFiles: 1,
+            autoProcessQueue: false,
+            acceptedFiles: "application/pdf",
+            webkitRelativePath: "/uploads"
+        });
+
+        myDropzone.on("success", function(req, xhr) {
+            var _this = this;
+
+            var filename = xhr + '.pdf';
+            $scope.loadingPanel = true;
+            $('#mdlLoading').modal('show');
+            $scope.TerminarGuardar(filename);
+
+            $scope.limpiarDropzone = function() {
+                _this.removeAllFiles();
+                myDropzone.enable()
+               // $scope.frmauditoria.loadLayout = true;
+            }
+        });
+
+        myDropzone.on("addedfile", function() {
+          //  $scope.frmauditoria.loadLayout = true;
+        });
+    };
+
+    $scope.readArchivoEsquema = function() {
+        myDropzone.processQueue();
+
+    };
+    $scope.TerminarGuardar = function(filename) {
+        var params = {
+            idfinanciera: $scope.currentFinancialIDAP,
+            idesquema: $scope.currentEsquema,
+            LayoutName:filename,
+            idusuario: localStorage.getItem('idUsuario')
+        };
+        esquemaFactory.savePdf(params).then(function(result) {
+            var res = result;
+            $('#mdlLoading').modal('hide');
+            $('#modalEsquemaCargarArchivo').modal('hide');
+            $scope.loadingPanel = false;
+            swal("Ok", "Se guardo con exito el archivo", "success");
+            setTimeout(function() {
+                location.reload();
+            }, 3000);
+        }, function(error) {
+            console.log("Error", error);
+        });
+    }
+
+    $scope.VerArchivoPdf = function(item) {
+
+        var folioEmpresaSucursal = item;
+        var arregloBytes = [];
+        $rootScope.pdf = undefined;
+        esquemaFactory.getreadPdf(item.ruta).then(function(result) {
+            arregloBytes = result.data;
+
+            if (arregloBytes.length == 0) {
+                $rootScope.NohayPdf = 1;
+                $rootScope.pdf = [];
+            } else {
+
+                $rootScope.NohayPdf = undefined;
+                $rootScope.pdf = URL.createObjectURL(utils.b64toBlob(arregloBytes, "application/pdf"));
+
+                $('#polizaCancelada').modal('show');
+            }
+
+            setTimeout(function() {
+                $("#pdfArchivo").html('');
+                $("<object class='filesInvoce' data='" + $scope.pdf + "' width='100%' height='500px' >").appendTo('#pdfArchivo');
+
+            }, 100);
+            $('#loading').modal('hide');
+            console.log($scope.pdf, 'Soy el arreglo ')
+        }, function(error) {
+            console.log("Error", error);
+        });
+    }
+
 });

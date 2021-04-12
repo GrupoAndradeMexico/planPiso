@@ -113,6 +113,9 @@
         <tr>
             <th width="30"></th>
             <th>Numero Serie</th>
+            <th>Sucursal</th>
+            <th>Colateral</th>
+            <th>Cuenta</th>
             <th>Saldo G.A.</th>
             <th>Sando Financiera</th>
             <th>Interes Acumulado Grupo Andrade</th>
@@ -136,6 +139,9 @@
                 <b>{{dato.numeroSerie}}</b><br>
                 <small class="text-warning">{{dato.CCP_IDDOCTO}}</small>
             </td>
+            <td>{{dato.sucursal}}</td>
+            <td>{{dato.descrip}}</td>
+            <td>{{dato.numcta}}</td>
             <td>{{dato.saldo | currency}}</td>
             <td>{{dato.valor | currency}}</td>
             <td>{{dato.InteresAcumulado | currency}}</td>
@@ -151,7 +157,9 @@
                         ng-blur="recalculo( key )"
                         style="width: 90px">
 
-                <button class="btn btn-linck pull-right btn-sm" ng-click="setIntFinanToAjuste( key )" ng-disabled="dato.esMayor == 1 || dato.equiparante != 1">
+                 <button class="btn btn-linck pull-right btn-sm" ng-click="setIntFinanToAjuste( key )" ></button>
+                 <!--ng-disabled="dato.esMayor == 1 || dato.equiparante != 1" -->
+                
                     <i class="fa fa-refresh"></i>
                 </button>
             </td>
@@ -237,7 +245,7 @@
             <button type="button" class="btn btn-default" ng-show="Muestracancelar" ng-click="prevStep()">Cancelar Conciliación</button>
             <!-- <button type="button" class="btn btn-default" ng-click="solicitaAutorizacion(3);">Guardar conciliación</button> -->
             
-            <button type="button" class="btn btn-primary pull-right" ng-click="guardaConciliacion()" ng-disabled="!conciliacion">Generar Conciliación</button>
+            <button type="button" class="btn btn-primary pull-right" ng-click="PrevioConciliacion()" ng-disabled="!conciliacion">Previo Conciliación</button>
         </div>
         <!-- </div> -->
         <div style="overflow: hidden;" ng-show="estatusConciliacion != 2">

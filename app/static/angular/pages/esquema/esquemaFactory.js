@@ -121,6 +121,22 @@ appModule.factory('esquemaFactory', function($http) {
                 params: {idusuario:idusuario},
                 headers: { 'Content-Type': 'application/json' }
             });
+        },savePdf: function(params) {
+            return $http({
+                url: esquemaUrl + 'savePdf/',
+                method: "GET",
+                params: params,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }, getreadPdf: function( ruta ) {
+            return $http({
+                url: esquemaUrl + 'readPdf/',
+                method: "GET",
+                params: { 
+                    ruta: ruta, 
+                },
+                headers: { 'Content-Type': 'application/json' }
+            });
         },
 
 

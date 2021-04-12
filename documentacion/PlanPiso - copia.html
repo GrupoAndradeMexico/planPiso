@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Plan Piso</title>
+</head>
+<body>
+	<h1>Plan Piso</h1>
+	<input type="text" name="" id="usuario" value="71">
+	<button onclick="openPP()">Open</button>
+</body>
+<script type="text/javascript">
+	function openPP(){
+		var url = 'http://192.168.20.89:4900';
+		var titulo = 'Plan piso';
+		var form = document.createElement("form");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", url);
+        form.setAttribute("target", titulo);
+
+        var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", "idUsuario");
+        hiddenField.setAttribute("value", document.getElementById('usuario').value);
+        form.appendChild(hiddenField);
+       
+        document.body.appendChild(form);
+        window.open('', titulo);
+        form.submit();
+	}
+</script>
+</html>

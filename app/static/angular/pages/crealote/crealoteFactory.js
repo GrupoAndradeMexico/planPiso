@@ -113,6 +113,22 @@ appModule.factory('crealoteFactory', function($http) {
                 },
                 headers: { 'Content-Type': 'application/json' }
             });
+        },
+        insIdBitacora: function() {
+            return $http({
+                url: crealoteUrl + 'insIdBitacora/',
+                method: "POST",
+                params: {},
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },
+        idBitacoraCrearLote: function(data) {
+            return $http({
+                url: crealoteUrl + 'idBitacoraCrearLote/',
+                method: "POST",
+                data: data,
+                headers: { 'Content-Type': 'application/json' }
+            });
         }
     };
 });

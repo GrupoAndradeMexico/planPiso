@@ -92,7 +92,7 @@ ApiEsquema.prototype.get_updEsquema = function(req, res, next) {
     { name: 'tieneReduccion', value: req.query.tieneReduccion, type: self.model.types.INT },
     { name: 'fechaInicio', value: req.query.fechaInicio, type: self.model.types.STRING },
     { name: 'fechaFin', value: req.query.fechaFin, type: self.model.types.STRING },
-    { name: 'porcentajePenetracion', value: req.query.porcentajePenetracion, type: self.model.types.INT },
+    { name: 'porcentajePenetracion', value: req.query.porcentajePenetracion, type: self.model.types.DECIMAL },
     { name: 'tipoTiieCID', value: req.query.tipoTiieCID, type: self.model.types.INT },
     { name: 'tipoColateralId', value: req.query.tipoColateralId, type: self.model.types.INT },
     { name: 'tiie', value: req.query.tiie, type: self.model.types.STRING },
@@ -172,6 +172,31 @@ ApiEsquema.prototype.get_Empresa = function(req, res, next) {
             result: result
         });
     });
+};
+ApiEsquema.prototype.get_savePdf = function(req, res, next) {
+    var self = this;
+    var params = [{ name: 'idfinanciera', value: req.query.idfinanciera, type: self.model.types.INT },
+    { name: 'idesquema', value: req.query.idesquema, type: self.model.types.INT },
+    { name: 'ruta', value: './uploads/'+ req.query.LayoutName, type: self.model.types.STRING },
+    { name: 'idusuario', value: req.query.idusuario , type: self.model.types.INT },
+          ];
+ console.log( './uploads/'+ req.query.LayoutName );
+    self.model.queryAllRecordSet('UPD_guardarArchivoFE_SP', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+ApiEsquema.prototype.get_readPdf = function(req, res, next) {
+    var self = this;
+  var binaryData = fs.readFileSync(req.query.ruta);
+  var base64String = new Buffer(binaryData).toString("base64");
+  var error=undefined;
+        self.view.expositor(res, {
+            error: error,
+            result: base64String
+        });
 };
 module.exports = ApiEsquema;
 

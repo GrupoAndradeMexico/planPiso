@@ -1,14 +1,14 @@
-var ApiNewUnitsView = require('../views/reference'),
-    ApiNewUnitsModel = require('../models/dataAccess')
+var ApiunidadesvinView = require('../views/reference'),
+    ApiunidadesvinModel = require('../models/dataAccess')
     XLSX = require('xlsx'),
     multer = require('multer'),
     fs=require('fs');
 
-var ApiNewUnits = function(conf) {
+var Apiunidadesvin = function(conf) {
     this.conf = conf || {};
 
-    this.view = new ApiNewUnitsView();
-    this.model = new ApiNewUnitsModel({
+    this.view = new ApiunidadesvinView();
+    this.model = new ApiunidadesvinModel({
         parameters: this.conf.parameters
     });
 
@@ -18,65 +18,44 @@ var ApiNewUnits = function(conf) {
 };
 
 
-ApiNewUnits.prototype.get_NewUnits = function(req, res, next) {
+
+Apiunidadesvin.prototype.get_NewUnitsBySucursal = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'empresaID', value: req.query.empresaID, type: self.model.types.INT }];
-
-    self.model.query('uspGetUnidadesNuevas', params, function(error, result) {
-        self.view.expositor(res, {
-            error: error,
-            result: result
-        });
-    });
-};
-
-ApiNewUnits.prototype.get_NewUnitsBySucursal = function(req, res, next) {
-
-    var self = this;
-
-    var params = [{ name: 'empresaID', value: req.query.empresaID, type: self.model.types.INT },
-    { name: 'sucursalID', value: req.query.sucursalID, type: self.model.types.INT} ,
-    { name: 'financieraID', value: req.query.financieraID, type: self.model.types.INT },
-    { name: 'tipo', value: req.query.tipo, type: self.model.types.INT },
+    var params = [{ name: 'empresaID', value: req.query.empresaID, type: self.model.types.INT }
 ];
 
-    self.model.query('uspGetUnidadesNuevas', params, function(error, result) {
+    self.model.query('uspGetUnidadesNuevasVin', params, function(error, result) {
         self.view.expositor(res, {
             error: error,
             result: result
         });
     });
 };
-ApiNewUnits.prototype.post_setUnitSchema = function(req, res, next) {
+Apiunidadesvin.prototype.post_setUnitSchema = function(req, res, next) {
 
     var self = this;
     var fecha = req.body.fechaCalculo.replace('-', '').replace('-', '');
     var fechaini = req.body.fechainicio.replace('-', '').replace('-', '');
     var fechafn = req.body.fechafin.replace('-', '').replace('-', '');
-    var params = [{ name: 'CCP_IDDOCTO', value: req.body.CCP_IDDOCTO, type: self.model.types.STRING },
-    { name: 'userID', value: req.body.userID, type: self.model.types.INT },
-    { name: 'esquemaID', value: req.body.esquemaID, type: self.model.types.INT },
-    { name: 'fecha_Calculo', value: fecha, type: self.model.types.STRING },
-    { name: 'fechainicio', value: fechaini, type: self.model.types.STRING },
-    { name: 'fechafin', value: fechafn, type: self.model.types.STRING },
-    { name: 'saldoInicial', value: req.body.saldoInicial, type: self.model.types.INT },
-    { name: 'InteresInicial', value: req.body.interes, type: self.model.types.INT },
+    var params = [{ name: 'CCP_IDDOCTO', value: req.body.vin, type: self.model.types.STRING },
+    { name: 'idUsuario', value: req.body.userID, type: self.model.types.INT },
+    { name: 'idEsquemaO', value: req.body.esquemaID, type: self.model.types.INT },
+    { name: 'fechaInicio', value: fechaini, type: self.model.types.STRING },
+    { name: 'montoFinanciar', value: req.body.saldoInicial, type: self.model.types.DECIMAL },
     { name: 'diasgracia', value: req.body.diasgracia, type: self.model.types.INT },
-    { name: 'tipoEntrada', value: req.body.tipoEntrada, type: self.model.types.STRING },
-    { name: 'idEmpresa', value: req.body.idEmpresa, type: self.model.types.INT },
-    { name: 'idSucursal', value: req.body.idSucursal, type: self.model.types.INT },
+    { name: 'empresaID', value: req.body.idEmpresa, type: self.model.types.INT },
     { name: 'numeroSerie', value: req.body.vin, type: self.model.types.STRING }];
 
-    self.model.query('uspSetUnidadSchema', params, function(error, result) {
+    self.model.query('Pol_Poliza14Detalle_INS', params, function(error, result) {
         self.view.expositor(res, {
             error: error,
             result: result
         });
     });
 };
-ApiNewUnits.prototype.get_SaldoFinanciera = function(req, res, next) {
+Apiunidadesvin.prototype.get_SaldoFinanciera = function(req, res, next) {
 
     var self = this;
 
@@ -93,7 +72,7 @@ ApiNewUnits.prototype.get_SaldoFinanciera = function(req, res, next) {
     });
 };
 
-ApiNewUnits.prototype.get_insExcelData = function(req, res, next) {
+Apiunidadesvin.prototype.get_insExcelData = function(req, res, next) {
 
     var self = this;
     var itemObject = JSON.parse(req.query.lstUnidades);
@@ -109,7 +88,7 @@ itemObject.consecutivo=0;
         { name: 'consecutivo', value: itemObject.consecutivo, type: self.model.types.INT }
     ];
 
-    self.model.query('TEMPORALLAYOUTUnidades_SP', params, function(error, result) {
+    self.model.query('TEMPORALLAYOUTUnidadesVin_SP', params, function(error, result) {
         self.view.expositor(res, {
             error: error,
             result: result
@@ -117,7 +96,7 @@ itemObject.consecutivo=0;
     });
 };
 
-ApiNewUnits.prototype.post_upload = function(req, res, next) {
+Apiunidadesvin.prototype.post_upload = function(req, res, next) {
     var filename = String(new Date().getTime());
   
     var storage = multer.diskStorage({
@@ -140,7 +119,7 @@ ApiNewUnits.prototype.post_upload = function(req, res, next) {
         }
     });
 };
-ApiNewUnits.prototype.get_readLayout = function(req, res, next) {
+Apiunidadesvin.prototype.get_readLayout = function(req, res, next) {
     var result = undefined;
     var error = undefined;
     try {
@@ -180,7 +159,7 @@ ApiNewUnits.prototype.get_readLayout = function(req, res, next) {
         });
     }
 };
-ApiNewUnits.prototype.get_readFile = function(req, res, next) {
+Apiunidadesvin.prototype.get_readFile = function(req, res, next) {
     var self = this;
     // fs.mkdir('./create',function(e){
     //     if(!e || (e && e.code === 'EEXIST')){
@@ -198,4 +177,4 @@ ApiNewUnits.prototype.get_readFile = function(req, res, next) {
             result: base64String
         });
 };
-module.exports = ApiNewUnits;
+module.exports = Apiunidadesvin;

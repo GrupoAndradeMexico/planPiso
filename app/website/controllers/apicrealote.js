@@ -408,4 +408,35 @@ Apicrealote.prototype.get_documentosNoEncontrados = function(req, res, next) {
         });
     });
 };
+Apicrealote.prototype.post_insIdBitacora = function(req, res, next) {
+
+    var self = this;
+
+    var params = [];
+
+    self.model.query('ins_idBitacoraCrearLote', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+Apicrealote.prototype.post_idBitacoraCrearLote = function(req, res, next) {
+
+    var self = this;
+    // console.log(req.body.idEmpresa)
+    var params = [{ name: 'idBitacoraCrearLote', value: req.body.idBitacoraCrearLote, type: self.model.types.INT },
+        { name: 'vin', value: req.body.vin, type: self.model.types.STRING },
+        { name: 'montoPagar', value: req.body.montoPagar, type: self.model.types.DECIMAL },
+        { name: 'interes', value: req.body.interes, type: self.model.types.DECIMAL },
+        { name: 'idUsuario', value: req.body.idUsuario, type: self.model.types.INT },
+        { name: 'idEmpresa', value: req.body.idEmpresa, type: self.model.types.INT }
+    ];
+    self.model.query('ins_bitacoraCrearlote', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
 module.exports = Apicrealote;

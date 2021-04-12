@@ -79,6 +79,12 @@ appModule.factory('staticFactory', function($http) {
                 { name: 'Reporte', url: '#', isActive: true }
             ];
         },
+        auditoriaBar: function() {
+            return [
+                { name: 'Empresas', url: 'empresa', isActive: false },
+                { name: 'Auditoria', url: '#', isActive: true }
+            ];
+        },
         message: function() {
             alert("Hello");
         },

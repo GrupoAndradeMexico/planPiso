@@ -74,4 +74,20 @@ ApiTraspaso.prototype.get_TraspasoEsquemaDetalle = function(req, res, next) {
         });
     });
 };
+
+ApiTraspaso.prototype.get_unidadEnProceso = function(req, res, next) {
+
+    var self = this;
+
+    var params = [{ name: 'documento', value: req.query.documento, type: self.model.types.STRING },
+    { name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT }];
+
+    self.model.query('usp_get_unidadEnProceso', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 module.exports = ApiTraspaso;

@@ -16,6 +16,10 @@ appModule.config(function($routeProvider, $locationProvider) {
         templateUrl: 'angular/pages/unuevas/unuevas.html',
         controller: 'unuevasController'
     })
+    .when('/unidadesvin', {
+        templateUrl: 'angular/pages/unidadesvin/unidadesvin.html',
+        controller: 'unidadesvinController'
+    })
 
     .when('/esquema', {
         templateUrl: 'angular/pages/esquema/esquema.html',

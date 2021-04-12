@@ -15,8 +15,36 @@ appModule.controller('traspasoController', function($scope, $rootScope, $locatio
 
     $scope.inicioTraspaso = function() {
         var valida = filterFilter($scope.lstNewUnits, { isChecked: true });
-
+        $scope.unidadesEnProceso = [];
         var auxList = [];
+        console.log(valida, 'Lista de las sseleccionadsa')
+        var promesaUnidadEnProceso = [];
+
+        valida.forEach(function(item, key) {
+            promesaUnidadEnProceso.push(traspasoFactory.unidadEnProceso(item.CCP_IDDOCTO, item.empresaID));
+        });
+        Promise.all(promesaUnidadEnProceso).then(function(results) {
+            console.log('REsultado unidades en proceso ', results);
+            angular.forEach(results, function(value, key) {
+
+                if (value.data.length > 0) {
+                    console.log(value, 'RESULTS')
+                    angular.forEach(value.data, function(value2, key) {
+                        $scope.unidadesEnProceso.push(value2);
+                    });
+
+                }
+            });
+            console.log($scope.unidadesEnProceso)
+            if ($scope.unidadesEnProceso.length > 0) {
+                swal({
+                    title: "Traspaso entre Financieras",
+                    text: "Algunas unidades se encuentran en otro proceso y no puede realziar el traspaso"
+                }, function() {
+                    location.reload();
+                });
+            }
+        });
         valida.forEach(function(item, key) {
             if (auxList.indexOf(item.financieraID) === -1) {
                 auxList.push(item.financieraID);

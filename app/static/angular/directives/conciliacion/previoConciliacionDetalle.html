@@ -1,0 +1,88 @@
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <h5>Previo Conciliacion</h5>
+            <!-- <div class="ibox-title">
+                <unidades-header></unidades-header>
+            </div> -->
+            <div class="ibox-content">
+                <!-- <step-unidades></step-unidades> -->
+                <div style="padding:10px; background-color: #fff; margin:8px;">
+                    <div class="row">
+                    <div class="col-sm-6">
+                        <h3>Tabla de previo de conciliación</h3> 
+                        <button type="button" class="btn btn-default" ng-click="AgregarDetail()">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </button>
+                        <table id="tblPrevio" class="table table-striped">
+                            <tr>
+                                <th>Sucursal</th>
+                                <th>Cuenta Contable</th>
+                                <th>Importe</th>
+                               <th></th>
+                            </tr>
+                            <tr ng-repeat="itemDetail in lstDetalle">
+                                <td>{{itemDetail.suc_nombre }} </td>
+                                <td>{{itemDetail.CTA_NUMCTA }}</td>
+                                <td>{{itemDetail.Interes | number:2 }}</td>
+                             
+                                <td>
+                                    <button type="button" class="btn btn-default" ng-click="EditarDetail(itemDetail)">
+                                        <span class="glyphicon glyphicon-edit"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-default" ng-click="BorrarDetail(itemDetail)">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th>Total:</th>
+                                <th>{{TotalInteres | number:2 }}</th>
+                               <th></th>
+                            </tr>
+                        </table>
+                    </div>
+                   
+                    <div class="col-sm-6" ng-show="agregareditar">
+            
+                        <div class="form-group">
+                            <div class="form-group">
+                                 <div class="form-group">
+                                    <label for="fSucursal">Sucursal:</label>
+                                    <select id="fsucursal" ng-options="lst.nombreSucursal for lst in lstSucursal" ng-model="ctrl.selectedsucursal" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="fcuenta">Cuenta Contable:</label>
+                                    <select id="fcuenta" ng-options="lst.CTA_NUMCTA for lst in lstCuentas" ng-model="ctrl.selectedcuenta" class="form-control"></select>
+                                </div>
+                               
+                                <label for="fporcentaje">Importe:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="fporcentaje" ng-model="ctrl.Interes" placeholder="Ej.: 10">
+                                </div>
+                            </div>
+                           
+                            <div class="form-group">
+                           
+                                <button type="button" class="btn btn-default" ng-click="CancelarDetail()">
+                                    <span class="glyphicon glyphicon-floppy-remove">Borrar</span>
+                                </button>
+                                <button type="button" class="btn btn-default" ng-click="GuardarDetail()">
+                                    <span class="glyphicon glyphicon-floppy-disk">Guardar</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                        <button type="button" class="btn btn-success btn-sm" ng-click="prevStep()">Anterior</button>
+                        <button type="button" class="btn btn-info btn-sm pull-right" ng-click="showMsgConciliacion()">Finalizar</button>
+               
+                    </div>
+                        
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

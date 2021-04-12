@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="col-sm-8">
-            <button class="btn btn-primary" ng-click="setPnlRecalcular()" ><span class="glyphicon glyphicon-usd"></span> Recalcular Intereses</button>
+            <button class="btn btn-primary" ng-click="setPnlRecalcular()"  ng-hide = "muestrarecalcularIntereses"><span class="glyphicon glyphicon-usd"></span> Recalcular Intereses</button>
             <div ng-show="showwarningspread">
                 <button class="btn btn-danger" ng-click="setPnlSpread()"  ng-hide="muestraCargarSpreadTiie"><span class="glyphicon glyphicon-usd"></span> Cargar Spread TIEE</button>
             </div>

@@ -129,7 +129,8 @@ ApiFinanciera.prototype.get_insColateralLineaCredito = function(req, res, next) 
     { name: 'LineaCredito', value: req.query.LineaCredito, type: self.model.types.DECIMAL },
     { name: 'NumUnidades', value: req.query.NumUnidades, type: self.model.types.INT },
     { name: 'fechainicio', value: req.query.fechainicio, type: self.model.types.STRING },
-    { name: 'fechafin', value: req.query.fechafin, type: self.model.types.STRING }];
+    { name: 'fechafin', value: req.query.fechafin, type: self.model.types.STRING },
+    { name: 'usuarioID', value: req.query.usuarioID, type: self.model.types.INT }];
 
     self.model.query('INS_ColateralLineaCredito_SP', params, function(error, result) {
         self.view.expositor(res, {
@@ -146,7 +147,8 @@ ApiFinanciera.prototype.get_updColateralLineaCredito = function(req, res, next) 
     { name: 'LineaCredito', value: req.query.LineaCredito, type: self.model.types.DECIMAL },
     { name: 'NumUnidades', value: req.query.NumUnidades, type: self.model.types.INT },
     { name: 'fechainicio', value: req.query.fechainicio, type: self.model.types.STRING },
-    { name: 'fechafin', value: req.query.fechafin, type: self.model.types.STRING }];
+    { name: 'fechafin', value: req.query.fechafin, type: self.model.types.STRING },
+    { name: 'usuarioID', value: req.query.usuarioID, type: self.model.types.INT }];
 
     self.model.query('UPD_ColateralLineaCredito_SP', params, function(error, result) {
         self.view.expositor(res, {

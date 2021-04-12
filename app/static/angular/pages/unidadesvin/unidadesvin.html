@@ -5,7 +5,7 @@
             <div class="ibox float-e-margins">
 
                 <div class="ibox-title">
-                    <unuevas-content-header></unuevas-content-header>
+                    <unidadesvin-content-header></unidadesvin-content-header>
                   
                 </div>
                 <div class="ibox-content row">
@@ -33,16 +33,16 @@
                     <div class="col-md-12">
                         <div style="padding:10px; background-color: #fff; margin:8px;">
                             <div  ng-show="showStep == 1" class="animated fadeInRight">
-                                <unuevas-seleccion></unuevas-seleccion>
+                                <unidadesvin-seleccion></unidadesvin-seleccion>
                                 <button type="button" class="btn btn-success btn-sm pull-right" ng-click="nextStep()">Siguiente</button>
                             </div>
                             <div ng-show="showStep == 2" class="animated fadeInRight">
-                                <unuevas-financiera></unuevas-financiera>
+                                <unidadesvin-financiera></unidadesvin-financiera>
                                 <button type="button" class="btn btn-success btn-sm" ng-click="prevStep()">Anterior</button>
                                 <button type="button" class="btn btn-success btn-sm pull-right" ng-click="nextStep()">Siguiente</button>
                             </div>
                             <div ng-show="showStep == 3" class="animated fadeInRight">
-                                <unuevas-aplicar></unuevas-aplicar>
+                                <unidadesvin-aplicar></unidadesvin-aplicar>
                                 <button type="button" class="btn btn-success btn-sm" ng-click="prevStep()">Anterior</button>
                                 <button type="button" class="btn btn-info btn-sm pull-right" ng-click="showMsg()" ng-hide="muestrafinalizar">Finalizar</button>
                             </div>

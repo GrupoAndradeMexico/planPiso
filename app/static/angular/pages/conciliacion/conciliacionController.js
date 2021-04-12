@@ -260,35 +260,60 @@ appModule.controller('conciliacionController', function($scope, $rootScope, $loc
         $scope.estatusConciliacion=idconciliacion.estatus;
         $scope.frmConciliacion.lbltipoconciliacion=idconciliacion.idTipo;
                                     
-
-        conciliacionFactory.getConciliacionGuardada($scope.idconciliacion).then(function(result) {
-            $scope.lstConceal = result.data;
-            $scope.sumTotal();
-
-             if($scope.frmConciliacion.lbltipoconciliacion== 1)
-                                    $scope.currentPanel = 'pnlConciliar';
-                                else
-                                    $scope.currentPanel = 'pnlConciliarUnidades';
-
-            conciliacionFactory.autorizacionDetalle( $scope.idconciliacion  ).then(function(detalle) {
-                if( detalle.data.length != 0 ){
-                   
-
-                    $scope.autDetalle = detalle.data[0];
-
-                    $scope.frmConciliacion.lblMes       = $scope.lstMonth[ ($scope.autDetalle.periodoContable - 1) ];
-                    $scope.frmConciliacion.idFinanciera = $scope.autDetalle.idFinanciera;
-                    $scope.lblFinanciera                = $scope.autDetalle.nombre;
-                    switch( $scope.autDetalle.estatus ){
-                        case 0: $scope.estSolAutorizacion = 4; break;
-                        case 1: $scope.estSolAutorizacion = 2; break;
-                        case 2: $scope.estSolAutorizacion = 3; break;
-                    }                    
-                    console.log( "estSolAutorizacion", $scope.estSolAutorizacion );
-
-                }
-            })
-        });
+        if($scope.frmConciliacion.lbltipoconciliacion== 1){
+            conciliacionFactory.getConciliacionGuardada($scope.idconciliacion).then(function(result) {
+                $scope.lstConceal = result.data;
+                $scope.sumTotal();
+                $scope.currentPanel = 'pnlConciliar';
+                              
+                conciliacionFactory.autorizacionDetalle( $scope.idconciliacion  ).then(function(detalle) {
+                    if( detalle.data.length != 0 ){
+                       
+    
+                        $scope.autDetalle = detalle.data[0];
+    
+                        $scope.frmConciliacion.lblMes       = $scope.lstMonth[ ($scope.autDetalle.periodoContable - 1) ];
+                        $scope.frmConciliacion.idFinanciera = $scope.autDetalle.idFinanciera;
+                        $scope.lblFinanciera                = $scope.autDetalle.nombre;
+                        switch( $scope.autDetalle.estatus ){
+                            case 0: $scope.estSolAutorizacion = 4; break;
+                            case 1: $scope.estSolAutorizacion = 2; break;
+                            case 2: $scope.estSolAutorizacion = 3; break;
+                        }                    
+                        console.log( "estSolAutorizacion", $scope.estSolAutorizacion );
+    
+                    }
+                })
+            });
+        }
+        else
+        {
+            conciliacionFactory.getConciliacionGuardadaPasivos($scope.idconciliacion).then(function(result) {
+                $scope.lstConceal = result.data;
+                $scope.sumTotal();
+                $scope.currentPanel = 'pnlConciliarUnidades';
+    
+                conciliacionFactory.autorizacionDetalle( $scope.idconciliacion  ).then(function(detalle) {
+                    if( detalle.data.length != 0 ){
+                       
+    
+                        $scope.autDetalle = detalle.data[0];
+    
+                        $scope.frmConciliacion.lblMes       = $scope.lstMonth[ ($scope.autDetalle.periodoContable - 1) ];
+                        $scope.frmConciliacion.idFinanciera = $scope.autDetalle.idFinanciera;
+                        $scope.lblFinanciera                = $scope.autDetalle.nombre;
+                        switch( $scope.autDetalle.estatus ){
+                            case 0: $scope.estSolAutorizacion = 4; break;
+                            case 1: $scope.estSolAutorizacion = 2; break;
+                            case 2: $scope.estSolAutorizacion = 3; break;
+                        }                    
+                        console.log( "estSolAutorizacion", $scope.estSolAutorizacion );
+    
+                    }
+                })
+            });
+        }
+        
     }
 
     $scope.muestraDetalleDocumentos = function( item ){
@@ -373,14 +398,14 @@ appModule.controller('conciliacionController', function($scope, $rootScope, $loc
                 $scope.diferencias.diferentes = $scope.diferencias.diferentes + 1;
             }
         });
-
+        $scope.situacion.financiera=0;
         $scope.controlCheck();
         $scope.readyConciliation();
-
+       // $scope.conciliacion = true;
         // Valida estatus de autorización
         // if($scope.situacion.gpoAndrade != 0 && $scope.situacion.financiera == 0){
         //     $scope.estSolAutorizacion  = 1;
-        //     //$scope.conciliacion = false;
+        //     $scope.conciliacion = false;
         // }
     };
 
@@ -506,10 +531,11 @@ appModule.controller('conciliacionController', function($scope, $rootScope, $loc
     $scope.ajusteAutomatico = function(){
         $scope.ajusteManual = true;
         $scope.lstConceal.forEach(function(item, key) {
-            if( item.equiparante == 1 && item.esMayor != 1 ){
+            // if( item.equiparante == 1 && item.esMayor != 1 ){
                 $scope.lstConceal[ key ].ajuste  = $scope.lstConceal[ key ].interes;
                 $scope.lstConceal[ key ].esMayor = 3;
-            }
+            // }
+         
         });
         
         $scope.total.sistema = 0;
@@ -523,13 +549,13 @@ appModule.controller('conciliacionController', function($scope, $rootScope, $loc
     }
 
     $scope.readyConciliation = function(){
-        var modulo = parseFloat($scope.total.sistema) - parseFloat($scope.total.archivo);
-        if( modulo >= -1 && modulo <= 1 ){
+        // var modulo = parseFloat($scope.total.sistema) - parseFloat($scope.total.archivo);
+        //  if( modulo >= -1 && modulo <= 1 ){
             $scope.conciliacion = true;
-        }
-        else{
-            $scope.conciliacion = false;
-        }        
+        // }
+        // else{
+        //     $scope.conciliacion = false;
+        // }        
        
     }
 
@@ -600,64 +626,7 @@ appModule.controller('conciliacionController', function($scope, $rootScope, $loc
         });
 
     }
-   
-    $scope.guardaConciliacion = function() {
-        var parametros = {
-            idConciliacion:      $scope.idconciliacion,
-            idEstatus:       1
 
-        }
-        $('#mdlLoading').modal('show');
-        var parametrosDetalle = {}
-        var item = {};
-      
-        conciliacionFactory.guardaConciliacion( parametros ).then(function(result) {
-            if( result.data.length > 0 ){
-                var promises = [];
-            $scope.contador=0;
-            $scope.maxcontador=$scope.lstConceal.length;
-
-                $scope.lstConceal.map((item) => {
-                  
-                    parametrosDetalle = {
-                        idConciliacion:         $scope.idconciliacion,
-                        movimientoID:           item.movimientoID,
-                        CCP_IDDOCTO:            item.CCP_IDDOCTO,
-                        VIN:                    item.numeroSerie,
-                        interesGrupoAndrade:    item.InteresMesActual,
-                        interesFinanciera:      item.interes,
-                        interesAjuste:          item.ajuste,
-                        situacion:              ( item.equiparante == 1 && item.esMayor == 1 ) ? 1 : ( item.equiparante == 1 && item.esMayor != 1 ) ? 2 : 3 ,// 1 => Montos iguales; 2 => Monto Ajustado; 3 => No Aplica
-                        checked:                 item.checked?1:0
-
-                    }
-
-                    
-                    promises.push(conciliacionFactory.guardaConciliacionDetalle( parametrosDetalle ));
-                })
-                
-                Promise.all(promises).then(function response(result) {
-                    console.log(result, 'UNIDADEEEES');
-                    angular.forEach(result, function(value, key) {
-                        var unidadesFor = value.data;
-                        // $scope.lstNewUnits.push(value.data);
-                        angular.forEach(unidadesFor, function(value2, key2) {
-                            $scope.contador++;
-                           
-                        });
-                    });
-                  
-            $scope.$apply();
-            $('#mdlLoading').modal('hide');
-            location.reload();
-                  
-                });
-                  
-                
-            }
-        });
-
-    }
   
     $scope.solicitaAutorizacion = function( estatus ) {
         var parametros = {
@@ -967,7 +936,7 @@ appModule.controller('conciliacionController', function($scope, $rootScope, $loc
                 $rootScope.NohayPdf = undefined;
                 $rootScope.excel = URL.createObjectURL(utils.b64toBlob(arregloBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
     
-                $('#polizaCancelada').modal('show');
+             
             }
     
             setTimeout(function() {
@@ -1202,4 +1171,263 @@ appModule.controller('conciliacionController', function($scope, $rootScope, $loc
     }
     ////////////////////////////////////////////////////
     ////////////////////////////////////////////////////
+    $scope.PrevioConciliacion = function() {  
+          
+        $('#mdlLoading').modal('show');
+        var parametrosDetalle = {}
+        var promises = [];
+        $scope.contador=0;
+        $scope.maxcontador=$scope.lstConceal.length;
+
+            $scope.lstConceal.map((item) => {
+                
+                parametrosDetalle = {
+                    idConciliacion:         $scope.idconciliacion,
+                    movimientoID:           item.movimientoID,
+                    CCP_IDDOCTO:            item.CCP_IDDOCTO,
+                    VIN:                    item.numeroSerie,
+                    interesGrupoAndrade:    item.InteresMesActual,
+                    interesFinanciera:      item.interes,
+                    interesAjuste:          item.ajuste,
+                    situacion:              ( item.equiparante == 1 && item.esMayor == 1 ) ? 1 : ( item.equiparante == 1 && item.esMayor != 1 ) ? 2 : 3 ,// 1 => Montos iguales; 2 => Monto Ajustado; 3 => No Aplica
+                    checked:                 item.checked?1:0
+
+                }
+
+                
+                promises.push(conciliacionFactory.guardaConciliacionDetalle( parametrosDetalle ));
+            })
+            
+        Promise.all(promises).then(function response(result) {
+            console.log(result, 'UNIDADEEEES');
+            angular.forEach(result, function(value, key) {
+                var unidadesFor = value.data;
+                // $scope.lstNewUnits.push(value.data);
+                angular.forEach(unidadesFor, function(value2, key2) {
+                    $scope.contador++;
+                    
+                });
+            });
+                
+        $scope.$apply();
+       
+        $scope.PrevioConciliacionDetalle();
+                
+        });
+    }
+                      
+                    
+             
+   
+    $scope.PrevioConciliacionDetalle = function(){
+        $scope.currentPanel = 'pnlPrevioConciliacionDetalle';
+        commonFactory.getSucursal($scope.session.empresaID, $scope.idUsuario).then(function(result) {
+            $scope.lstSucursal = result.data;
+        });
+        conciliacionFactory.getCuentas().then(function(result) {
+            $scope.lstCuentas = result.data;
+        });
+        conciliacionFactory.PrevioConciliacion($scope.idconciliacion).then(function(result) {
+            $scope.lstDetalle = result.data;
+            $scope.CalculaTotal();
+            $('#mdlLoading').modal('hide');
+            $scope.initTblProviders();
+           
+          
+        });
+    }
+    $scope.AgregarDetail = function() {
+        $scope.agregareditar = true;
+        $scope.nuevo = 1;
+        $scope.ctrl = {};
+
+    }
+    $scope.GuardarDetail = function() {
+        if ($scope.nuevo == 1) {
+            // var newobject={
+            //     dia:$scope.ctrl.dia,
+            //     porcentaje:$scope.ctrl.porcentaje
+            // }
+            //  $scope.esquemaHeader.lstreduccion.push(newobject);
+            var params = {
+                idconciliacion: $scope.idconciliacion,
+                CTA_NUMCTA: $scope.ctrl.selectedcuenta.CTA_NUMCTA,
+                idsucursal: $scope.ctrl.selectedsucursal.sucursalID,
+                Interes: $scope.ctrl.Interes,
+                usuarioID: localStorage.getItem('idUsuario')
+            };
+
+            conciliacionFactory.insprevioConciliacion(params).then(function(result) {
+                swal('Guardado', 'Registro guardado con exito', 'success');
+                $scope.regresatabla();
+
+            });
+        } else {
+            // for (var i=0; i<$scope.esquemaHeader.lstreduccion.length; i++) { 
+            //     if ($scope.esquemaHeader.lstreduccion[i].dia == $scope.ctrl.dia) {
+            //         $scope.esquemaHeader.lstreduccion[i].porcentaje = $scope.ctrl.porcentaje;
+            //        break; //Stop this loop, we found it!
+            //     }
+            //   }
+            if($scope.ctrl.selectedsucursal==undefined)
+            {
+                $scope.ctrl.selectedsucursal=[];
+                $scope.ctrl.selectedsucursal.idsucursal=$scope.ctrl.idsucursal;
+            }
+            if($scope.ctrl.selectedcuenta==undefined)
+            {
+                $scope.ctrl.selectedcuenta=[];
+                $scope.ctrl.selectedcuenta.CTA_NUMCTA=$scope.ctrl.CTA_NUMCTA;
+            }
+
+            var params = {
+                idprevioconciliacion: $scope.ctrl.idprevioConciliacion,
+                idconciliacion: $scope.idconciliacion,
+                CTA_NUMCTA: $scope.ctrl.selectedcuenta.CTA_NUMCTA,
+                idsucursal: $scope.ctrl.selectedsucursal.sucursalID,
+                Interes: $scope.ctrl.Interes,
+                //,usuarioID: localStorage.getItem('idUsuario')
+            };
+
+            conciliacionFactory.updprevioConciliacion(params).then(function(result) {
+                swal('Guardado', 'Registro guardada con exito', 'success');
+                $scope.regresatabla();
+
+            });
+
+        }
+        $scope.agregareditar = false;
+    }
+    $scope.CancelarDetail = function() {
+        $scope.agregareditar = false;
+    }
+    $scope.EditarDetail = function(item) {
+        $scope.agregareditar = true;
+        $scope.ctrl = {};
+        $scope.nuevo = 0;
+        $scope.ctrl.idprevioConciliacion = item.idprevioConciliacion;
+        $scope.ctrl.idsucursal = item.idsucursal;
+        $scope.ctrl.CTA_NUMCTA = item.CTA_NUMCTA;
+        $scope.ctrl.selectedcuenta = _.where($scope.lstCuentas, { reduc: item.CTA_NUMCTA.substr(5,2) })[0];
+        $scope.ctrl.selectedsucursal = _.where($scope.lstSucursal, { sucursalID: item.idsucursal })[0];
+        $scope.ctrl.Interes = item.Interes;
+
+    }
+    $scope.BorrarDetail = function(item) {
+        var params = {
+            idprevioConciliacion: item.idprevioConciliacion
+            //,usuarioID: localStorage.getItem('idUsuario')
+        };
+
+        conciliacionFactory.delprevioConciliacion(params).then(function(result) {
+            swal('Guardado', 'registro borrado con exito', 'success');
+            $scope.regresatabla();
+
+        });
+    }
+    $scope.regresatabla = function() {
+    
+        conciliacionFactory.PrevioConciliacion($scope.idconciliacion).then(function(result) {
+            $scope.lstDetalle = result.data;
+            $scope.CalculaTotal();
+        });
+
+
+    }
+    $scope.CalculaTotal = function(){
+        $scope.TotalInteres=0;
+        $scope.lstDetalle.forEach(function(item) {
+            $scope.TotalInteres+= item.Interes;
+             
+        });
+       
+    }
+    $scope.showMsgConciliacion = function() 
+    {
+        swal({
+            title: "¿Estas Seguro?",
+            text: "Se guardara la conciliacion?.",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#21B9BB",
+            confirmButtonText: "Continuar",
+            closeOnConfirm: false
+        },
+        function() 
+        {
+            $('#mdlLoading').modal('show');
+           var parametros = {
+            idConciliacion:      $scope.idconciliacion,
+            idEstatus:       1
+
+             }
+
+            conciliacionFactory.guardaConciliacion(parametros).then(function( respuesta ) {
+                $('#mdlLoading').modal('hide');
+            location.reload();
+            }, function(error) {
+                $scope.error(error.data.Message);
+            });
+           
+            
+            
+        });
+    };
+    // $scope.guardaConciliacion = function() {
+    //     var parametros = {
+    //         idConciliacion:      $scope.idconciliacion,
+    //         idEstatus:       1
+
+    //     }
+    //     $('#mdlLoading').modal('show');
+    //     var parametrosDetalle = {}
+    //     var item = {};
+      
+    //     conciliacionFactory.guardaConciliacion( parametros ).then(function(result) {
+    //         if( result.data.length > 0 ){
+    //             var promises = [];
+    //         $scope.contador=0;
+    //         $scope.maxcontador=$scope.lstConceal.length;
+
+    //             $scope.lstConceal.map((item) => {
+                  
+    //                 parametrosDetalle = {
+    //                     idConciliacion:         $scope.idconciliacion,
+    //                     movimientoID:           item.movimientoID,
+    //                     CCP_IDDOCTO:            item.CCP_IDDOCTO,
+    //                     VIN:                    item.numeroSerie,
+    //                     interesGrupoAndrade:    item.InteresMesActual,
+    //                     interesFinanciera:      item.interes,
+    //                     interesAjuste:          item.ajuste,
+    //                     situacion:              ( item.equiparante == 1 && item.esMayor == 1 ) ? 1 : ( item.equiparante == 1 && item.esMayor != 1 ) ? 2 : 3 ,// 1 => Montos iguales; 2 => Monto Ajustado; 3 => No Aplica
+    //                     checked:                 item.checked?1:0
+
+    //                 }
+
+                    
+    //                 promises.push(conciliacionFactory.guardaConciliacionDetalle( parametrosDetalle ));
+    //             })
+                
+    //             Promise.all(promises).then(function response(result) {
+    //                 console.log(result, 'UNIDADEEEES');
+    //                 angular.forEach(result, function(value, key) {
+    //                     var unidadesFor = value.data;
+    //                     // $scope.lstNewUnits.push(value.data);
+    //                     angular.forEach(unidadesFor, function(value2, key2) {
+    //                         $scope.contador++;
+                           
+    //                     });
+    //                 });
+                  
+    //         $scope.$apply();
+    //         $('#mdlLoading').modal('hide');
+    //         location.reload();
+                  
+    //             });
+                  
+                
+    //         }
+    //     });
+
+    // }
 });
