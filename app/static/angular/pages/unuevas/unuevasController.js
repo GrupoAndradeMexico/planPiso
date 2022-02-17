@@ -33,7 +33,10 @@ appModule.controller('unuevasController', function($scope, $rootScope, $location
     var finalizar = _.where($scope.lstPermisoBoton, { idModulo: 1, Boton: "finalizar" })[0];
     $scope.muestrafinalizar = finalizar != undefined ? false : true;
 
-
+    commonFactory.getFinancial(sessionFactory.empresaID, $scope.idUsuario).then(function(result) {
+            $scope.lstFinancial = result.data;
+            $scope.ddlFinancialShow = true;
+        });
     commonFactory.getSucursal(sessionFactory.empresaID, $scope.idUsuario).then(function(result) {
         $scope.lstSucursal = result.data;
         var promises = [];
@@ -128,7 +131,7 @@ appModule.controller('unuevasController', function($scope, $rootScope, $location
         if($scope.selectedSchema.tipoColateralId !=undefined)
         {
                 var data = {
-                idPersona: $scope.unidad.idPersona,
+                idPersona: $scope.listUnidades[0].idPersona,
             idEmpresa: sessionFactory.empresaID,
             idColateral:$scope.selectedSchema.tipoColateralId
             };
@@ -317,6 +320,7 @@ appModule.controller('unuevasController', function($scope, $rootScope, $location
         $scope.setTableStyle('#tblUnidadesNuevas');
         $scope.totalUnidades = $scope.lstNewUnits.length;
         $scope.setCalendarStyle();
+        $("#modalNuevaLayout").modal('hide');
     };
 
     $scope.setTableStyle = function(tableID) {
@@ -483,15 +487,17 @@ var myDropzone3;
                             // $scope.nexStep();
                             $scope.frmConciliacion.loadLayout = true;
                             $scope.loadingPanel = false;
-                            $('#mdlLoading').modal('hide');
+                            //$('#mdlLoading').modal('hide');
                                 // if($scope.frmConciliacion.lbltipoconciliacion== 1)
                                 //     $scope.currentPanel = 'pnlConciliar';
                                 // else
                                 //     $scope.currentPanel = 'pnlConciliarUnidades';
                             $scope.conceal();
                             $("#modalNuevaLayout").modal('hide');
-                            var aux = filterFilter($scope.lstFinancial, { financieraID: $scope.frmConciliacion.idFinanciera });
-                            $scope.lblFinanciera = aux[0].nombre;
+                            // var aux = filterFilter($scope.lstFinancial, { financieraIDBP: $scope.idfinancierabp });
+                            // $scope.lblFinanciera = aux[0].nombre;
+                            // $scope.unidad.idPersona = financieraIDBP;
+
                         }
                         else{
                             increment++;
