@@ -402,7 +402,54 @@ appModule.factory('conciliacionFactory', function($http) {
                 headers: { 'Content-Type': 'application/json' }
             });
         },
-
+        recalcularConci: function( params ) {
+            return $http({
+                url: conciliacionUrl + 'recalcularConci/',
+                method: "GET",
+                params: params,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },
+        recalcularConciCierreMes: function( params ) {
+            return $http({
+                url: conciliacionUrl + 'recalcularConciCierreMes/',
+                method: "GET",
+                params: params,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },
+        BorrarFila: function( params ) {
+            return $http({
+                url: conciliacionUrl + 'BorrarFila/',
+                method: "GET",
+                params: params,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },
+        datosVin: function( params ) {
+            return $http({
+                url: conciliacionUrl + 'datosVin/',
+                method: "GET",
+                params: params,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },
+        ActivarVin: function( params ) {
+            return $http({
+                url: conciliacionUrl + 'ActivarVin/',
+                method: "GET",
+                params: params,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },
+        DesactivarVin: function( params ) {
+            return $http({
+                url: conciliacionUrl + 'DesactivarVin/',
+                method: "GET",
+                params: params,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },
 
     };
 });

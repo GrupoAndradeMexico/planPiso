@@ -103,6 +103,11 @@
                 <h2><b>{{total.archivo | currency}}</b></h2>
             </div>            
         </div>
+        <div class="col-md-12 text-right">
+            <button type="button" class="btn btn-primary pull-right" ng-click="recalcularConciFinMes()" ng-show="estatusConciliacion == 2">Recalcular Conciliacion</button>
+            <button type="button" class="btn btn-primary pull-right" ng-click="ActualizaSaldos()" ng-show="estatusConciliacion == 2">Actualizar Saldos</button>
+            
+        </div> 
     </div>
 
 </div>  

@@ -708,7 +708,8 @@ $scope.insertDetalles= function(){
     $scope.obtieneCociliacion = function(){
         var parametros = {
             idEmpresa:      $scope.session.empresaID,
-            periodo:  $scope.currentPeriodo.periodo
+            periodo:  $scope.currentPeriodo.periodo,
+            anio: $scope.currentPeriodo.anio
         }
         conciliacionFactory.obtieneCociliacion(parametros).then(function(result) {
          
@@ -1493,6 +1494,86 @@ $scope.insertDetallesGuardar= function(){
                 console.log("Error", error);
             });
             
-        }            
+        }   
+        $scope.recalcularConci= function(){
+            var parametros = {
+                idConciliacion:      $scope.idconciliacion
+            }
+            $('#mdlLoading').modal('show');
+            conciliacionFactory.recalcularConci(parametros).then(function(result) {
+                location.reload();
+                $('#mdlLoading').modal('hide');
+                swal("Ok", "Se actualizo con exito", "success");
+            }, function(error) {
+                console.log("Error", error);
+            });
+            
+        }     
+        $scope.recalcularConciFinMes= function(){
+            var parametros = {
+                idConciliacion:      $scope.idconciliacion
+            }
+            $('#mdlLoading').modal('show');
+            conciliacionFactory.recalcularConciCierreMes(parametros).then(function(result) {
+                location.reload();
+                $('#mdlLoading').modal('hide');
+                swal("Ok", "Se actualizo con exito", "success");
+            }, function(error) {
+                console.log("Error", error);
+            });
+            
+        }    
+        $scope.BorrarFilaConci= function(item){
+            $scope.borrafila=item;
+            $scope.fechaPromesa='';
+            $('#BorrarFilaConciliacion').modal('show');
+        }
+
+        $scope.BorrarFila= function(item){
+            var parametros = {
+                idConciliacion:      $scope.idconciliacion,
+                movimientoID:  $scope.borrafila.movimientoID,
+                vin:  $scope.borrafila.numeroSerie,
+                FechaFin: item
+            }
+            $('#mdlLoading').modal('show');
+            conciliacionFactory.BorrarFila(parametros).then(function(result) {
+                location.reload();
+                $('#mdlLoading').modal('hide');
+                swal("Ok", "Se borro con exito", "success");
+            }, function(error) {
+                console.log("Error", error);
+            });
+            
+        }     
+        $scope.seleccionarFilaConci= function(item){
+            $scope.seleccionarfila=item;
+            var parametros = {
+                idConciliacion:      $scope.idconciliacion,
+                vin:  $scope.seleccionarfila.numeroSerie
+            }
+     
+            conciliacionFactory.datosVin(parametros).then(function(result) {
+                $scope.lstTpp = result.data;
+                $('#SeleccionarFilaConciliacion').modal('show');
+            }, function(error) {
+                console.log("Error", error);
+            });
+           
+        }   
+        $scope.ActivarVin= function(item){
+            $scope.seleccionartpp=item;
+            var parametros = {
+                idConciliacion:      $scope.idconciliacion,
+                idmovimiento:  $scope.seleccionartpp.movimientoID
+            }
+     
+            conciliacionFactory.ActivarVin(parametros).then(function(result) {
+                $scope.lstTpp = result.data;
+            }, function(error) {
+                console.log("Error", error);
+            });
+           
+        } 
             
 });

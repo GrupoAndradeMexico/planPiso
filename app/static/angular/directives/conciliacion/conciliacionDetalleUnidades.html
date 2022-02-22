@@ -31,6 +31,9 @@
             </div>
             <div class="col-md-6 text-right">
                 <button type="button" class="btn btn-primary pull-right" ng-click="reporteConsulta()" >Carátula</button>
+                <button type="button" class="btn btn-primary pull-right" ng-click="recalcularConci()" ng-show="estatusConciliacion == 2">Recalcular Conciliacion</button>
+                <button type="button" class="btn btn-primary pull-right" ng-click="ActualizaSaldos()" ng-show="estatusConciliacion == 2">Actualizar Saldos</button>
+                
             </div>            
         </div>
     </div>
@@ -47,6 +50,7 @@
             <th>Saldo Financiera</th>
             <th>Diferencia</th>
             <th width="180">Situación</th>
+            <!-- <th>Acción</th> -->
         </tr>
     </thead>
     <tbody>
@@ -89,6 +93,10 @@
                 </table>
             </td>
             <!-- <td ng-class="dato.esMayor == 1 ? 'celdaFondoVerde' : dato.esMayor == 2 ? 'celdaFondoAmarillo' : 'celdaFondoRojo'  ">{{dato.diferencia| currency}}</td> -->
+            <!-- <td>
+                <button type="button" ng-show="dato.equiparante > 1" class="btn btn-danger" ng-click="BorrarFilaConci(dato)">Borrar</button>
+                <button type="button" ng-show="dato.equiparante > 1 || dato.saldo==0" class="btn btn-danger" ng-click="seleccionarFilaConci(dato)">Seleccionar Tpp</button>
+            </td> -->
         </tr>
     </tbody>
 </table>
@@ -125,5 +133,95 @@
             </div>
         </div>
     </div>
+</div>
+<!-- INICIA modal que muestra el reporte en pdf -->
+<!--===================================================-->
+<!-- <div id="BorrarFilaConciliacion" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="height: 300px;">
+            <div class="modal-header" style="background-color:#1f897f;">
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="pci-cross pci-circle" style="color:#fff;"></i>
+                </button>
+                <h4 class="modal-title text-center" id="myLargeModalLabel" style="color:#fff;">Conciliación</h4>
+            </div>
+            <div class="modal-body text-center">
+            <div class="col-sm-offset-4 col-sm-4">
+                <label>Para poder borrar la fila seleccione la fecha fin de plan piso</label>
+                <div class="input-group date" data-provide="datepicker" data-date-format="dd/mm/yyyy">
+                    <input type="text" class="form-control" ng-model="fechaPromesa">
+                    <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </div>
+                  
+                </div>
+
+            </div>
+                  <button type="submit" class="btn btn-primary pull-right" ng-click="BorrarFila(fechaPromesa)" ng-disabled="!fechaPromesa">Borrar fila</button>
+            </div>
+           
+        </div>
+    </div>
+</div> -->
+<!--INICIA modal que muestra el reporte en pdf -->
+<!--===================================================-->
+<!-- <div id="SeleccionarFilaConciliacion" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+   
+        <div class="modal-content" style="height: 300px;">
+            <div class="modal-header" style="background-color:#1f897f;">
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="pci-cross pci-circle" style="color:#fff;"></i>
+                </button>
+                <h4 class="modal-title text-center" id="myLargeModalLabel" style="color:#fff;">Conciliación</h4>
+            </div>
+            <div class="modal-body text-center">
+            <div class="col-sm-offset-2 col-sm-10">
+                <label>Seleccionar la tpp correcta</label>
+            </div class="row">
+                <table id="tblTpp" class="table table-hover borderless">
+                    <thead>
+                        <tr>
+                           
+                            <th>Vin</th>
+                            <th>TPP</th>
+                            <th>Activo</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="(key, dato) in lstTpp" repeat-end="setTableStyle('#tblConciliacion')">
+                          
+                            <td>{{dato.vin}}</td>
+                            <td>{{dato.CCP_IDDOCTO}}</td>
+                           
+                            <td> <input  type="checkbox"
+                                ng-checked="dato.active"
+                                ng-disabled="true">
+                            </td>
+                          
+                            <td>
+                                <button type="button"  class="btn btn-danger" ng-show="!dato.active" ng-click="ActivarVin(dato)">Activar</button>
+                               
+                                <div class="input-group date" data-provide="datepicker" data-date-format="dd/mm/yyyy" ng-show="dato.active">
+                                    <input type="text" class="form-control" ng-model="dato.fecha">
+                                    <div class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </div>
+                                  
+                                </div>
+                                <button type="button" class="btn btn-danger" ng-show="dato.active"  ng-click="DesactivarVin(dato)" ng-disabled="!dato.fecha">Desactivar</button>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            </div class="row">
+                  <button type="button" class="btn btn-primary pull-right" ng-click="recalcularConci()" >Cerrar y recalcular</button>
+                  <button type="button" class="btn btn-primary pull-right" data-dismiss="modal">Cerrar</button>
+            </div>
+           
+        </div>
+    </div>
+     -->
 </div>
 </div>

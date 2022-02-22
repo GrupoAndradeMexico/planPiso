@@ -350,7 +350,8 @@ ApiConciliacion.prototype.get_obtieneConciliacion = function(req, res, next) {
 
     var self = this;
     var params = [{ name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
-    { name: 'periodo', value: req.query.periodo, type: self.model.types.INT },];
+    { name: 'periodo', value: req.query.periodo, type: self.model.types.INT },
+    { name: 'anio', value: req.query.anio, type: self.model.types.INT }];
 
 
     self.model.query('CONC_OBTIENETODAS_SP', params, function(error, result) {
@@ -712,11 +713,83 @@ ApiConciliacion.prototype.get_ActualizaSaldos = function(req, res, next) {
     var self = this;
     var params = [{ name: 'empresaID', value: req.query.idEmpresa, type: self.model.types.INT },];
 
-    self.model.query('Usp_ActualizaSaldos', params, function(error, result) {
+    self.model.query('upd_actualizaCarteraPP', params, function(error, result) {
         self.view.expositor(res, {
             error: error,
             result: result
         });
     });
 };
+ApiConciliacion.prototype.get_recalcularConci = function(req, res, next) {
+
+    var self = this;
+    var params = [{ name: 'idConciliacion', value: req.query.idConciliacion, type: self.model.types.INT },];
+
+    self.model.query('Usp_recalcularConci', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+ApiConciliacion.prototype.get_recalcularConciCierreMes = function(req, res, next) {
+
+    var self = this;
+    var params = [{ name: 'idConciliacion', value: req.query.idConciliacion, type: self.model.types.INT },];
+
+    self.model.query('Usp_recalcularConciCierreMes', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+// ApiConciliacion.prototype.get_BorrarFila = function(req, res, next) {
+
+//     var self = this;
+//     var params = [
+//         { name: 'idConciliacion', value: req.query.idConciliacion, type: self.model.types.INT },
+//         { name: 'movimientoID', value: req.query.movimientoID, type: self.model.types.INT },
+//         { name: 'vin', value: req.query.vin, type: self.model.types.STRING },    
+       
+//     { name: 'FechaFin', value: req.query.FechaFin, type: self.model.types.STRING },
+// ];
+
+//     self.model.query('Usp_BorrarFilaConciliacionDet', params, function(error, result) {
+//         self.view.expositor(res, {
+//             error: error,
+//             result: result
+//         });
+//     });
+// };
+ApiConciliacion.prototype.get_datosVin = function(req, res, next) {
+
+    var self = this;
+    var params = [
+        { name: 'idConciliacion', value: req.query.idConciliacion, type: self.model.types.INT },
+        { name: 'vin', value: req.query.vin, type: self.model.types.STRING }
+];
+
+    self.model.query('Usp_datosVinConciliacionDet', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+// ApiConciliacion.prototype.get_ActivarVin = function(req, res, next) {
+
+//     var self = this;
+//     var params = [
+//         { name: 'idConciliacion', value: req.query.idConciliacion, type: self.model.types.INT },
+//         { name: 'movimientoid', value: req.query.idmovimiento, type: self.model.types.INT }
+// ];
+
+//     self.model.query('Usp_ActivarVinConciliacionDet', params, function(error, result) {
+//         self.view.expositor(res, {
+//             error: error,
+//             result: result
+//         });
+//     });
+// };
 module.exports = ApiConciliacion;
