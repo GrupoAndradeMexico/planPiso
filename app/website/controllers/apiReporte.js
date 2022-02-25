@@ -45,6 +45,19 @@ ApiReporte.prototype.get_reporteUnidades = function(req, res, next) {
         });
     });
 };
+ApiReporte.prototype.get_actualizarCartera = function(req, res, next) {
+
+    var self = this;
+
+    var params = [{ name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT }];
+    console.log(params)
+    self.model.query('upd_actualizaCarteraPP', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
 
 
 module.exports = ApiReporte;

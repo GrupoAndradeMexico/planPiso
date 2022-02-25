@@ -39,6 +39,16 @@ appModule.factory('reporteFactory', function($http) {
                 },
                 headers: { 'Content-Type': 'application/json' }
             });
+        },
+        actualizarCartera: function(idEmpresa) {
+            return $http({
+                url: reporteUrl + 'actualizarCartera/',
+                method: "GET",
+                params: {
+                    idEmpresa
+                },
+                headers: { 'Content-Type': 'application/json' }
+            });
         }
     };
 

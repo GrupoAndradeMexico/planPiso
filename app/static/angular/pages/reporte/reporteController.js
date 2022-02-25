@@ -789,4 +789,14 @@ appModule.controller('reporteController', function($scope, $rootScope, $location
             console.log($scope.lstEmpresa, 'LASEMPRESAS :S')
         });
     };
+    $scope.actualizarCartera = function(){
+        $('#mdlLoading').modal('show');
+        reporteFactory.actualizarCartera(sessionFactory.empresaID).then(function success(result){
+            $('#mdlLoading').modal('hide');
+            console.log(result.data);
+            location.reload();
+        }, function error(err){
+            console.log('Ocurrio un error al actualizar la cartera');
+        });
+    };
 });
