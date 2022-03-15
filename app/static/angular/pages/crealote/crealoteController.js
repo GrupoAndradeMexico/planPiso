@@ -1,4 +1,4 @@
-appModule.controller('crealoteController', function($scope, $rootScope, $location, $sce, $interval, crealoteFactory, commonFactory, staticFactory, filterFilter, uiGridConstants, uiGridGroupingConstants, utils, alertFactory, sacarunidadFactory, conciliacionFactory, $window, $timeout) {
+appModule.controller('crealoteController', function($scope, $rootScope, $location, $sce, $interval, $filter, crealoteFactory, commonFactory, staticFactory, filterFilter, uiGridConstants, uiGridGroupingConstants, utils, alertFactory, sacarunidadFactory, conciliacionFactory, $window, $timeout) {
     var sessionFactory = JSON.parse(sessionStorage.getItem("sessionFactory"));
     $scope.lstPermisoBoton = JSON.parse(sessionStorage.getItem("PermisoUsuario"));
     $scope.idUsuario = localStorage.getItem("idUsuario");
@@ -11,6 +11,12 @@ appModule.controller('crealoteController', function($scope, $rootScope, $locatio
 
     var myDropzone;
     var cargaInfoGridLotes = function() {
+        crealoteFactory.cuentaInteres(sessionFactory.empresaID).then(function success(result) {
+            $scope.selectCuentasInteres = result.data;
+            console.log(result.data, 'INTERESEEEES')
+        }, function error(err) {
+            console.log(err, 'Ocurrio un erro al intentar obtener la cuenta de intereses')
+        });
         $scope.sumaDocumentos = undefined;
         var valor = _.where($scope.lstPermisoBoton, { idModulo: 11, Boton: "guardarLote" })[0];
         $scope.BotonGuardarLote = valor != undefined;
@@ -840,8 +846,8 @@ appModule.controller('crealoteController', function($scope, $rootScope, $locatio
                             console.log('Ocurrio un error al intentar obtener el interes de la unidad')
                         });
 
-                    }else{
-                        console.log(row.documento,' ', row.numeroSerie, 'ESTE ES EL PROBLEMAAAAAAAA', row.saldo, ' ' , row.Pagar)
+                    } else {
+                        console.log(row.documento, ' ', row.numeroSerie, 'ESTE ES EL PROBLEMAAAAAAAA', row.saldo, ' ', row.Pagar)
                     }
                     if ((row.convenioCIE == null) || (row.convenioCIE == undefined) || (row.convenioCIE == "")) {
                         pasaxCIE = true;
@@ -1005,7 +1011,8 @@ appModule.controller('crealoteController', function($scope, $rootScope, $locatio
                                                 'idproveedor': idProveedor,
                                                 'saldoDocumento': value.saldo,
                                                 'saldoInteres': value.totalInteres,
-                                                'idUsuario': $scope.idUsuario
+                                                'idUsuario': $scope.idUsuario,
+                                                'idCuenta': value.idCuenta
                                             };
                                             promises.push(sacarunidadFactory.polizaInteres(objetoPoliza));
                                         })
@@ -1053,7 +1060,7 @@ appModule.controller('crealoteController', function($scope, $rootScope, $locatio
                                             });
                                             Promise.all(promisesBitacora).then(function response(result) {
                                                 console.log('Termino Bitacora');
-                                                window.location = "/sacarunidad";
+                                                window.location = "/crealote";
                                             });
                                         });
                                     } else {
@@ -1469,7 +1476,7 @@ appModule.controller('crealoteController', function($scope, $rootScope, $locatio
         myDropzone.processQueue();
     };
     var execelFields = [];
-    $scope.readLayout = function(filename) {        
+    $scope.readLayout = function(filename) {
         $scope.gridApi1.selection.clearSelectedRows();
         conciliacionFactory.readLayout(filename).then(function(result) {
             var LayoutFile = result.data;
@@ -1481,7 +1488,7 @@ appModule.controller('crealoteController', function($scope, $rootScope, $locatio
             }
 
             execelFields = $scope.arrayToObject(aux);
-            guardaBitacoraExcel();            
+            guardaBitacoraExcel();
         }, function(error) {
             console.log("Error", error);
         });
@@ -1610,7 +1617,19 @@ appModule.controller('crealoteController', function($scope, $rootScope, $locatio
                 value.cuentaDestino = cuenta;
             }
         });
-    }
+    };
+    // $scope.customFilter = function(row, index) {
+    //     console.log(row, index);
+    //     console.log($filter('filter')($scope.selectCuentasInteres, {'CTA_NUMCTA':row}));
+    //     let filtroInteres = $filter('filter')($scope.selectCuentasInteres, {'CTA_NUMCTA':row});
+    //     $scope.arrayInteresUnidad[index].cuentaSeleccion = filtroInteres[0];
+    //     console.log($scope.arrayInteresUnidad);
+    //     // if (row.CTA_NUMCTA.includes("Tech")) {
+    //     //     return true;
+    //     // } else {
+    //     //     return false;
+    //     // }
+    // }
     /////////-----------------------------
     //FAL crea los campos del grid y las rutinas en los eventos del grid.
 
@@ -1638,4 +1657,5 @@ appModule.controller('crealoteController', function($scope, $rootScope, $locatio
     // $scope.regresar = function(){
     //     location.reload();
     // }    
+
 });

@@ -91,10 +91,12 @@ Apisacarunidad.prototype.get_polizaInteres = function(req, res, next) {
         { name: 'idproveedor', value: req.query.idproveedor, type: self.model.types.INT },
         { name: 'saldoDocumento', value: req.query.saldoDocumento, type: self.model.types.DECIMAL },
         { name: 'saldoInteres', value: req.query.saldoInteres, type: self.model.types.DECIMAL },
-        { name: 'idUsuario', value: req.query.idUsuario, type: self.model.types.INT }
+        { name: 'idUsuario', value: req.query.idUsuario, type: self.model.types.INT },
+        { name: 'idCuenta', value: req.query.idCuenta, type: self.model.types.INT }
     ];
-    console.log(params)
+    // console.log(params)
     self.model.query('UspGeneraOrdenCompra_SP', params, function(error, result) {
+        // console.log(error, result)
         self.view.expositor(res, {
             error: error,
             result: result

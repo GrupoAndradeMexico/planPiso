@@ -11,6 +11,12 @@ appModule.controller('sacarunidadController', function($scope, $rootScope, $loca
     $scope.BotonGuardarLote = false;
     $scope.agrupado = 1;
     var cargaInfoGridLotes = function() {
+        crealoteFactory.cuentaInteres(sessionFactory.empresaID).then(function success(result) {
+            $scope.selectCuentasInteres = result.data;
+            console.log(result.data, 'INTERESEEEES')
+        }, function error(err) {
+            console.log(err, 'Ocurrio un erro al intentar obtener la cuenta de intereses')
+        });
         $scope.sumaDocumentos = undefined;
         var valor = _.where($scope.lstPermisoBoton, { idModulo: 8, Boton: "guardarLote" })[0];
         $scope.BotonGuardarLote = valor != undefined;
@@ -977,7 +983,8 @@ appModule.controller('sacarunidadController', function($scope, $rootScope, $loca
                                                 'idproveedor': idProveedor,
                                                 'saldoDocumento': value.saldo,
                                                 'saldoInteres': value.totalInteres,
-                                                'idUsuario': $scope.idUsuario
+                                                'idUsuario': $scope.idUsuario,
+                                                'idCuenta': value.idCuenta
                                             };
                                             promises.push(sacarunidadFactory.polizaInteres(objetoPoliza));
                                         })

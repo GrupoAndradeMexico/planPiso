@@ -129,6 +129,14 @@ appModule.factory('crealoteFactory', function($http) {
                 data: data,
                 headers: { 'Content-Type': 'application/json' }
             });
+        },
+        cuentaInteres: function(idEmpresa) {
+            return $http({
+                url: crealoteUrl + 'cuentaInteres/',
+                method: "GET",
+                params: { idEmpresa },
+                headers: { 'Content-Type': 'application/json' }
+            });
         }
     };
 });
