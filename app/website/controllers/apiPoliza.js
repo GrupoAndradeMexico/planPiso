@@ -45,6 +45,7 @@ ApiPoliza.prototype.get_CancelaPoliza= function(req, res, next) {
     { name: 'documento', value: req.query.documento, type: self.model.types.STRING },
     { name: 'fechabusqueda', value: req.query.fechabusqueda, type: self.model.types.STRING },
     { name: 'horabusqueda', value: req.query.horabusqueda, type: self.model.types.STRING },
+    { name: 'fechaSeleccionada', value: req.query.fecha, type: self.model.types.STRING }
           ];
 
     self.model.query('Usp_CancelaCompensacion', params, function(error, result) {
