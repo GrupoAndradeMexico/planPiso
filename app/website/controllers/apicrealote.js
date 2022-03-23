@@ -47,8 +47,8 @@ Apicrealote.prototype.get_documentos = function(req, res, next) {
 Apicrealote.prototype.get_poliza = function(req, res, next) {
 
     var self = this;
-    console.log('hi');
-    console.log(req.query.tipo, req.query.factura, req.query.nodo)
+    // console.log('hi');
+    // console.log(req.query.tipo, req.query.factura, req.query.nodo)
 
     var url = this.conf.parameters.WSGeneraPdf;
     if (req.query.tipo && req.query.annio && req.query.mes && req.query.No && req.query.empresa) {
@@ -60,18 +60,18 @@ Apicrealote.prototype.get_poliza = function(req, res, next) {
             Empresa: req.query.empresa
         };
         soap.createClient(url, function(err, client) {
-            console.log(url)
+            // console.log(url)
             if (err) {
-                console.log('Error 4', err)
+                // console.log('Error 4', err)
 
                 self.view.expositor(res, {
                     mensaje: "Hubo un problema intente de nuevo",
                 });
             } else {
-                console.log(args)
+                // console.log(args)
                 client.GeneraPdfPolizaCompra(args, function(err, result, raw) {
                     if (err) {
-                        console.log('Error 3', err)
+                        // console.log('Error 3', err)
 
                         self.view.expositor(res, {
                             mensaje: "Hubo un problema intente de nuevo",
@@ -79,7 +79,7 @@ Apicrealote.prototype.get_poliza = function(req, res, next) {
                     } else {
                         parseString(raw, function(err, result) {
                             if (err) {
-                                console.log('Error 2', err)
+                                // console.log('Error 2', err)
 
                                 self.view.expositor(res, {
                                     mensaje: "Hubo un problema intente de nuevo",
@@ -101,7 +101,7 @@ Apicrealote.prototype.get_poliza = function(req, res, next) {
             }
         });
     } else {
-        console.log('Error 1')
+        // console.log('Error 1')
         self.view.expositor(res, {
             mensaje: "Hubo un problema intente de nuevo",
         });
@@ -147,7 +147,7 @@ Apicrealote.prototype.post_encabezadoPagos = function(req, res, next) {
         { name: 'cifraControl', value: req.body.cifraControl, type: self.model.types.INT },
         { name: 'interesAgrupado', value: req.body.interesAgrupado, type: self.model.types.INT }
     ];
-    console.log(params, 'INS_PAG_PROG_PAGOS_SP')
+    // console.log(params, 'INS_PAG_PROG_PAGOS_SP')
     self.model.query('INS_PAG_PROG_PAGOS_SP', params, function(error, result) {
         self.view.expositor(res, {
             error: error,

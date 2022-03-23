@@ -53,10 +53,10 @@ Apisacarunidad.prototype.get_interesUnidad = function(req, res, next) {
         { name: 'idfinanciera', value: req.query.idProveedor, type: self.model.types.INT },
         { name: 'saldo', value: req.query.monto, type: self.model.types.DECIMAL }
     ];
-    console.log(params)
+    // console.log(params)
     self.model.queryAllRecordSet('Usp_CalculaPagoInteres_INS', params, function(error, result) {
-        console.log(result)
-        console.log(error)
+        // console.log(result)
+        // console.log(error)
         self.view.expositor(res, {
             error: error,
             result: result
@@ -72,8 +72,8 @@ Apisacarunidad.prototype.get_encabezadoPreLote = function(req, res, next) {
         { name: 'idProveedor', value: req.query.idProveedor, type: self.model.types.INT }
     ];
     self.model.query('upd_preLote_sp', params, function(error, result) {
-        console.log(result)
-        console.log(error)
+        // console.log(result)
+        // console.log(error)
         self.view.expositor(res, {
             error: error,
             result: result
@@ -84,17 +84,23 @@ Apisacarunidad.prototype.get_encabezadoPreLote = function(req, res, next) {
 Apisacarunidad.prototype.get_polizaInteres = function(req, res, next) {
 
     var self = this;
+    let interes = req.query.saldoInteres;
+    console.log(typeof interes)
+    if(typeof interes == "string"){
+        console.log('entre')
+        interes = interes.replace(/,/g, "");;
+    }
 
     var params = [{ name: 'idPreLote', value: req.query.idPreLote, type: self.model.types.INT },
         { name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
         { name: 'documento', value: req.query.documento, type: self.model.types.STRING },
         { name: 'idproveedor', value: req.query.idproveedor, type: self.model.types.INT },
         { name: 'saldoDocumento', value: req.query.saldoDocumento, type: self.model.types.DECIMAL },
-        { name: 'saldoInteres', value: req.query.saldoInteres, type: self.model.types.DECIMAL },
+        { name: 'saldoInteres', value: interes, type: self.model.types.DECIMAL },
         { name: 'idUsuario', value: req.query.idUsuario, type: self.model.types.INT },
         { name: 'idCuenta', value: req.query.idCuenta, type: self.model.types.INT }
     ];
-    // console.log(params)
+     // console.log(params)
     self.model.query('UspGeneraOrdenCompra_SP', params, function(error, result) {
         // console.log(error, result)
         self.view.expositor(res, {
@@ -126,7 +132,7 @@ Apisacarunidad.prototype.post_bitacorainteres = function(req, res, next) {
         { name: 'idLote', value: req.body.idLote, type: self.model.types.INT },
         { name: 'tasa', value: req.body.tasa, type: self.model.types.DECIMAL }
     ];
-    console.log(params)
+    // console.log(params)
     self.model.query('INS_logInteresOrdendecompra_SP', params, function(error, result) {
         self.view.expositor(res, {
             error: error,
