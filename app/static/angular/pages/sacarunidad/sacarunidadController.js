@@ -277,7 +277,7 @@ appModule.controller('sacarunidadController', function($scope, $rootScope, $loca
                 displayName: 'Orden de compra',
                 width: '13%',
                 enableCellEdit: false,
-                cellTemplate: '<div class="urlTabla" ng-class="col.colIndex()" ><a tooltip="Ver en digitalización" class="urlTabla" href="http://192.168.20.92:3200/?id={{row.entity.ordenCompra}}&employee=' + $scope.idUsuario + '&proceso=1" target="_new">{{row.entity.ordenCompra}}</a></div>'
+                cellTemplate: '<div class="urlTabla" ng-class="col.colIndex()" ><a tooltip="Ver en digitalización" class="urlTabla" href="http://192.168.20.89:3200/?id={{row.entity.ordenCompra}}&employee=' + $scope.idUsuario + '&proceso=1" target="_new">{{row.entity.ordenCompra}}</a></div>'
             },
             {
                 name: 'monto',
