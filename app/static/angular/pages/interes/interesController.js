@@ -1118,6 +1118,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
 
                             Promise.all(facturas).then(function(results) {
                                 console.log(results, 'Facturaaaas')
+                                $scope.facturasTotal = [];
                                 var contadorFacturas = 0;
                                 $scope.ocGarantias = [];
                                 angular.forEach(results, function(value, key) {
@@ -1934,6 +1935,19 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         $scope.sumaTotalCXP();
         $scope.sumaTotalCXC();
     }
+    $scope.validaCD = function(saldo, newValue, oldValue, index){
+        console.log(saldo, newValue, oldValue, index, 'CD VALIDA');
+        if(saldo == 0){
+            $scope.facturasCompensacion[index].montoCompensar = 0;
+            alertFactory.warning('El documento no tiene saldo');
+        }else if(newValue <= saldo){
+            $scope.facturasCompensacion[index].montoCompensar = newValue;
+        }else{
+            $scope.facturasCompensacion[index].montoCompensar = oldValue;
+            alertFactory.warning('No puede ingresar un valor mayor al saldo');
+        }
+        $scope.totalCompensar();
+    };
     $scope.totalCompensar = function() {
         $scope.montoCompensar = 0;
         $scope.saldoCXC = 0;
