@@ -122,9 +122,16 @@
             <th>Colateral</th>
             <th>Cuenta</th>
             <th>Moneda</th>
-            <th>Saldo G.A.</th>
-            <th>Saldo Financiera</th>
             <th>Interes Acumulado Grupo Andrade</th>
+            <th>Saldo Financiera</th>            
+            <th>Saldo G.A.</th>
+            <th>Spread</th>
+            <th>Tiie</th>
+            <th>Fecha Tiie</th>
+            <th>Penetracion</th>
+            <th>Fecha Inicio</th>
+            <th>Fecha Fin</th>
+            <th>Dias</th>
             <th>Interes Grupo Andrade</th>
             <th>Interes Financiera</th>
             <th ng-show="ajusteManual">Ajuste de Interes</th>
@@ -149,9 +156,16 @@
             <td>{{dato.descrip}}</td>
             <td>{{dato.numcta}}</td>
             <td>{{dato.moneda}}</td>
-            <td>{{dato.saldo | currency}}</td>
-            <td>{{dato.valor | currency}}</td>
             <td>{{dato.InteresAcumulado | currency}}</td>
+            <td>{{dato.valor | currency}}</td>
+            <td>{{dato.saldo | currency}}</td>
+            <td>{{dato.puntos | number }}</td>
+            <td>{{dato.tiie | number }}</td>
+            <td>{{dato.fechatiie}}</td>
+            <td>{{dato.penetracion | number }}</td>
+            <td>{{dato.fechainicio}}</td>
+            <td>{{dato.fechafin}}</td>
+            <td>{{dato.dias}}</td>
             <td>{{dato.InteresMesActual | currency}}</td>
             <td>{{dato.interes | currency}}</td>
             <td ng-show="ajusteManual" width="120" style="border-left: solid 1px #ddd; 
