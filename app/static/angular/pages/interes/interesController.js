@@ -1032,7 +1032,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                             console.log(result.data[0][0].FechaHoy, result.data[0][0].fecha, 'Soy la fecha de cierre de mes y la de hoy')
                             $scope.fechaCierreMes = result.data[0][0].fecha;
                             $scope.fechaDiaHoy = result.data[0][0].FechaHoy;
-                            if($scope.fechaCierreMes != $scope.fechaDiaHoy){
+                            if ($scope.fechaCierreMes != $scope.fechaDiaHoy) {
                                 $scope.mostrarFechasElegir = true;
                             }
                         }, function error(err) {
@@ -1294,49 +1294,75 @@ appModule.controller('interesController', function($scope, $rootScope, $location
     };
     $scope.setPnlCompensacionResumen = function(saldoCompensar, fecha) {
         $scope.fechaCompensacion = fecha;
-        console.log(fecha, 'Soy la fecha que el usuario selecciono')
-        $scope.mostrarMensajeFecha = '';
-        if ($scope.fechaCierreMes != $scope.fechaDiaHoy && !fecha) {
-            swal("Aviso", "Debe seleccionar una fecha", "warning");
+        // console.log(fecha, 'Soy la fecha que el usuario selecciono')
+        // console.log($scope.facturasTotal, 'Validar estas factura');
+        // console.log($scope.facturasCompensacion, 'Validar CD')
+        let auxFechaE = fecha.split('/');
+        $scope.documentoFecha = '';
+        console.log(auxFechaE[2] + '-' + (auxFechaE[1] - 1).toString() + '-' + auxFechaE[0]);
+        let fechaEaux = new Date(auxFechaE[2] + '-' + (auxFechaE[1] - 1).toString() + '-' + auxFechaE[0]);
+        angular.forEach($scope.facturasTotal, function(value, key) {
+            let auxFecha = value.fecha.split('/');
+            console.log(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
+            let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
+            if (fechaFaux > fechaEaux) {
+                $scope.documentoFecha = $scope.documentoFecha + value.factura + ',';
+            }
+        });
+        angular.forEach($scope.facturasCompensacion, function(value, key) {
+            let auxFecha = value.fecha.split('/');
+            console.log(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
+            let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
+            if (fechaFaux > fechaEaux) {
+                $scope.documentoFecha = $scope.documentoFecha + value.factura + ',';
+            }
+        });
+        if ($scope.documentoFecha) {
+            swal("Aviso", "El documento " + $scope.documentoFecha + " tiene una fecha posterior, no puede realziar la compensación", "warning");
         } else {
-            var isok = 0;
-            if (saldoCompensar - $scope.saldoFinanciera <= 0) {
-                $scope.currentPanel = "pnlCompensacionResumen";
-                $scope.saldoCompensar = saldoCompensar;
+            $scope.mostrarMensajeFecha = '';
+            if ($scope.fechaCierreMes != $scope.fechaDiaHoy && !fecha) {
+                swal("Aviso", "Debe seleccionar una fecha", "warning");
             } else {
-                // swal("Aviso", "No puede ser mayor el saldo a compensar que el saldo e la financiera", "warning");
-                if (fecha) {
-                    $scope.mostrarMensajeFecha = 'con la fecha: ' + fecha;
-                }
-                swal({
-                    title: "¿Esta seguro?",
-                    text: "Se creara la compensación para la unidad seleccionada " + $scope.mostrarMensajeFecha + ".",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#21B9BB",
-                    confirmButtonText: "Aplicar",
-                    closeOnConfirm: true
-                }, function() {
-                    $scope.totalCompensar();
-                    $scope.sumaTotalCXP();
-                    $scope.sumaTotalCXC();
-                    $('#mdlLoading').modal('hide');
-                    var paraCompensacion = {
-                        idUsuario: $scope.idUsuario,
-                        idEmpresa: sessionFactory.empresaID,
-                        idtipopoliza: 8 //cambio de financiera
+                var isok = 0;
+                if (saldoCompensar - $scope.saldoFinanciera <= 0) {
+                    $scope.currentPanel = "pnlCompensacionResumen";
+                    $scope.saldoCompensar = saldoCompensar;
+                } else {
+                    // swal("Aviso", "No puede ser mayor el saldo a compensar que el saldo e la financiera", "warning");
+                    if (fecha) {
+                        $scope.mostrarMensajeFecha = 'con la fecha: ' + fecha;
                     }
+                    swal({
+                        title: "¿Esta seguro?",
+                        text: "Se creara la compensación para la unidad seleccionada " + $scope.mostrarMensajeFecha + ".",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#21B9BB",
+                        confirmButtonText: "Aplicar",
+                        closeOnConfirm: true
+                    }, function() {
+                        $scope.totalCompensar();
+                        $scope.sumaTotalCXP();
+                        $scope.sumaTotalCXC();
+                        $('#mdlLoading').modal('hide');
+                        var paraCompensacion = {
+                            idUsuario: $scope.idUsuario,
+                            idEmpresa: sessionFactory.empresaID,
+                            idtipopoliza: 8 //cambio de financiera
+                        }
 
-                    interesFactory.cabeceraPoliza(paraCompensacion).then(function(respuesta) {
-                        $scope.LastId = respuesta.data[0].LastId;
-                        $scope.lstUnitsCompensacion = filterFilter($scope.lstNewUnits, { isChecked: true });
-                        $scope.guardaCompensacionDetalle();
-                    }, function(error) {
-                        $scope.error(error.data.Message);
+                        interesFactory.cabeceraPoliza(paraCompensacion).then(function(respuesta) {
+                            $scope.LastId = respuesta.data[0].LastId;
+                            $scope.lstUnitsCompensacion = filterFilter($scope.lstNewUnits, { isChecked: true });
+                            $scope.guardaCompensacionDetalle();
+                        }, function(error) {
+                            $scope.error(error.data.Message);
+                        });
+                        // $scope.setPnlInteres();
                     });
-                    // $scope.setPnlInteres();
-                });
 
+                }
             }
         }
 
@@ -1935,14 +1961,14 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         $scope.sumaTotalCXP();
         $scope.sumaTotalCXC();
     }
-    $scope.validaCD = function(saldo, newValue, oldValue, index){
+    $scope.validaCD = function(saldo, newValue, oldValue, index) {
         console.log(saldo, newValue, oldValue, index, 'CD VALIDA');
-        if(saldo == 0){
+        if (saldo == 0) {
             $scope.facturasCompensacion[index].montoCompensar = 0;
             alertFactory.warning('El documento no tiene saldo');
-        }else if(newValue <= saldo){
+        } else if (newValue <= saldo) {
             $scope.facturasCompensacion[index].montoCompensar = newValue;
-        }else{
+        } else {
             $scope.facturasCompensacion[index].montoCompensar = oldValue;
             alertFactory.warning('No puede ingresar un valor mayor al saldo');
         }
@@ -2123,6 +2149,8 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             console.log(result.data)
             $scope.facturasCompensacion[index].importe = result.data[0].cargo;
             $scope.facturasCompensacion[index].saldo = result.data[0].saldo;
+            $scope.facturasCompensacion[index].fecha = result.data[0].fecha;
+            $scope.facturasCompensacion[index].factura = result.data[0].documento;
         }, function error(err) {
             console.log('Ocurrió un problema al intentar obtener los datos de la factura de Comision dealer');
         });
