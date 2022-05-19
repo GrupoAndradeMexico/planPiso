@@ -923,4 +923,38 @@ ApiInteres.prototype.get_fechaCierreMes = function(req, res, next) {
         });
     });
 };
+ApiInteres.prototype.get_getFinancial = function(req, res, next) {
+
+    var self = this;
+
+    var params = [{ name: 'empresaId', value: req.query.empresaId, type: self.model.types.INT }
+    ];
+
+    self.model.query('uspGetFinancieraSpread', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+ApiInteres.prototype.get_saveSpreadFecha = function(req, res, next) {
+
+    var self = this;
+
+    var params = [{ name: 'idempresa', value: req.query.idempresa, type: self.model.types.INT },
+        { name: 'idfinanciera', value: req.query.idfinanciera, type: self.model.types.INT },
+        { name: 'puntos', value: req.query.puntos, type: self.model.types.DECIMAL },
+        { name: 'tiie', value: req.query.tiie, type: self.model.types.DECIMAL },
+        { name: 'penetracion', value: req.query.penetracion, type: self.model.types.DECIMAL },
+        { name: 'fecha', value: req.query.fecha, type: self.model.types.STRING }
+      
+    ];
+
+    self.model.query('uspSaveSpreadsFecha', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
 module.exports = ApiInteres;

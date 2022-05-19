@@ -15,6 +15,7 @@
                     <th>Penetracion</th>
                     <th>Mes</th>
                     <th>Año</th>
+                    <th>Fecha</th>
                     <th></th>
                     
                     <!-- <th></th> -->
@@ -30,13 +31,12 @@
                     <td>{{item.penetracion}}</td>
                     <td>{{item.mes}}</td>
                     <td>{{item.anio}}</td>
+                    <td>{{item.fecha}}</td>
                    <td>
                         <button type="button" class="btn btn-default" ng-click="editDetail(item)">
                             <span class="glyphicon glyphicon-edit"></span>
                         </button>
-                        <button type="button" class="btn btn-default" ng-click="">
-                            <span class="glyphicon glyphicon-trash"></span>
-                        </button>
+                       
                     </td> 
                 </tr>
             </tbody>
@@ -65,7 +65,7 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li ng-repeat="financial in lstFinancial">
+                                        <li ng-repeat="financial in lstFinanciale">
                                             <a ng-click="setCurrentFinance2(financial)">{{financial.nombre}}</a>
                                         </li>
                                     </ul>
@@ -83,25 +83,51 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="fpenetracion" ng-model="penetracion" placeholder="Ej.: 10">
                                 </div>
-                                <label for="fmes">Mes:</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="fmes" ng-model="mes" placeholder="Ej.: 10">
+                                <div ng-show="currentFinancial2.tipo==1">
+                                    <label for="fmes">Mes:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="fmes" ng-model="mes" placeholder="Ej.: 10">
+                                    </div>
+                                    <label for="fanio">Año:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="fanio" ng-model="anio" placeholder="Ej.: 2020">
+                                    </div>
                                 </div>
-                                <label for="fanio">Año:</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="fanio" ng-model="anio" placeholder="Ej.: 2020">
+                                <div ng-show="currentFinancial2.tipo==2">
+                                    <div class="form-group" id="calendar">
+                                        <label for="fInicio">Fecha:</label>
+                                        <div class="input-group date" data-provide="datepicker" data-date-format="dd/mm/yyyy" ng-model="fecha">
+                                            <input type="text" id="fInicio" class="form-control" ng-model="fecha">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                                
-                            <div class="form-group">
+                            <div ng-show="currentFinancial2.tipo==1">
+                                <div class="form-group">
                             
-                            <button type="button" class="btn btn-default" ng-click="CancelarDetail()">
-                                <span class="glyphicon glyphicon-floppy-remove"></span>
-                            </button>
-                            <button type="button" class="btn btn-default" ng-click="GuardarDetail(puntos,tiie,penetracion,mes,anio)">
-                                <span class="glyphicon glyphicon-floppy-disk"></span>
-                            </button>
+                                    <button type="button" class="btn btn-default" ng-click="CancelarDetail()">
+                                        <span class="glyphicon glyphicon-floppy-remove"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-default" ng-click="GuardarDetalleSpread(puntos,tiie,penetracion,mes,anio)">
+                                        <span class="glyphicon glyphicon-floppy-disk"></span>
+                                    </button>
+                                    </div>
                             </div>
+                            <div ng-show="currentFinancial2.tipo==2">
+                                <div class="form-group">
+                            
+                                    <button type="button" class="btn btn-default" ng-click="CancelarDetail()">
+                                        <span class="glyphicon glyphicon-floppy-remove"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-default" ng-click="GuardarDetalleSpreadCalendar(puntos,tiie,penetracion,fecha)">
+                                        <span class="glyphicon glyphicon-floppy-disk"></span>
+                                    </button>
+                                    </div>
+                            </div>
+                           
                         </div>
                         
                         <a class="btn btn-default pull-right" data-dismiss="modal"> Cerrar </a>

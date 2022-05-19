@@ -124,6 +124,9 @@ appModule.controller('interesController', function($scope, $rootScope, $location
     commonFactory.getFinancial(sessionFactory.empresaID).then(function(result) {
         $scope.lstFinancial = result.data;
     });
+    interesFactory.getFinancial(sessionFactory.empresaID).then(function(result) {
+        $scope.lstFinanciale = result.data;
+    });
     $scope.checkUnits = function(value) {
 
         $scope.showButtons = _.where($scope.lstNewUnits, { isChecked: true }).length > 0;
@@ -246,6 +249,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
     }
     $scope.setCurrentFinance2 = function(financialObj) {
         //  $scope.currentPanel = "pnlResumen";
+       
         $rootScope.currentFinancialName2 = financialObj.nombre;
         $rootScope.currentFinancial2 = financialObj;
         $rootScope.currentSchemaName2 = 'Seleccione Esquema';
@@ -382,11 +386,11 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         $scope.penetracion = edit.penetracion;
         $scope.mes = edit.mes;
         $scope.anio = edit.anio;
-        $scope.currentFinancial2 = _.where($scope.lstFinancial, { financieraID: edit.idfinanciera });
-        $scope.currentFinancialName2 = $scope.currentFinancial2[0].nombre;
+        $scope.currentFinancial2 = _.where($scope.lstFinancial, { financieraID: edit.idfinanciera })[0];
+        $scope.currentFinancialName2 = $scope.currentFinancial2.nombre;
 
     };
-    commonFactory.getFinancial($scope.session.empresaID).then(function(result) {
+    interesFactory.getFinancial($scope.session.empresaID).then(function(result) {
         $scope.lstFinancial = result.data;
 
     });
@@ -396,10 +400,10 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         $scope.currentFinancial2 = financialObj;
         // $scope.getNewUnitsBySucursal(sessionFactory.empresaID, $scope.currentSucursal.sucursalID);
     };
-    $scope.GuardarDetail = function(puntos, tiie, penetracion, mes, anio) {
+    $scope.GuardarDetalleSpread = function(puntos, tiie, penetracion, mes, anio) {
         var data = {
             idempresa: sessionFactory.empresaID,
-            idfinanciera: $scope.currentFinancial2[0].financieraID,
+            idfinanciera: $scope.currentFinancial2.financieraID,
             puntos: puntos,
             tiie: tiie,
             penetracion: penetracion,
@@ -407,6 +411,29 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             anio: anio
         };
         interesFactory.saveSpread(data).then(function(resultSchema) {
+
+            commonFactory.getSpreads(sessionFactory.empresaID).then(function(result) {
+                if (result.data.length > 0) {
+                    $scope.lstSpreads = result.data[0];
+
+
+                }
+                $('#selectReporte').modal('hide');
+                swal("Ok", "Se guardo con exito", "success");
+            });
+        });
+
+    }
+    $scope.GuardarDetalleSpreadCalendar = function(puntos, tiie, penetracion, fecha) {
+        var data = {
+            idempresa: sessionFactory.empresaID,
+            idfinanciera: $scope.currentFinancial2.financieraID,
+            puntos: puntos,
+            tiie: tiie,
+            penetracion: penetracion,
+            fecha: fecha
+        };
+        interesFactory.saveSpreadFecha(data).then(function(resultSchema) {
 
             commonFactory.getSpreads(sessionFactory.empresaID).then(function(result) {
                 if (result.data.length > 0) {

@@ -531,7 +531,25 @@ appModule.factory('interesFactory', function($http) {
                 headers: { 'Content-Type': 'application/json' }
             });
         }
+        ,
+        getFinancial: function(empresaId) {
+            return $http({
+                url: interesesUrl + 'getFinancial/',
+                method: "GET",
+                params: {
+                    empresaId: empresaId
+                },
 
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },saveSpreadFecha: function(params) {
+            return $http({
+                url: interesesUrl + 'saveSpreadFecha/',
+                method: "GET",
+                params: params,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },
 
     };
 });
