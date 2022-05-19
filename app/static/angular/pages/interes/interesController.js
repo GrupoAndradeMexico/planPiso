@@ -249,7 +249,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
     }
     $scope.setCurrentFinance2 = function(financialObj) {
         //  $scope.currentPanel = "pnlResumen";
-       
+
         $rootScope.currentFinancialName2 = financialObj.nombre;
         $rootScope.currentFinancial2 = financialObj;
         $rootScope.currentSchemaName2 = 'Seleccione Esquema';
@@ -365,6 +365,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
     /////////////////////////
     $scope.setPnlSpread = function() {
         $scope.currentPanel = "pnlSpread";
+        $scope.setResetTable('tablaSpread', 'Tabla Spread', 10);
         //  location.reload();
         //  $scope.showwarningspread=true;
     };
@@ -372,6 +373,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         if (result.data.length > 0) {
             if ($scope.lstSpreads == undefined) {
                 $scope.lstSpreads = result.data[0];
+
             }
         }
     });
