@@ -1323,10 +1323,14 @@ appModule.controller('interesController', function($scope, $rootScope, $location
     };
     $scope.setPnlCompensacionResumen = function(saldoCompensar, fecha) {
         $scope.fechaCompensacion = fecha;
+        var fechaComparar = fecha;
         // console.log(fecha, 'Soy la fecha que el usuario selecciono')
         // console.log($scope.facturasTotal, 'Validar estas factura');
         // console.log($scope.facturasCompensacion, 'Validar CD')
-        let auxFechaE = fecha.split('/');
+        if(!fechaComparar){
+            fechaComparar = $scope.fechaDiaHoy;
+        }
+        let auxFechaE = fechaComparar.split('/');
         $scope.documentoFecha = '';
         console.log(auxFechaE[2] + '-' + (auxFechaE[1] - 1).toString() + '-' + auxFechaE[0]);
         let fechaEaux = new Date(auxFechaE[2] + '-' + (auxFechaE[1] - 1).toString() + '-' + auxFechaE[0]);
