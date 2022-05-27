@@ -392,7 +392,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         $scope.currentFinancialName2 = $scope.currentFinancial2.nombre;
 
     };
-    interesFactory.getFinancial($scope.session.empresaID).then(function(result) {
+    commonFactory.getFinancial($scope.session.empresaID).then(function(result) {
         $scope.lstFinancial = result.data;
 
     });
