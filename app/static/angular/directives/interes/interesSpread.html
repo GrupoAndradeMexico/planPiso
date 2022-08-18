@@ -13,6 +13,7 @@
                     <th>Spread</th>
                     <th>Tiie</th>
                     <th>Penetracion</th>
+                    <th>Quincena</th>
                     <th>Mes</th>
                     <th>Año</th>
                     <th>Fecha</th>
@@ -29,6 +30,7 @@
                     <td>{{item.puntos}}</td>
                     <td>{{item.tiie}}</td>
                     <td>{{item.penetracion}}</td>
+                    <td>{{item.quincena}}</td>
                     <td>{{item.mes}}</td>
                     <td>{{item.anio}}</td>
                     <td>{{item.fecha}}</td>
@@ -84,6 +86,10 @@
                                     <input type="text" class="form-control" id="fpenetracion" ng-model="penetracion" placeholder="Ej.: 10">
                                 </div>
                                 <div ng-show="currentFinancial2.tipo==1">
+                                    <label for="fquincena">Quincena:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="fquincena" ng-model="quincena" placeholder="Ej.: 10">
+                                    </div>
                                     <label for="fmes">Mes:</label>
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="fmes" ng-model="mes" placeholder="Ej.: 10">
@@ -111,7 +117,7 @@
                                     <button type="button" class="btn btn-default" ng-click="CancelarDetail()">
                                         <span class="glyphicon glyphicon-floppy-remove"></span>
                                     </button>
-                                    <button type="button" class="btn btn-default" ng-click="GuardarDetalleSpread(puntos,tiie,penetracion,mes,anio)">
+                                    <button type="button" class="btn btn-default" ng-click="GuardarDetalleSpread(puntos,tiie,penetracion,quincena,mes,anio)">
                                         <span class="glyphicon glyphicon-floppy-disk"></span>
                                     </button>
                                     </div>

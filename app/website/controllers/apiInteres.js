@@ -404,6 +404,7 @@ ApiInteres.prototype.get_saveSpread = function(req, res, next) {
         { name: 'puntos', value: req.query.puntos, type: self.model.types.DECIMAL },
         { name: 'tiie', value: req.query.tiie, type: self.model.types.DECIMAL },
         { name: 'penetracion', value: req.query.penetracion, type: self.model.types.DECIMAL },
+        { name: 'quincena', value: req.query.quincena, type: self.model.types.INT },
         { name: 'mes', value: req.query.mes, type: self.model.types.INT },
         { name: 'anio', value: req.query.anio, type: self.model.types.INT }
     ];

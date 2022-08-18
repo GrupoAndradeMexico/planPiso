@@ -386,6 +386,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         $scope.puntos = edit.puntos;
         $scope.tiie = edit.tiie;
         $scope.penetracion = edit.penetracion;
+        $scope.quincena = edit.quincena;
         $scope.mes = edit.mes;
         $scope.anio = edit.anio;
         $scope.currentFinancial2 = _.where($scope.lstFinancial, { financieraID: edit.idfinanciera })[0];
@@ -402,13 +403,14 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         $scope.currentFinancial2 = financialObj;
         // $scope.getNewUnitsBySucursal(sessionFactory.empresaID, $scope.currentSucursal.sucursalID);
     };
-    $scope.GuardarDetalleSpread = function(puntos, tiie, penetracion, mes, anio) {
+    $scope.GuardarDetalleSpread = function(puntos, tiie, penetracion,quincena, mes, anio) {
         var data = {
             idempresa: sessionFactory.empresaID,
             idfinanciera: $scope.currentFinancial2.financieraID,
             puntos: puntos,
             tiie: tiie,
             penetracion: penetracion,
+            quincena: quincena,
             mes: mes,
             anio: anio
         };
