@@ -1150,6 +1150,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                             Promise.all(facturas).then(function(results) {
                                 console.log(results, 'Facturaaaas')
                                 $scope.facturasTotal = [];
+                                $scope.sinregimen = [];
                                 var contadorFacturas = 0;
                                 $scope.ocGarantias = [];
                                 angular.forEach(results, function(value, key) {
@@ -1169,6 +1170,11 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                                                     console.log('Ocurrió un error al intentar obtener las OT relacionadas a la Garantia extendida')
                                                 });
                                             }
+                                            // 06/09/2022 Se agrega validación de REgimen Fiscal 
+                                            if(!value2.regimenFiscal){
+                                                $scope.sinregimen.push(value2)
+                                            }
+                                            
                                             // if (value2.tipoProducto != 'NCR') {
                                             $scope.montoTotal = $scope.montoTotal + value2.saldo;
                                             // } else if (value2.tipoProducto == 'NCR') {
@@ -1230,6 +1236,14 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                                 } else {
                                     swal("Aviso", "No se puede compensar este documento.", "warning");
                                 }
+                                let idPersonaSR = '';
+                                if ($scope.sinregimen.length > 0) {
+                                    angular.forEach($scope.sinregimen, function(sinregimen, key){
+                                        idPersonaSR = idPersonaSR + sinregimen.idPersona + ','
+                                    });
+                                    idPersonaSR = idPersonaSR.slice(0, -1);
+                                    swal("Aviso", "La persona que quiere afectar no tiene régimen fiscal asociado. Los id de persona son los siguientes: " + idPersonaSR, "warning");
+                                } 
                                 console.log($scope.facturasTotal, 'TOTAL FACTURAS');
                                 // totalCompensar();
                                 $scope.totalCompensar();
