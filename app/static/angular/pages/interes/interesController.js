@@ -1242,7 +1242,13 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                                         idPersonaSR = idPersonaSR + sinregimen.idPersona + ','
                                     });
                                     idPersonaSR = idPersonaSR.slice(0, -1);
-                                    swal("Aviso", "La persona que quiere afectar no tiene régimen fiscal asociado. Los id de persona son los siguientes: " + idPersonaSR, "warning");
+                                    swal({
+                                        title: "Compensación",
+                                        text: "La persona que quiere afectar no tiene régimen fiscal asociado. Los id de persona son los siguientes: " + idPersonaSR
+                                    }, function() {
+                                        location.reload();
+                                    });
+                                    // swal("Aviso", "La persona que quiere afectar no tiene régimen fiscal asociado. Los id de persona son los siguientes: " + idPersonaSR, "warning");
                                 } 
                                 console.log($scope.facturasTotal, 'TOTAL FACTURAS');
                                 // totalCompensar();
