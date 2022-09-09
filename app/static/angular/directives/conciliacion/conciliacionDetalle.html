@@ -133,6 +133,7 @@
             <th>Fecha Fin</th>
             <th>Dias</th>
             <th>Interes Grupo Andrade</th>
+            <th>Interes Total GA</th>
             <th>Interes Financiera</th>
             <th ng-show="ajusteManual">Ajuste de Interes</th>
             <th>Ajuste</th>
@@ -167,6 +168,7 @@
             <td>{{dato.fechafin}}</td>
             <td>{{dato.dias}}</td>
             <td>{{dato.InteresMesActual | currency}}</td>
+            <td>{{dato.interestotalmensual | currency}}</td>
             <td>{{dato.interes | currency}}</td>
             <td ng-show="ajusteManual" width="120" style="border-left: solid 1px #ddd; 
                                                          border-right: solid 1px #ddd;
