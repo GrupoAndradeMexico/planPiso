@@ -792,4 +792,77 @@ ApiConciliacion.prototype.get_datosVin = function(req, res, next) {
 //         });
 //     });
 // };
+ApiConciliacion.prototype.get_traerpagos = function(req, res, next) {
+
+    var self = this;
+    var params = [
+        { name: 'idConciliacion', value: req.query.idConciliacion, type: self.model.types.INT },
+        { name: 'idmovimiento', value: req.query.idmovimiento, type: self.model.types.INT }
+];
+
+    self.model.query('Usp_TraerPagos', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+ApiConciliacion.prototype.get_actualizapagos = function(req, res, next) {
+
+    var self = this;
+    var params = [
+        { name: 'idConciliacion', value: req.query.idConciliacion, type: self.model.types.INT },
+        { name: 'idmovimiento', value: req.query.idmovimiento, type: self.model.types.INT },
+        { name: 'tipopol', value: req.query.tipopol, type: self.model.types.STRING },
+        { name: 'conspol', value: req.query.conspol, type: self.model.types.INT },
+        { name: 'fecha', value: req.query.fecha, type: self.model.types.STRING }
+
+];
+
+    self.model.query('Usp_ActualizaTraerPagos', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+ApiConciliacion.prototype.get_nuevopagos = function(req, res, next) {
+
+    var self = this;
+
+    if(req.query.cargo==undefined)
+    req.query.cargo=0;
+    if(req.query.abono==undefined)
+    req.query.abono=0;
+    var params = [
+        { name: 'idConciliacion', value: req.query.idConciliacion, type: self.model.types.INT },
+        { name: 'idmovimiento', value: req.query.idmovimiento, type: self.model.types.INT },
+        { name: 'cargo', value: req.query.cargo, type: self.model.types.DECIMAL },
+        { name: 'abono', value: req.query.abono, type: self.model.types.DECIMAL },
+        { name: 'fecha', value: req.query.fecha, type: self.model.types.STRING }
+
+];
+
+    self.model.query('Usp_TraerPagos_INS', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+ApiConciliacion.prototype.get_borrarpagos = function(req, res, next) {
+
+    var self = this;
+    var params = [
+        { name: 'idsaldoconciliacion', value: req.query.idsaldoconciliacion, type: self.model.types.INT }
+
+];
+
+    self.model.query('Usp_BorrarTraerPagos', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
 module.exports = ApiConciliacion;

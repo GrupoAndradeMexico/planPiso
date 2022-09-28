@@ -450,6 +450,38 @@ appModule.factory('conciliacionFactory', function($http) {
                 headers: { 'Content-Type': 'application/json' }
             });
         },
+        traerpagos: function( params ) {
+            return $http({
+                url: conciliacionUrl + 'traerpagos/',
+                method: "GET",
+                params: params,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },
+        actualizapagos: function( params ) {
+            return $http({
+                url: conciliacionUrl + 'actualizapagos/',
+                method: "GET",
+                params: params,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },
+        nuevopagos: function( params ) {
+            return $http({
+                url: conciliacionUrl + 'nuevopagos/',
+                method: "GET",
+                params: params,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },
+        borrarpagos: function( params ) {
+            return $http({
+                url: conciliacionUrl + 'borrarpagos/',
+                method: "GET",
+                params: params,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },
 
     };
 });

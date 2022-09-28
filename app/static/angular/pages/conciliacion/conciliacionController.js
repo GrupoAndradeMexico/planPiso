@@ -1,4 +1,4 @@
-appModule.controller('conciliacionController', function($scope, $rootScope, $location, conciliacionFactory,  commonFactory, staticFactory, filterFilter, utils ,$window,$sce ) {
+appModule.controller('conciliacionController', function($scope, $rootScope, $location, conciliacionFactory,  commonFactory, staticFactory, filterFilter, utils ,$window,$sce,$filter ) {
     $scope.idUsuario            = parseInt( localStorage.getItem( "idUsuario" ) )
     $scope.session  = JSON.parse( sessionStorage.getItem( "sessionFactory" ) );
     $scope.lstPermisoBoton      = JSON.parse(sessionStorage.getItem("PermisoUsuario"));
@@ -1575,5 +1575,118 @@ $scope.insertDetallesGuardar= function(){
             });
            
         } 
-            
+        $scope.mostrarModalPagos = function(dato){
+            $("#ModalSaldos").modal('show');
+            $scope.mostrarEditar=0;
+            $scope.mostrarNuevo=0;
+            $scope.setTableStyle('#tblConciliacion2');
+            var parametros = {
+                idConciliacion:      $scope.idconciliacion,
+                idmovimiento: dato.movimientoID
+            }
+     
+            conciliacionFactory.traerpagos(parametros).then(function(result) {
+                $scope.lsttraerpagos = result.data;
+                var cargos=0;
+                var abonos=0;
+                $scope.saldo=0;
+                for (var i=0; i<$scope.lsttraerpagos.length; i++) {
+                    cargos+=$scope.lsttraerpagos[i].ccp_cargo;
+                    abonos+=$scope.lsttraerpagos[i].ccp_abono;
+                  }
+                  $scope.saldo=abonos-cargos;
+            }, function(error) {
+                console.log("Error", error);
+            });
+        }   
+  
+        $scope.EditarPago = function(dato){
+            $scope.mostrarEditar=1;
+          
+            $scope.fecha=dato.ccp_fechope;
+            $scope.poliza=dato.ccp_conspol;
+            $scope.cargo=dato.ccp_cargo;
+            $scope.abono=dato.ccp_abono;
+            $scope.tipopol=dato.ccp_tipopol;
+            $scope.idConciliacion=$scope.idconciliacion;
+            $scope.idmovimiento=dato.idmovimiento;
+        }   
+        $scope.NuevoPago = function(){
+            $scope.mostrarNuevo=1;
+            $scope.idConciliacion=$scope.idconciliacion;
+            $scope.idmovimiento=$scope.lsttraerpagos[0].idmovimiento;
+        }   
+        $scope.GuardarFechaPago = function(fecha){
+            $scope.mostrarEditar=0;
+            var parametros = {
+                idConciliacion:      $scope.idconciliacion,
+                idmovimiento: $scope.idmovimiento,
+                conspol:$scope.poliza,
+                tipopol:$scope.tipopol,
+                fecha:fecha
+            }
+     
+            conciliacionFactory.actualizapagos(parametros).then(function(result) {
+                $scope.lsttraerpagos = result.data;
+                var cargos=0;
+                var abonos=0;
+                $scope.saldo=0;
+                for (var i=0; i<$scope.lsttraerpagos.length; i++) {
+                    cargos+=$scope.lsttraerpagos[i].ccp_cargo;
+                    abonos+=$scope.lsttraerpagos[i].ccp_abono;
+                  }
+                  $scope.saldo=abonos-cargos;
+
+                $scope.setTableStyle('#tblConciliacion2');
+            }, function(error) {
+                console.log("Error", error);
+            });
+        }       
+        $scope.GuardarNuevoFechaPago = function(cargos,abonos,fecha){
+            $scope.mostrarEditar=0;
+            var parametros = {
+                idConciliacion:      $scope.idconciliacion,
+                idmovimiento: $scope.lsttraerpagos[0].idmovimiento,
+                cargo:cargos,
+                abono:abonos,
+                fecha:$filter('date')(fecha, 'dd/MM/yyyy')
+            }
+     
+            conciliacionFactory.nuevopagos(parametros).then(function(result) {
+                $scope.lsttraerpagos = result.data;
+                var cargos=0;
+                var abonos=0;
+                $scope.saldo=0;
+                for (var i=0; i<$scope.lsttraerpagos.length; i++) {
+                    cargos+=$scope.lsttraerpagos[i].ccp_cargo;
+                    abonos+=$scope.lsttraerpagos[i].ccp_abono;
+                  }
+                  $scope.saldo=abonos-cargos;
+                $scope.setTableStyle('#tblConciliacion2');
+                $scope.mostrarNuevo=0;
+            }, function(error) {
+                console.log("Error", error);
+            });
+        }  
+        $scope.BorrarPago = function(dato){
+          
+            var parametros = {
+                idsaldoconciliacion:     dato.idSaldoConciliacion
+            }
+     
+            conciliacionFactory.borrarpagos(parametros).then(function(result) {
+                $scope.lsttraerpagos = result.data;
+                var cargos=0;
+                var abonos=0;
+                $scope.saldo=0;
+                for (var i=0; i<$scope.lsttraerpagos.length; i++) {
+                    cargos+=$scope.lsttraerpagos[i].ccp_cargo;
+                    abonos+=$scope.lsttraerpagos[i].ccp_abono;
+                  }
+                  $scope.saldo=abonos-cargos;
+                $scope.setTableStyle('#tblConciliacion2');
+            }, function(error) {
+                console.log("Error", error);
+            });
+        }         
 });

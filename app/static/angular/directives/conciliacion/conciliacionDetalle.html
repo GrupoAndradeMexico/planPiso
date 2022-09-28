@@ -1,66 +1,75 @@
 <div class="row">
     <div class="col-md-6">
-            <div class="alert alert-default"  style="overflow: hidden; background-color: #f4f4f4;"  role="alert" ng-show="situacion.gpoAndrade == 0 && situacion.financiera == 0">
-                
-                <div ng-show="!conciliacion">
-                    <h4 class="alert-heading">
-                        <table width="100%" border="0">
-                            <tr>
-                                <td width="40"> <i class="fa fa-exclamation-triangle text-warning" aria-hidden="true" style="font-size: 30px"></i> </td>
-                                <td> <span>No es posible realizar la conciliación</span> </td>
-                            </tr>
-                        </table>
-                    </h4>
+        <div class="alert alert-default" style="overflow: hidden; background-color: #f4f4f4;" role="alert"
+            ng-show="situacion.gpoAndrade == 0 && situacion.financiera == 0">
 
-                    <p>No es posible realizar la conciliación, asegurate de ajustar los montos de intereses a aplicar.</p>
-                </div>
+            <div ng-show="!conciliacion">
+                <h4 class="alert-heading">
+                    <table width="100%" border="0">
+                        <tr>
+                            <td width="40"> <i class="fa fa-exclamation-triangle text-warning" aria-hidden="true"
+                                    style="font-size: 30px"></i> </td>
+                            <td> <span>No es posible realizar la conciliación</span> </td>
+                        </tr>
+                    </table>
+                </h4>
 
-                <div ng-show="conciliacion">
-                    <h4 class="alert-heading">
-                        <table width="100%" border="0">
-                            <tr>
-                                <td width="40"> <i class="fa fa-check-circle text-success" aria-hidden="true" style="font-size: 30px"></i>  </td>
-                                <td> <span>Conciliación lista</span> </td>
-                            </tr>
-                        </table>
-                    </h4>
-
-                    <p>Los montos de los intereses estan listos para su conciliación.</p>
-                </div>
-
-                <hr>
-
-                <button class="btn btn-primary btn-sm pull-left" style="margin-right: 10px;" ng-click="ajusteAutomatico();">Ajuste General</button>
-                <button class="btn btn-primary btn-sm pull-left" ng-click="fnAjusteManual();">Ajuste Manual</button>
+                <p>No es posible realizar la conciliación, asegurate de ajustar los montos de intereses a aplicar.</p>
             </div>
 
-            <div class="alert alert-warning" style="overflow: hidden;"  role="alert"  ng-show="situacion.gpoAndrade != 0 && situacion.financiera == 0">
+            <div ng-show="conciliacion">
                 <h4 class="alert-heading">
-                    <i class="fa fa-info-circle" aria-hidden="true" style="font-size: 20px"></i> 
-                    Unidades no reportadas por la Financiera!
+                    <table width="100%" border="0">
+                        <tr>
+                            <td width="40"> <i class="fa fa-check-circle text-success" aria-hidden="true"
+                                    style="font-size: 30px"></i> </td>
+                            <td> <span>Conciliación lista</span> </td>
+                        </tr>
+                    </table>
                 </h4>
-                <p>Existen unidades reportadas por Grupo Andrade que la Financiera no esta reportando, para poder conciliar deselecciona aquellas que no reporte la financiera.</p>
-                <!-- <div ng-show="estSolAutorizacion == 3">
+
+                <p>Los montos de los intereses estan listos para su conciliación.</p>
+            </div>
+
+            <hr>
+
+            <button class="btn btn-primary btn-sm pull-left" style="margin-right: 10px;"
+                ng-click="ajusteAutomatico();">Ajuste General</button>
+            <button class="btn btn-primary btn-sm pull-left" ng-click="fnAjusteManual();">Ajuste Manual</button>
+        </div>
+
+        <div class="alert alert-warning" style="overflow: hidden;" role="alert"
+            ng-show="situacion.gpoAndrade != 0 && situacion.financiera == 0">
+            <h4 class="alert-heading">
+                <i class="fa fa-info-circle" aria-hidden="true" style="font-size: 20px"></i>
+                Unidades no reportadas por la Financiera!
+            </h4>
+            <p>Existen unidades reportadas por Grupo Andrade que la Financiera no esta reportando, para poder conciliar
+                deselecciona aquellas que no reporte la financiera.</p>
+            <!-- <div ng-show="estSolAutorizacion == 3">
                     <hr>
                     <small>Fecha de autorización: {{autDetalle.fechaAutoriza}}</small>
                 </div> -->
-                <hr>
-            
-                <div ng-show="estSolAutorizacion == 0 || estSolAutorizacion == 3">
-                    <button ng-disabled="flagAjusteCaseTree" class="btn btn-primary btn-sm pull-left" style="margin-right: 10px;" ng-click="ajusteAutomatico();">Ajuste General</button>
-                    <button ng-disabled="flagAjusteCaseTree" class="btn btn-primary btn-sm pull-left" ng-click="fnAjusteManual();">Ajuste Manual</button>
-                    <button class="btn btn-warning btn-sm pull-right" ng-click="controlCheckDeseleccionar();">{{lbl_btn_descheck}}</button>
-                </div>
+            <hr>
 
-            
-                <!-- <div ng-show="estSolAutorizacion == 1">
+            <div ng-show="estSolAutorizacion == 0 || estSolAutorizacion == 3">
+                <button ng-disabled="flagAjusteCaseTree" class="btn btn-primary btn-sm pull-left"
+                    style="margin-right: 10px;" ng-click="ajusteAutomatico();">Ajuste General</button>
+                <button ng-disabled="flagAjusteCaseTree" class="btn btn-primary btn-sm pull-left"
+                    ng-click="fnAjusteManual();">Ajuste Manual</button>
+                <button class="btn btn-warning btn-sm pull-right"
+                    ng-click="controlCheckDeseleccionar();">{{lbl_btn_descheck}}</button>
+            </div>
+
+
+            <!-- <div ng-show="estSolAutorizacion == 1">
                     <button class="btn btn-warning btn-sm pull-right" ng-click="solicitaAutorizacion(1);">
                         <i class="fa fa-key" aria-hidden="true"></i> Solicitar Autorización
                     </button>
                 </div> -->
 
-            
-                <!-- <div ng-show="estSolAutorizacion == 2" class="row">
+
+            <!-- <div ng-show="estSolAutorizacion == 2" class="row">
                     <div class="col-sm-6 pull-right">
                         <table border="0" class="pull-right">
                             <tr>
@@ -70,20 +79,23 @@
                         </table>                    
                     </div>
                 </div> -->
-            </div>
+        </div>
 
-            <div class="alert alert-danger" role="alert" ng-show="situacion.financiera != 0 && estatusConciliacion == 2 && frmConciliacion.lbltipoconciliacion == 1">
-                <h4 class="alert-heading">
-                    <i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 20px"></i> 
-                    Unidades no reportadas por Grupo Andrade!
-                </h4>
-                <p>No es posible realizar la CONCILIACIÓN debido a que Grupo Andrade no reporta unidades que en el Layout se especifican.</p>
-                <hr>
-                <p class="mb-0">
-                    <b>NOTA:</b> Debera actualizar la cartera para cuadrar la conciliación.
-                    <button type="button" class="btn btn-primary pull-right"  ng-show="MuestracompraVirtual" ng-click="CompraVirtual()" >Compra Virtual</button>
-                </p>
-            </div>
+        <div class="alert alert-danger" role="alert"
+            ng-show="situacion.financiera != 0 && estatusConciliacion == 2 && frmConciliacion.lbltipoconciliacion == 1">
+            <h4 class="alert-heading">
+                <i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 20px"></i>
+                Unidades no reportadas por Grupo Andrade!
+            </h4>
+            <p>No es posible realizar la CONCILIACIÓN debido a que Grupo Andrade no reporta unidades que en el Layout se
+                especifican.</p>
+            <hr>
+            <p class="mb-0">
+                <b>NOTA:</b> Debera actualizar la cartera para cuadrar la conciliación.
+                <button type="button" class="btn btn-primary pull-right" ng-show="MuestracompraVirtual"
+                    ng-click="CompraVirtual()">Compra Virtual</button>
+            </p>
+        </div>
     </div>
     <div class="col-md-6">
         <div class="row">
@@ -101,133 +113,139 @@
             <div class="col-md-6 text-right">
                 <b>Total Financiera</b>
                 <h2><b>{{total.archivo | currency}}</b></h2>
-            </div>            
+            </div>
         </div>
         <div class="col-md-12 text-right">
-            <button type="button" class="btn btn-primary pull-right" ng-click="recalcularConciFinMes()" ng-show="estatusConciliacion == 2">Recalcular Conciliacion</button>
-            <button type="button" class="btn btn-primary pull-right" ng-click="ActualizaSaldos()" ng-show="estatusConciliacion == 2">Actualizar Saldos</button>
-            
-        </div> 
+            <button type="button" class="btn btn-primary pull-right" ng-click="recalcularConciFinMes()"
+                ng-show="estatusConciliacion == 2">Recalcular Conciliacion</button>
+            <button type="button" class="btn btn-primary pull-right" ng-click="ActualizaSaldos()"
+                ng-show="estatusConciliacion == 2">Actualizar Saldos</button>
+
+        </div>
     </div>
 
-</div>  
+</div>
 <hr>
 <div class="row">
-<table id="tblConciliacion" class="table table-hover borderless">
-    <thead>
-        <tr>
-            <th width="30"></th>
-            <th>Numero Serie</th>
-            <th>Sucursal</th>
-            <th>Colateral</th>
-            <th>Cuenta</th>
-            <th>Moneda</th>
-            <th>Interes Acumulado Grupo Andrade</th>
-            <th>Saldo Financiera</th>            
-            <th>Saldo G.A.</th>
-            <th>Spread</th>
-            <th>Tiie</th>
-            <th>Fecha Tiie</th>
-            <th>Penetracion</th>
-            <th>Fecha Inicio</th>
-            <th>Fecha Fin</th>
-            <th>Dias</th>
-            <th>Interes Grupo Andrade</th>
-            <th>Interes Total GA</th>
-            <th>Interes Financiera</th>
-            <th ng-show="ajusteManual">Ajuste de Interes</th>
-            <th>Ajuste</th>
-            <th width="180">Situación</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr ng-repeat="(key, dato) in lstConceal" repeat-end="setTableStyle('#tblConciliacion')">
-            <td>
-                <input  type="checkbox"
-                        ng-checked="dato.checked"
-                        ng-disabled="dato.equiparante != 3">
-                       
-                 <!-- ng-checked="situacion.financiera == 0"   ng-disabled="true"-->
-            </td>
-            <td>
-                <b>{{dato.numeroSerie}}</b><br>
-                <small class="text-warning">{{dato.CCP_IDDOCTO}}</small>
-            </td>
-            <td>{{dato.sucursal}}</td>
-            <td>{{dato.descrip}}</td>
-            <td>{{dato.numcta}}</td>
-            <td>{{dato.moneda}}</td>
-            <td>{{dato.InteresAcumulado | currency}}</td>
-            <td>{{dato.valor | currency}}</td>
-            <td>{{dato.saldo | currency}}</td>
-            <td>{{dato.puntos | number }}</td>
-            <td>{{dato.tiie | number }}</td>
-            <td>{{dato.fechatiie}}</td>
-            <td>{{dato.penetracion | number }}</td>
-            <td>{{dato.fechainicio}}</td>
-            <td>{{dato.fechafin}}</td>
-            <td>{{dato.dias}}</td>
-            <td>{{dato.InteresMesActual | currency}}</td>
-            <td>{{dato.interestotalmensual | currency}}</td>
-            <td>{{dato.interes | currency}}</td>
-            <td ng-show="ajusteManual" width="120" style="border-left: solid 1px #ddd; 
+    <table id="tblConciliacion" class="table table-hover borderless">
+        <thead>
+            <tr>
+                <th width="30"></th>
+                <th>Numero Serie</th>
+                <th>Sucursal</th>
+                <th>Colateral</th>
+                <th>Cuenta</th>
+                <th>Moneda</th>
+                <th>Interes Acumulado Grupo Andrade</th>
+                <th>Saldo Financiera</th>
+                <th>Saldo G.A.</th>
+                <th>Spread</th>
+                <th>Tiie</th>
+                <th>Fecha Tiie</th>
+                <th>Penetracion</th>
+                <th>Fecha Inicio</th>
+                <th>Fecha Fin</th>
+                <th>Dias</th>
+                <th>Interes Grupo Andrade</th>
+                <th>Interes Total GA</th>
+                <th>Interes Financiera</th>
+                <th ng-show="ajusteManual">Ajuste de Interes</th>
+                <th>Ajuste</th>
+                <th></th>
+                <th width="180">Situación</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="(key, dato) in lstConceal" repeat-end="setTableStyle('#tblConciliacion')">
+                <td>
+                    <input type="checkbox" ng-checked="dato.checked" ng-disabled="dato.equiparante != 3">
+
+                    <!-- ng-checked="situacion.financiera == 0"   ng-disabled="true"-->
+                </td>
+                <td>
+                    <b>{{dato.numeroSerie}}</b><br>
+                    <small class="text-warning">{{dato.CCP_IDDOCTO}}</small>
+                </td>
+                <td>{{dato.sucursal}}</td>
+                <td>{{dato.descrip}}</td>
+                <td>{{dato.numcta}}</td>
+                <td>{{dato.moneda}}</td>
+                <td>{{dato.InteresAcumulado | currency}}</td>
+                <td>{{dato.valor | currency}}</td>
+                <td>{{dato.saldo | currency}}</td>
+                <td>{{dato.puntos | number }}</td>
+                <td>{{dato.tiie | number }}</td>
+                <td>{{dato.fechatiie}}</td>
+                <td>{{dato.penetracion | number }}</td>
+                <td>{{dato.fechainicio}}</td>
+                <td>{{dato.fechafin}}</td>
+                <td>{{dato.dias}}</td>
+                <td>{{dato.InteresMesActual | currency}}</td>
+                <td>{{dato.interestotalmensual | currency}}</td>
+                <td>{{dato.interes | currency}}</td>
+                <td ng-show="ajusteManual" width="120" style="border-left: solid 1px #ddd; 
                                                          border-right: solid 1px #ddd;
                                                          background-color: #f4f4f4">
-                <input  type="text" 
-                        class="form-control text-right pull-left" 
-                        ng-model="dato.ajuste"
-                        ng-disabled="dato.esMayor == 1 || dato.equiparante != 1"
-                        ng-blur="recalculo( key )"
+                    <input type="text" class="form-control text-right pull-left" ng-model="dato.ajuste"
+                        ng-disabled="dato.esMayor == 1 || dato.equiparante != 1" ng-blur="recalculo( key )"
                         style="width: 90px">
 
-                 <button class="btn btn-linck pull-right btn-sm" ng-click="setIntFinanToAjuste( key )" ></button>
-                 <!--ng-disabled="dato.esMayor == 1 || dato.equiparante != 1" -->
-                
+                    <button class="btn btn-linck pull-right btn-sm" ng-click="setIntFinanToAjuste( key )"></button>
+                    <!--ng-disabled="dato.esMayor == 1 || dato.equiparante != 1" -->
+
                     <i class="fa fa-refresh"></i>
-                </button>
-            </td>
-            <td>
-                {{dato.diferencia | currency}}
-            </td>
-            <td ng-class="  {
+                    </button>
+                </td>
+                <td>
+                    {{dato.diferencia | currency}}
+                </td>
+                <td>
+                    <button class="btn btn-warning pull-right" ng-click="mostrarModalPagos(dato)"
+                        ng-disabled="dato.diferencia<50 && dato.diferencia >-50">MC y Pago virtual</button>
+                </td>
+                <td ng-class="  {
                                 'celdaFondoVerde': dato.equiparante == 1 && dato.esMayor == 1,
                                 'celdaFondoAzul': dato.equiparante == 1 && ( dato.esMayor == 0 || dato.esMayor == 2 || dato.esMayor == 3),
                                 'celdaFondoRojo': dato.equiparante == 2,
                                 'celdaFondoAmarillo': dato.equiparante == 3,
                             }">
-                <table width="100%" border="0">
-                    <tr>
-                        <td width="50" class="text-center">
-                            <i ng-show="dato.equiparante == 1 && dato.esMayor == 1" class="fa fa-check-circle text-primary" 
-                            aria-hidden="true" style="font-size: 20px "></i>
+                    <table width="100%" border="0">
+                        <tr>
+                            <td width="50" class="text-center">
+                                <i ng-show="dato.equiparante == 1 && dato.esMayor == 1"
+                                    class="fa fa-check-circle text-primary" aria-hidden="true"
+                                    style="font-size: 20px "></i>
 
-                            <i ng-show="dato.equiparante == 1 && ( dato.esMayor == 0 || dato.esMayor == 2)" class="fa fa-info-circle text-primary" 
-                            aria-hidden="true" style="font-size: 20px "></i>
+                                <i ng-show="dato.equiparante == 1 && ( dato.esMayor == 0 || dato.esMayor == 2)"
+                                    class="fa fa-info-circle text-primary" aria-hidden="true"
+                                    style="font-size: 20px "></i>
 
-                            <i ng-show="dato.equiparante == 1 && ( dato.esMayor == 3)" class="fa fa-sliders text-primary" 
-                            aria-hidden="true" style="font-size: 20px "></i>
+                                <i ng-show="dato.equiparante == 1 && ( dato.esMayor == 3)"
+                                    class="fa fa-sliders text-primary" aria-hidden="true" style="font-size: 20px "></i>
 
-                            <i ng-show="dato.equiparante == 2" class="fa fa-arrow-circle-right text-danger" 
-                            aria-hidden="true" style="font-size: 20px "></i>
+                                <i ng-show="dato.equiparante == 2" class="fa fa-arrow-circle-right text-danger"
+                                    aria-hidden="true" style="font-size: 20px "></i>
 
-                            <i ng-show="dato.equiparante == 3" class="fa fa-arrow-circle-left text-warning" 
-                            aria-hidden="true" style="font-size: 20px "></i>
-                        </td>
-                        <td>
-                            <p ng-show=" dato.equiparante == 1 && dato.esMayor == 0">Interés de Financiera mayor a Gpo. Andrade</p>
-                            <p ng-show=" dato.equiparante == 1 && dato.esMayor == 1">Montos iguales</p>
-                            <p ng-show=" dato.equiparante == 1 && dato.esMayor == 2">Interés de Financiera menor a Gpo. Andrade</p>
-                            <p ng-show=" dato.equiparante == 1 && dato.esMayor == 3">Ajuste de Interes</p>
-                            <p ng-show=" dato.equiparante == 2">Reportada por la Financiera</p>
-                            <p ng-show=" dato.equiparante == 3">Reportada por Grupo Andrade</p>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-            <!-- <td ng-class="dato.esMayor == 1 ? 'celdaFondoVerde' : dato.esMayor == 2 ? 'celdaFondoAmarillo' : 'celdaFondoRojo'  ">{{dato.diferencia| currency}}</td> -->
-        </tr>
-    </tbody>
-</table>
+                                <i ng-show="dato.equiparante == 3" class="fa fa-arrow-circle-left text-warning"
+                                    aria-hidden="true" style="font-size: 20px "></i>
+                            </td>
+                            <td>
+                                <p ng-show=" dato.equiparante == 1 && dato.esMayor == 0">Interés de Financiera mayor a
+                                    Gpo. Andrade</p>
+                                <p ng-show=" dato.equiparante == 1 && dato.esMayor == 1">Montos iguales</p>
+                                <p ng-show=" dato.equiparante == 1 && dato.esMayor == 2">Interés de Financiera menor a
+                                    Gpo. Andrade</p>
+                                <p ng-show=" dato.equiparante == 1 && dato.esMayor == 3">Ajuste de Interes</p>
+                                <p ng-show=" dato.equiparante == 2">Reportada por la Financiera</p>
+                                <p ng-show=" dato.equiparante == 3">Reportada por Grupo Andrade</p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <!-- <td ng-class="dato.esMayor == 1 ? 'celdaFondoVerde' : dato.esMayor == 2 ? 'celdaFondoAmarillo' : 'celdaFondoRojo'  ">{{dato.diferencia| currency}}</td> -->
+            </tr>
+        </tbody>
+    </table>
 </div>
 <div class="row">
     <div class="col-sm-6">
@@ -239,12 +257,13 @@
                 <h4 class="alert-heading">
                     <table width="100%" border="0">
                         <tr>
-                            <td width="40"> <i class="fa fa-exclamation-triangle text-warning" aria-hidden="true" style="font-size: 30px"></i> </td>
+                            <td width="40"> <i class="fa fa-exclamation-triangle text-warning" aria-hidden="true"
+                                    style="font-size: 30px"></i> </td>
                             <td> <span>No es posible realizar la conciliación</span> </td>
                         </tr>
                     </table>
-                    
-                    
+
+
                 </h4>
 
                 <p>No es posible realizar la conciliación, asegurate de ajustar los montos de intereses a aplicar.</p>
@@ -254,7 +273,8 @@
                 <h4 class="alert-heading">
                     <table width="100%" border="0">
                         <tr>
-                            <td width="40"> <i class="fa fa-check-circle text-success" aria-hidden="true" style="font-size: 30px"></i>  </td>
+                            <td width="40"> <i class="fa fa-check-circle text-success" aria-hidden="true"
+                                    style="font-size: 30px"></i> </td>
                             <td> <span>Conciliación lista</span> </td>
                         </tr>
                     </table>
@@ -265,15 +285,184 @@
 
             <hr>
             <button type="button" class="btn btn-default" ng-click="prevStep()">Regresar</button>
-            <button type="button" class="btn btn-default" ng-show="Muestracancelar" ng-click="prevStep()">Cancelar Conciliación</button>
+            <button type="button" class="btn btn-default" ng-show="Muestracancelar" ng-click="prevStep()">Cancelar
+                Conciliación</button>
             <!-- <button type="button" class="btn btn-default" ng-click="solicitaAutorizacion(3);">Guardar conciliación</button> -->
-            
+
             <!-- <button type="button" class="btn btn-primary pull-right" ng-click="PrevioConciliacion()" ng-disabled="!conciliacion">Previo Conciliación</button> -->
         </div>
-        <button type="button" class="btn btn-primary pull-right" ng-click="PrevioConciliacion()" ng-disabled="!conciliacion">Previo Conciliación</button>
+        <button type="button" class="btn btn-primary pull-right" ng-click="PrevioConciliacion()"
+            ng-disabled="!conciliacion">Previo Conciliación</button>
         <!-- </div> -->
         <div style="overflow: hidden;" ng-show="estatusConciliacion != 2">
-             <button type="button" class="btn btn-default pull-right" ng-click="prevStep()">Regresar</button>
-         </div>
+            <button type="button" class="btn btn-default pull-right" ng-click="prevStep()">Regresar</button>
+        </div>
+    </div>
+</div>
+
+<!--INICIA modal que muestra el los pagos en pdf -->
+<!--===================================================-->
+<div id="ModalSaldos" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#1f897f;">
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="pci-cross pci-circle" style="color:#fff;"></i>
+                </button>
+                <h4 class="modal-title text-center" id="myLargeModalLabel" style="color:#fff;">MC y pago Virtual</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-primary pull-left"
+                                            ng-click="NuevoPago()" >Agregar Pago virtual</button>
+                    </div>
+                    <div class="col-md-12">
+                        <table id="tblConciliacion2" class="table table-hover borderless">
+                            <thead>
+                                <tr>
+                                    <th>Numero Serie</th>
+                                    <th>Documento</th>
+                                    <th>Tipo poliza</th>
+                                    <th>Poliza</th>
+                                    <th>Fecha de documento</th>
+                                    <th>Cargos</th>
+                                    <th>Abonos</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="(key, dato) in lsttraerpagos">
+
+                                    <td>{{dato.vin}}</td>
+                                    <td>{{dato.ccp_iddocto}}</td>
+                                    <td>{{dato.ccp_tipopol}}</td>
+                                    <td>{{dato.ccp_conspol}}</td>
+                                    <td>{{dato.ccp_fechope}}</td>
+                                    <td>{{dato.ccp_cargo| currency}}</td>
+                                    <td>{{dato.ccp_abono| currency}}</td>
+                                    <td> <button type="button" class="btn btn-default pull-right"
+                                            ng-click="EditarPago(dato)" ng-show="dato.tipo==1||dato.tipo==2">Editar
+                                            Fecha</button>
+                                        <button type="button" class="btn btn-default pull-right"
+                                            ng-click="BorrarPago(dato)" ng-show="dato.tipo==2">Borrar</button>
+                                    </td>
+                                </tr>
+                        </table>
+                        </td>
+                        <!-- <td ng-class="dato.esMayor == 1 ? 'celdaFondoVerde' : dato.esMayor == 2 ? 'celdaFondoAmarillo' : 'celdaFondoRojo'  ">{{dato.diferencia| currency}}</td> -->
+                        </tr>
+                        </tbody>
+<tfoot>
+    <tr>
+        <td>Saldo:</td>
+        <td>{{saldo| currency}}</td>
+        <td></td>
+    </tr>
+</tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div class="row" ng-show="mostrarEditar==1">
+                    <div class="col-md-12">
+                        <table class="table table-hover borderless">
+                            <thead>
+                                <tr>
+                                    <th>Tipo póliza</th>
+                                    <th>Num póliza</th>
+                                    <th>Cargos</th>
+                                    <th>Abonos</th>
+                                    <th>Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{tipopol}}</td>
+                                    <td>{{poliza}}</td>
+                                    <td>{{cargo| currency}}</td>
+                                    <td>{{abono| currency}}</td>
+                                    <td>
+                                        <div class="input-group date" data-provide="datepicker"
+                                            data-date-format="dd/mm/yyyy">
+                                            <input type="text" class="form-control" ng-model="fecha">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </div>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                        <div>
+                            <button type="submit" class="btn btn-primary pull-right"
+                                ng-click="GuardarFechaPago(fecha)">Guardar Fecha</button>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="row" ng-show="mostrarNuevo==1">
+                    <div class="col-md-12">
+                        <table class="table table-hover borderless">
+                            <thead>
+                                <tr>
+                                    <th>Cargos</th>
+                                    <th>Abonos</th>
+                                    <th>Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                   
+                                    <td><div class="form-group">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="fCargo" ng-model="cargos" placeholder="Ej.: 10.0">
+                                        </div>
+                                    </div></td>
+                                    <td><div class="form-group">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="fAbono" ng-model="abonos" placeholder="Ej.: 10.0">
+                                        </div>
+                                    </div></td>
+                                    <td>
+                                        <div class="input-group date" data-provide="datepicker"
+                                            data-date-format="dd/mm/yyyy">
+                                            <input type="text" class="form-control" ng-model="fecha">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </div>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                        <div>
+                            <button type="submit" class="btn btn-primary pull-right"
+                                ng-click="GuardarNuevoFechaPago(cargos,abonos,fecha)">Guardar Fecha</button>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-primary pull-right" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
     </div>
 </div>
