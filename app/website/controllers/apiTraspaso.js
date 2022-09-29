@@ -65,8 +65,9 @@ ApiTraspaso.prototype.get_TraspasoEsquemaDetalle = function(req, res, next) {
     { name: 'idEsquemaO', value: req.query.idEsquemaO, type: self.model.types.INT },
     { name: 'idfinancieraD', value: req.query.idfinancieraD, type: self.model.types.INT },
     { name: 'idEsquemaD', value: req.query.idEsquemaD, type: self.model.types.INT },
-    { name: 'idUsuario', value: req.query.idUsuario, type: self.model.types.INT }];
-
+    { name: 'idUsuario', value: req.query.idUsuario, type: self.model.types.INT },
+    { name: 'fechaInicio', value: req.query.fechaInicioEsquema, type: self.model.types.STRING }];
+console.log(params)
     self.model.query('Pol_CambioEsquema_INS', params, function(error, result) {
         self.view.expositor(res, {
             error: error,

@@ -47,6 +47,7 @@
             <th>Interes Corte Pagado</th>
             <th>Interes MesActual</th>
             <th>Interes Acumulado Financiera</th>
+            <th ng-show="typeTraspaso == 4">Fecha</th>
             <th>Interes Total</th>
         </tr>
     </thead>
@@ -63,6 +64,7 @@
             <td>{{unidad.InteresCortePagado | currency}}</td>
             <td>{{unidad.InteresMesActual | currency}}</td>
             <td>{{unidad.InteresAcumuladoFinanciera | currency}}</td>
+            <td>{{unidad.fechaInicioEsquema}}</td>
             <td>{{unidad.InteresTotal | currency}}</td>
         </tr>
     </tbody>

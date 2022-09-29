@@ -12,15 +12,37 @@ appModule.controller('traspasoController', function($scope, $rootScope, $locatio
         pago: f.getFullYear() + "/" + ((f.getMonth() + 1) < 10 ? "0" + (f.getMonth() + 1) : (f.getMonth() + 1)) + "/" + f.getDate(),
         fijo: f.getFullYear() + "/" + ((f.getMonth() + 1) < 10 ? "0" + (f.getMonth() + 1) : (f.getMonth() + 1)) + "/" + f.getDate()
     }
+    function zfill(number, width) {
+        var numberOutput = Math.abs(number); /* Valor absoluto del número */
+        var length = number.toString().length; /* Largo del número */
+        var zero = "0"; /* String de cero */
 
+        if (width <= length) {
+            if (number < 0) {
+                return ("-" + numberOutput.toString());
+            } else {
+                return numberOutput.toString();
+            }
+        } else {
+            if (number < 0) {
+                return ("-" + (zero.repeat(width - length)) + numberOutput.toString());
+            } else {
+                return ((zero.repeat(width - length)) + numberOutput.toString());
+            }
+        }
+    }
     $scope.inicioTraspaso = function() {
         var valida = filterFilter($scope.lstNewUnits, { isChecked: true });
         $scope.unidadesEnProceso = [];
         var auxList = [];
         console.log(valida, 'Lista de las sseleccionadsa')
         var promesaUnidadEnProceso = [];
-
+        $scope.fechaInicio = new Date();
+        console.log($scope.fechaInicio);
+        $scope.fechaInicio = zfill($scope.fechaInicio.getDate(), 2) + '/' + zfill(($scope.fechaInicio.getMonth() + 1), 2) + '/' + $scope.fechaInicio.getFullYear();
+        console.log($scope.fechaInicio, 'Que pasara')
         valida.forEach(function(item, key) {
+            item.fechaInicioEsquema = $scope.fechaInicio
             promesaUnidadEnProceso.push(traspasoFactory.unidadEnProceso(item.CCP_IDDOCTO, item.empresaID));
         });
         Promise.all(promesaUnidadEnProceso).then(function(results) {
@@ -72,6 +94,16 @@ appModule.controller('traspasoController', function($scope, $rootScope, $locatio
                 location.reload();
             });
         }
+    }
+    $scope.cambiaFechaEsquema = function(fecha){
+        let valida = filterFilter($scope.lstNewUnits, { isChecked: true });
+        valida.forEach(function(item, key) {
+            item.fechaInicioEsquema = fecha;
+        });
+        // $scope.lstNewUnits.forEach(function(item, key) {
+        //     if(item.fechaInicioEsquema){
+        //         item.fechaInicioEsquema = $scope.fechaInicio
+        //     }
     }
     $scope.setCurrentFinance2 = function(financialObj) {
         //  $scope.currentPanel = "pnlResumen";
@@ -237,7 +269,8 @@ appModule.controller('traspasoController', function($scope, $rootScope, $locatio
                 idEsquemaO: item.esquemaID,
                 idfinancieraD: $scope.currentFinancial2.financieraID,
                 idEsquemaD: $scope.currentSchema2.esquemaID,
-                idUsuario: $scope.idUsuario
+                idUsuario: $scope.idUsuario,
+                fechaInicioEsquema: item.fechaInicioEsquema
             }
 
             traspasoFactory.traspasoEsquemaDetalle(paraTraspasoDetalle).then(function(response) {
