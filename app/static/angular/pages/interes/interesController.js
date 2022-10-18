@@ -1032,6 +1032,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         }
     });
     $scope.callCompensation = function() {
+        $scope.disabledButton = false;
         var validaS = validaSaldo();
         if (validaS == 0) {
             $scope.consecCompensacion = 0;
@@ -1397,6 +1398,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                         confirmButtonText: "Aplicar",
                         closeOnConfirm: true
                     }, function() {
+                        $scope.disabledButton = true;
                         $scope.totalCompensar();
                         $scope.sumaTotalCXP();
                         $scope.sumaTotalCXC();
