@@ -33,7 +33,7 @@ appModule.controller('unidadesvinController', function($scope, $rootScope, $loca
     $scope.muestrafinalizar = finalizar != undefined ? false : true;
 
     $scope.apretarboton = 0;
-
+    $scope.disablesButton = false;
     $scope.getNewUnitsBySucursal = function(empresaID) {
         $('#tblUnidadesNuevasVin').DataTable().destroy();
         unidadesvinFactory.getNewUnitsBySucursal(empresaID).then(function(result) {
@@ -270,6 +270,9 @@ appModule.controller('unidadesvinController', function($scope, $rootScope, $loca
         $scope.setTableStyle('#tblUnidadesNuevasVin');
         $scope.totalUnidades = $scope.lstNewUnits.length;
         $scope.setCalendarStyle();
+        if($scope.maxPro != $scope.totalUnidades){
+            swal("Aviso", "El número de unidades cargadas en el excel no coincide con el número de unidades encontradas. Favor de reportarlo con sistemas.", "warning");
+        }
     };
 
     $scope.setTableStyle = function(tableID) {
@@ -296,6 +299,7 @@ appModule.controller('unidadesvinController', function($scope, $rootScope, $loca
         // }
         // else
         // {
+        $scope.disablesButton = true;
         unidadesvinFactory.assignMesage($scope.setSchema);
         // }
     };

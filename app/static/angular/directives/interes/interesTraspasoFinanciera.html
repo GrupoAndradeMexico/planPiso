@@ -55,6 +55,24 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="ftienereduccion">Fecha de inicio esquema:</label>
+                            <div class="input-group date" data-provide="datepicker" data-date-format="dd/mm/yyyy">
+                                <input type="text" class="form-control" ng-model="fechaInicioCambia">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </div>
+                            </div>
+                        </div>                        
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="ftienereduccion">Cambiara la fecha de todos los documentos </label>
+                            <button class="btn btn-warning" ng-click="cambiaFechaEsquema(fechaInicioCambia)">Cambiar</button>
+                        </div> 
+                                             
+                    </div>
                 </div>
             </div>
             <hr>
@@ -82,6 +100,7 @@
                     <th>Interes Corte Pagado</th>
                     <th>Interes MesActual</th>
                     <th>Interes Acumulado Financiera</th>
+                    <th ng-show="typeTraspaso == 4">Fecha</th>
                     <th>Interes Total</th>
                 </tr>
             </thead>
@@ -99,6 +118,14 @@
                     <td>{{unidad.InteresCortePagado | currency}}</td>
                     <td>{{unidad.InteresMesActual | currency}}</td>
                     <td>{{unidad.InteresAcumuladoFinanciera | currency}}</td>
+                    <td ng-show="typeTraspaso == 4" style="width:200px">
+                        <div class="input-group date" data-provide="datepicker" data-date-format="dd/mm/yyyy">
+                            <input type="text" class="form-control" ng-model="unidad.fechaInicioEsquema">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </div>
+                        </div>
+                    </td>
                     <td>{{unidad.InteresTotal | currency}}</td>
                 </tr>
             </tbody>
