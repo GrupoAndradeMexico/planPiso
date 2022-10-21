@@ -151,7 +151,7 @@
                 <th>Interes Financiera</th>
                 <th ng-show="ajusteManual">Ajuste de Interes</th>
                 <th>Ajuste</th>
-                <th></th>
+                <!-- <th></th> -->
                 <th width="180">Situación</th>
             </tr>
         </thead>
@@ -199,10 +199,10 @@
                 <td>
                     {{dato.diferencia | currency}}
                 </td>
-                <td>
+                <!-- <td>
                     <button class="btn btn-warning pull-right" ng-click="mostrarModalPagos(dato)"
                         ng-disabled="dato.diferencia<50 && dato.diferencia >-50">MC y Pago virtual</button>
-                </td>
+                </td> -->
                 <td ng-class="  {
                                 'celdaFondoVerde': dato.equiparante == 1 && dato.esMayor == 1,
                                 'celdaFondoAzul': dato.equiparante == 1 && ( dato.esMayor == 0 || dato.esMayor == 2 || dato.esMayor == 3),

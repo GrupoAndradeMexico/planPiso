@@ -238,7 +238,7 @@ appModule.controller('conciliacionController', function($scope, $rootScope, $loc
     $scope.arrayToObject = function(array) {
         var lst = [];
         for (var i = 0; i < array.length; i++) {
-            var obj = { dato1: array[i].Numeroserie, dato2: array[i].Valor, dato3: array[i].Interes };
+            var obj = { dato1: array[i].Numeroserie, dato2: array[i].Valor, dato3: array[i].Interes, dato4: array[i].Fecha };
             lst.push(obj);
         }
         return lst;
