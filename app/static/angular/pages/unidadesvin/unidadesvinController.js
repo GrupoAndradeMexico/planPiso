@@ -329,7 +329,8 @@ appModule.controller('unidadesvinController', function($scope, $rootScope, $loca
             tipoEntrada: item.tipoCompra,
             idEmpresa: item.idEmpresa,
             idSucursal: item.idSucursal,
-            vin: item.veh_numserie
+            vin: item.veh_numserie,
+            folioOrden: item.folioOrden
         };
 
         unidadesvinFactory.setUnitSchema(data).then(function(result) {

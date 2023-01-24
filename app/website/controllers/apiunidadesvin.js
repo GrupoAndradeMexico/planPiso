@@ -46,7 +46,8 @@ Apiunidadesvin.prototype.post_setUnitSchema = function(req, res, next) {
     { name: 'montoFinanciar', value: req.body.saldoInicial, type: self.model.types.DECIMAL },
     { name: 'diasgracia', value: req.body.diasgracia, type: self.model.types.INT },
     { name: 'empresaID', value: req.body.idEmpresa, type: self.model.types.INT },
-    { name: 'numeroSerie', value: req.body.vin, type: self.model.types.STRING }];
+    { name: 'numeroSerie', value: req.body.vin, type: self.model.types.STRING },
+    { name: 'folioOrden', value: req.body.folioOrden, type: self.model.types.STRING }];
 
     self.model.query('Pol_Poliza14Detalle_INS', params, function(error, result) {
         self.view.expositor(res, {
