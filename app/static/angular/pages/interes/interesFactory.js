@@ -6,23 +6,35 @@ appModule.factory('interesFactory', function($http) {
             return $http({
                 url: interesesUrl + 'InterestUnits/',
                 method: "GET",
-                params: { empresaID: empresaID, sucursalID: sucursalID, financieraID: financieraID },
-                headers: { 'Content-Type': 'application/json' }
+                params: {
+                    empresaID: empresaID,
+                    sucursalID: sucursalID,
+                    financieraID: financieraID
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         getDetailUnits: function(unidadID) {
             return $http({
                 url: interesesUrl + 'DetailUnits/',
                 method: "GET",
-                params: { unidadID: unidadID },
-                headers: { 'Content-Type': 'application/json' }
+                params: {
+                    unidadID: unidadID
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         insLotePago: function() {
             return $http({
                 url: interesesUrl + 'insLotePago/',
                 method: "GET",
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         insLotePagoDetalle: function(params) {
@@ -30,7 +42,9 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'insLotePagoDetalle/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         getSchemaMovements: function(params) {
@@ -38,7 +52,9 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'SchemaMovements/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         getGuardaProvision: function(params) {
@@ -46,7 +62,9 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'guardaProvision/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         getProcesaProvision: function(params) {
@@ -54,7 +72,9 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'procesaProvision/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         getProvisionToday: function(params) {
@@ -62,7 +82,9 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'ProvisionToday/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         ProvisionFinancieraDetalle: function(params) {
@@ -70,7 +92,9 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'ProvisionFinancieraDetalle/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         insPago: function(params) {
@@ -78,7 +102,9 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'insPago/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         insCompensacion: function(params) {
@@ -86,7 +112,9 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'insCompensacion/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         validaPago: function(params) {
@@ -94,7 +122,9 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'validaPago/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         GetCompensacion: function(params) {
@@ -102,7 +132,9 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'Compensacion/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         ReduccionFinanciera: function(params) {
@@ -110,7 +142,9 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'reduccionFinanciera/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         ReduccionFinancieraDetalle: function(params) {
@@ -118,7 +152,9 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'reduccionFinancieraDetalle/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         procesaReduccion: function(lastId) {
@@ -128,23 +164,37 @@ appModule.factory('interesFactory', function($http) {
                 params: {
                     idReduccionFinanciera: lastId
                 },
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         getInterestUnitsNews: function(empresaID, sucursalID, financieraID) {
             return $http({
                 url: interesesUrl + 'interestUnitsNews/',
                 method: "GET",
-                params: { empresaID: empresaID, sucursalID: sucursalID, financieraID: financieraID },
-                headers: { 'Content-Type': 'application/json' }
+                params: {
+                    empresaID: empresaID,
+                    sucursalID: sucursalID,
+                    financieraID: financieraID
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         getInterestUnitsPreOwned: function(empresaID, sucursalID, financieraID) {
             return $http({
                 url: interesesUrl + 'interestUnitsPreOwned/',
                 method: "GET",
-                params: { empresaID: empresaID, sucursalID: sucursalID, financieraID: financieraID },
-                headers: { 'Content-Type': 'application/json' }
+                params: {
+                    empresaID: empresaID,
+                    sucursalID: sucursalID,
+                    financieraID: financieraID
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         insertaDocumentosLote: function(array) {
@@ -152,7 +202,9 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'insertaDocumentosLote/',
                 method: "POST",
                 data: array,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
 
@@ -165,7 +217,9 @@ appModule.factory('interesFactory', function($http) {
                     idSucursal: idSucursal,
                     documento: documento
                 },
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         facturaTramites: function(idEmpresa, idSucursal, documento) {
@@ -177,7 +231,9 @@ appModule.factory('interesFactory', function($http) {
                     idSucursal: idSucursal,
                     documento: documento
                 },
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         facturaServicios: function(idEmpresa, idSucursal, documento) {
@@ -189,7 +245,9 @@ appModule.factory('interesFactory', function($http) {
                     idSucursal: idSucursal,
                     documento: documento
                 },
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         facturaOT: function(idEmpresa, idSucursal, documento) {
@@ -201,7 +259,9 @@ appModule.factory('interesFactory', function($http) {
                     idSucursal: idSucursal,
                     documento: documento
                 },
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         facturaAccesorios: function(idEmpresa, idSucursal, documento) {
@@ -213,7 +273,9 @@ appModule.factory('interesFactory', function($http) {
                     idSucursal: idSucursal,
                     documento: documento
                 },
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         saveSpread: function(params) {
@@ -221,7 +283,9 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'saveSpread/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         enganche: function(vin, documento) {
@@ -232,7 +296,9 @@ appModule.factory('interesFactory', function($http) {
                     vin: vin,
                     documento: documento
                 },
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         cabeceraPoliza: function(params) {
@@ -240,7 +306,9 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'cabeceraPoliza/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         compensacionDetalle: function(params) {
@@ -248,7 +316,9 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'compensacionDetalle/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         detalleBproCompensacion: function(params) {
@@ -256,7 +326,9 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'detalleBproCompensacion/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         notaCredito: function(idEmpresa, idSucursal, documento) {
@@ -268,7 +340,9 @@ appModule.factory('interesFactory', function($http) {
                     idSucursal: idSucursal,
                     documento: documento
                 },
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         guardarTraspaso: function(params) {
@@ -276,15 +350,22 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'guardarTraspaso/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         Refacciones: function(sucursalID, vin) {
             return $http({
                 url: interesesUrl + 'Refacciones/',
                 method: "GET",
-                params: { sucursalID: sucursalID, vin: vin },
-                headers: { 'Content-Type': 'application/json' }
+                params: {
+                    sucursalID: sucursalID,
+                    vin: vin
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         insertaDocumentosLoteCompensacion: function(array) {
@@ -292,15 +373,21 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'insertaDocumentosLoteCompensacion/',
                 method: "POST",
                 data: array,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         Meses: function(financieraID) {
             return $http({
                 url: interesesUrl + 'Meses/',
                 method: "GET",
-                params: { financieraID: financieraID },
-                headers: { 'Content-Type': 'application/json' }
+                params: {
+                    financieraID: financieraID
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         RecalculaInteres: function(params) {
@@ -308,39 +395,57 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'RecalculaInteres/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         ResumenInteresMes: function(idfinanciera) {
             return $http({
                 url: interesesUrl + 'ResumenInteresMes/',
                 method: "GET",
-                params: { idfinanciera: idfinanciera },
-                headers: { 'Content-Type': 'application/json' }
+                params: {
+                    idfinanciera: idfinanciera
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         historiaFolios: function(folio) {
             return $http({
                 url: interesesUrl + 'historiaFolios/',
                 method: "GET",
-                params: { folio: folio },
-                headers: { 'Content-Type': 'application/json' }
+                params: {
+                    folio: folio
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         movimientosFolio: function(folio) {
             return $http({
                 url: interesesUrl + 'movimientosFolio/',
                 method: "GET",
-                params: { folio: folio },
-                headers: { 'Content-Type': 'application/json' }
+                params: {
+                    folio: folio
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         historialCotizacion: function(folio) {
             return $http({
                 url: interesesUrl + 'historialCotizacion/',
                 method: "GET",
-                params: { folio: folio },
-                headers: { 'Content-Type': 'application/json' }
+                params: {
+                    folio: folio
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
 
@@ -353,7 +458,9 @@ appModule.factory('interesFactory', function($http) {
                     idSucursal: idSucursal,
                     documento: documento
                 },
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         facturaTramitesH: function(idEmpresa, idSucursal, documento) {
@@ -365,7 +472,9 @@ appModule.factory('interesFactory', function($http) {
                     idSucursal: idSucursal,
                     documento: documento
                 },
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         facturaServiciosH: function(idEmpresa, idSucursal, documento) {
@@ -377,7 +486,9 @@ appModule.factory('interesFactory', function($http) {
                     idSucursal: idSucursal,
                     documento: documento
                 },
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         facturaOTH: function(idEmpresa, idSucursal, documento) {
@@ -389,7 +500,9 @@ appModule.factory('interesFactory', function($http) {
                     idSucursal: idSucursal,
                     documento: documento
                 },
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         facturaAccesoriosH: function(idEmpresa, idSucursal, documento) {
@@ -401,7 +514,9 @@ appModule.factory('interesFactory', function($http) {
                     idSucursal: idSucursal,
                     documento: documento
                 },
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         movimientoscxp: function(folio) {
@@ -411,7 +526,9 @@ appModule.factory('interesFactory', function($http) {
                 params: {
                     folio: folio
                 },
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         movimientoscxc: function(folio, documento) {
@@ -423,7 +540,9 @@ appModule.factory('interesFactory', function($http) {
                     documento: documento
                 },
 
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         otGarantia: function(vin, factura) {
@@ -435,7 +554,9 @@ appModule.factory('interesFactory', function($http) {
                     factura: factura
                 },
 
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         buscaFactura: function(factura, idEmpresa) {
@@ -447,7 +568,9 @@ appModule.factory('interesFactory', function($http) {
                     factura: factura
                 },
 
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         getCuentas: function(params) {
@@ -455,7 +578,9 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'cuentas/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         insprevioConciliacion: function(params) {
@@ -463,7 +588,9 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'insprevioConciliacion/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         updprevioConciliacion: function(params) {
@@ -471,7 +598,9 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'updprevioConciliacion/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         delprevioConciliacion: function(params) {
@@ -479,7 +608,9 @@ appModule.factory('interesFactory', function($http) {
                 url: interesesUrl + 'delprevioConciliacion/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         obtenerCompensacion: function(documento, factura, tiempo) {
@@ -492,7 +623,9 @@ appModule.factory('interesFactory', function($http) {
                     tiempo: tiempo
                 },
 
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         eliminaCompensacion: function(documento, factura, tiempo) {
@@ -505,7 +638,9 @@ appModule.factory('interesFactory', function($http) {
                     tiempo: tiempo
                 },
 
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         obtieneDetalleCompensacion: function(documento) {
@@ -516,7 +651,9 @@ appModule.factory('interesFactory', function($http) {
                     documento: documento
                 },
 
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         fechaCierreMes: function(documento, idEmpresa) {
@@ -528,10 +665,11 @@ appModule.factory('interesFactory', function($http) {
                     idEmpresa: idEmpresa
                 },
 
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
-        }
-        ,
+        },
         getFinancial: function(empresaId) {
             return $http({
                 url: interesesUrl + 'getFinancial/',
@@ -540,16 +678,45 @@ appModule.factory('interesFactory', function($http) {
                     empresaId: empresaId
                 },
 
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
-        },saveSpreadFecha: function(params) {
+        },
+        saveSpreadFecha: function(params) {
             return $http({
                 url: interesesUrl + 'saveSpreadFecha/',
                 method: "GET",
                 params: params,
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
-
+        saveApiPoliza: function(documento, idMovimiento, json, idDealer) {
+            return $http({
+                url: interesesUrl + 'saveApiPoliza',
+                method: "POST",
+                data: {
+                    documento,
+                    idMovimiento,
+                    idDealer,
+                    json
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        },
+        getDetallePoliza: function(transaccion, idDealer) {
+            return $http({
+                url: interesesUrl + 'detallePoliza/',
+                method: "GET",
+                params: {transaccion, idDealer},
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
     };
 });

@@ -1,5 +1,6 @@
 var ApiInteresView = require('../views/reference'),
     ApiInteresModel = require('../models/dataAccess')
+var request = require('request')
 
 
 var ApiInteres = function(conf) {
@@ -20,10 +21,19 @@ ApiInteres.prototype.get_InterestUnits = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'empresaID', value: req.query.empresaID, type: self.model.types.INT },
-        { name: 'sucursalID', value: req.query.sucursalID, type: self.model.types.INT },
-        { name: 'financieraID', value: req.query.financieraID, type: self.model.types.INT }
-    ];
+    var params = [{
+        name: 'empresaID',
+        value: req.query.empresaID,
+        type: self.model.types.INT
+    }, {
+        name: 'sucursalID',
+        value: req.query.sucursalID,
+        type: self.model.types.INT
+    }, {
+        name: 'financieraID',
+        value: req.query.financieraID,
+        type: self.model.types.INT
+    }];
 
     self.model.query('uspGetUnidadesInteres', params, function(error, result) {
         self.view.expositor(res, {
@@ -37,7 +47,11 @@ ApiInteres.prototype.get_DetailUnits = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'unidadID', value: req.query.unidadID, type: self.model.types.INT }];
+    var params = [{
+        name: 'unidadID',
+        value: req.query.unidadID,
+        type: self.model.types.INT
+    }];
 
     self.model.query('uspGetUnidadesDetalle', params, function(error, result) {
         self.view.expositor(res, {
@@ -63,10 +77,19 @@ ApiInteres.prototype.get_insLotePagoDetalle = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'loteID', value: req.query.loteID, type: self.model.types.INT },
-        { name: 'unidadID', value: req.query.unidadID, type: self.model.types.INT },
-        { name: 'interesCalculado', value: req.query.interesCalculado, type: self.model.types.INT }
-    ];
+    var params = [{
+        name: 'loteID',
+        value: req.query.loteID,
+        type: self.model.types.INT
+    }, {
+        name: 'unidadID',
+        value: req.query.unidadID,
+        type: self.model.types.INT
+    }, {
+        name: 'interesCalculado',
+        value: req.query.interesCalculado,
+        type: self.model.types.INT
+    }];
 
     self.model.query('uspInsLoteInteresDetalle', params, function(error, result) {
         self.view.expositor(res, {
@@ -79,16 +102,43 @@ ApiInteres.prototype.get_guardaProvision = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
-        { name: 'idSucursal', value: req.query.idSucursal, type: self.model.types.INT },
-        { name: 'idFinanciera', value: req.query.idFinanciera, type: self.model.types.INT },
-        { name: 'CCP_IDDOCTO', value: req.query.CCP_IDDOCTO, type: self.model.types.STRING },
-        { name: 'consecutivo', value: req.query.consecutivo, type: self.model.types.INT },
-        { name: 'saldoDocumento', value: req.query.saldoDocumento, type: self.model.types.STRING },
-        { name: 'interesCalculado', value: req.query.interesCalculado, type: self.model.types.STRING },
-        { name: 'interesAplicar', value: req.query.interesAplicar, type: self.model.types.STRING },
-        { name: 'aplica', value: req.query.aplica, type: self.model.types.INT }
-    ];
+    var params = [{
+        name: 'idEmpresa',
+        value: req.query.idEmpresa,
+        type: self.model.types.INT
+    }, {
+        name: 'idSucursal',
+        value: req.query.idSucursal,
+        type: self.model.types.INT
+    }, {
+        name: 'idFinanciera',
+        value: req.query.idFinanciera,
+        type: self.model.types.INT
+    }, {
+        name: 'CCP_IDDOCTO',
+        value: req.query.CCP_IDDOCTO,
+        type: self.model.types.STRING
+    }, {
+        name: 'consecutivo',
+        value: req.query.consecutivo,
+        type: self.model.types.INT
+    }, {
+        name: 'saldoDocumento',
+        value: req.query.saldoDocumento,
+        type: self.model.types.STRING
+    }, {
+        name: 'interesCalculado',
+        value: req.query.interesCalculado,
+        type: self.model.types.STRING
+    }, {
+        name: 'interesAplicar',
+        value: req.query.interesAplicar,
+        type: self.model.types.STRING
+    }, {
+        name: 'aplica',
+        value: req.query.aplica,
+        type: self.model.types.INT
+    }];
 
     self.model.query('GUARDAPROVISION_SP', params, function(error, result) {
         self.view.expositor(res, {
@@ -101,7 +151,11 @@ ApiInteres.prototype.get_procesaProvision = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'conse', value: req.query.consecutivo, type: self.model.types.INT }];
+    var params = [{
+        name: 'conse',
+        value: req.query.consecutivo,
+        type: self.model.types.INT
+    }];
 
     self.model.query('PROCESAPROVISIO_SP', params, function(error, result) {
         self.view.expositor(res, {
@@ -114,7 +168,11 @@ ApiInteres.prototype.get_SchemaMovements = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'CCP_IDDOCTO', value: req.query.CCP_IDDOCTO, type: self.model.types.STRING }];
+    var params = [{
+        name: 'CCP_IDDOCTO',
+        value: req.query.CCP_IDDOCTO,
+        type: self.model.types.STRING
+    }];
 
     self.model.queryAllRecordSet('Usp_EsquemaMovimientos_GET', params, function(error, result) {
         self.view.expositor(res, {
@@ -127,10 +185,19 @@ ApiInteres.prototype.get_ProvisionToday = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idUsuario', value: req.query.idUsuario, type: self.model.types.INT },
-        { name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
-        { name: 'idtipopoliza', value: req.query.idtipopoliza, type: self.model.types.INT }
-    ];
+    var params = [{
+        name: 'idUsuario',
+        value: req.query.idUsuario,
+        type: self.model.types.INT
+    }, {
+        name: 'idEmpresa',
+        value: req.query.idEmpresa,
+        type: self.model.types.INT
+    }, {
+        name: 'idtipopoliza',
+        value: req.query.idtipopoliza,
+        type: self.model.types.INT
+    }];
 
     self.model.query('Pol_Cabecera_INS', params, function(error, result) {
         self.view.expositor(res, {
@@ -143,10 +210,19 @@ ApiInteres.prototype.get_ProvisionFinancieraDetalle = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idUsuario', value: req.query.idUsuario, type: self.model.types.INT },
-        { name: 'idCierre', value: req.query.idCierre, type: self.model.types.INT },
-        { name: 'totalInteres', value: req.query.totalInteres, type: self.model.types.DECIMAL },
-    ];
+    var params = [{
+        name: 'idUsuario',
+        value: req.query.idUsuario,
+        type: self.model.types.INT
+    }, {
+        name: 'idCierre',
+        value: req.query.idCierre,
+        type: self.model.types.INT
+    }, {
+        name: 'totalInteres',
+        value: req.query.totalInteres,
+        type: self.model.types.DECIMAL
+    }, ];
 
     self.model.query('Pol_Poliza7Detalle_INS', params, function(error, result) {
         self.view.expositor(res, {
@@ -159,19 +235,55 @@ ApiInteres.prototype.get_insPago = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'CCP_IDDOCTO', value: req.query.CCP_IDDOCTO, type: self.model.types.INT },
-        { name: 'idempresa', value: req.query.idempresa, type: self.model.types.INT },
-        { name: 'idsucursal', value: req.query.idsucursal, type: self.model.types.INT },
-        { name: 'tipoPagoInteresID', value: req.query.tipoPagoInteresID, type: self.model.types.STRING },
-        { name: 'tipoPagoMensualID', value: req.query.tipoPagoMensualID, type: self.model.types.INT },
-        { name: 'tipoSOFOMID', value: req.query.tipoSOFOMID, type: self.model.types.STRING },
-        { name: 'tipoCobroInteresID', value: req.query.tipoCobroInteresID, type: self.model.types.STRING },
-        { name: 'interesMes', value: req.query.interesMes, type: self.model.types.STRING },
-        { name: 'saldo', value: req.query.saldo, type: self.model.types.INT },
-        { name: 'totalMes', value: req.query.totalMes, type: self.model.types.STRING },
-        { name: 'fechaPromesa', value: req.query.fechaPromesa, type: self.model.types.INT },
-        { name: 'usuarioID', value: req.query.usuarioID, type: self.model.types.INT }
-    ];
+    var params = [{
+        name: 'CCP_IDDOCTO',
+        value: req.query.CCP_IDDOCTO,
+        type: self.model.types.INT
+    }, {
+        name: 'idempresa',
+        value: req.query.idempresa,
+        type: self.model.types.INT
+    }, {
+        name: 'idsucursal',
+        value: req.query.idsucursal,
+        type: self.model.types.INT
+    }, {
+        name: 'tipoPagoInteresID',
+        value: req.query.tipoPagoInteresID,
+        type: self.model.types.STRING
+    }, {
+        name: 'tipoPagoMensualID',
+        value: req.query.tipoPagoMensualID,
+        type: self.model.types.INT
+    }, {
+        name: 'tipoSOFOMID',
+        value: req.query.tipoSOFOMID,
+        type: self.model.types.STRING
+    }, {
+        name: 'tipoCobroInteresID',
+        value: req.query.tipoCobroInteresID,
+        type: self.model.types.STRING
+    }, {
+        name: 'interesMes',
+        value: req.query.interesMes,
+        type: self.model.types.STRING
+    }, {
+        name: 'saldo',
+        value: req.query.saldo,
+        type: self.model.types.INT
+    }, {
+        name: 'totalMes',
+        value: req.query.totalMes,
+        type: self.model.types.STRING
+    }, {
+        name: 'fechaPromesa',
+        value: req.query.fechaPromesa,
+        type: self.model.types.INT
+    }, {
+        name: 'usuarioID',
+        value: req.query.usuarioID,
+        type: self.model.types.INT
+    }];
 
     self.model.query('Usp_CreaPago_INS', params, function(error, result) {
         self.view.expositor(res, {
@@ -184,7 +296,11 @@ ApiInteres.prototype.get_validaPago = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'CCP_IDDOCTO', value: req.query.CCP_IDDOCTO, type: self.model.types.STRING }];
+    var params = [{
+        name: 'CCP_IDDOCTO',
+        value: req.query.CCP_IDDOCTO,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('Usp_ValidaPago_GET', params, function(error, result) {
         self.view.expositor(res, {
@@ -197,7 +313,11 @@ ApiInteres.prototype.get_Compensacion = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'CCP_IDDOCTO', value: req.query.CCP_IDDOCTO, type: self.model.types.STRING }];
+    var params = [{
+        name: 'CCP_IDDOCTO',
+        value: req.query.CCP_IDDOCTO,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('Usp_Compensacion_GET', params, function(error, result) {
         self.view.expositor(res, {
@@ -210,12 +330,27 @@ ApiInteres.prototype.get_insCompensacion = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'CCP_IDDOCTO', value: req.query.CCP_IDDOCTO, type: self.model.types.STRING },
-        { name: 'idempresa', value: req.query.idempresa, type: self.model.types.INT },
-        { name: 'idsucursal', value: req.query.idsucursal, type: self.model.types.INT },
-        { name: 'saldo', value: req.query.saldo, type: self.model.types.INT },
-        { name: 'usuarioID', value: req.query.usuarioID, type: self.model.types.INT }
-    ];
+    var params = [{
+        name: 'CCP_IDDOCTO',
+        value: req.query.CCP_IDDOCTO,
+        type: self.model.types.STRING
+    }, {
+        name: 'idempresa',
+        value: req.query.idempresa,
+        type: self.model.types.INT
+    }, {
+        name: 'idsucursal',
+        value: req.query.idsucursal,
+        type: self.model.types.INT
+    }, {
+        name: 'saldo',
+        value: req.query.saldo,
+        type: self.model.types.INT
+    }, {
+        name: 'usuarioID',
+        value: req.query.usuarioID,
+        type: self.model.types.INT
+    }];
 
     self.model.query('Usp_CreaCompensacion_INS', params, function(error, result) {
         self.view.expositor(res, {
@@ -228,10 +363,19 @@ ApiInteres.prototype.get_ReduccionFinanciera = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idUsuario', value: req.query.idUsuario, type: self.model.types.INT },
-        { name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
-        { name: 'idtipopoliza', value: req.query.idtipopoliza, type: self.model.types.INT }
-    ];
+    var params = [{
+        name: 'idUsuario',
+        value: req.query.idUsuario,
+        type: self.model.types.INT
+    }, {
+        name: 'idEmpresa',
+        value: req.query.idEmpresa,
+        type: self.model.types.INT
+    }, {
+        name: 'idtipopoliza',
+        value: req.query.idtipopoliza,
+        type: self.model.types.INT
+    }];
 
     self.model.query('Pol_Cabecera_INS', params, function(error, result) {
         self.view.expositor(res, {
@@ -245,11 +389,23 @@ ApiInteres.prototype.get_ReduccionFinancieraDetalle = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idpoliza', value: req.query.idpoliza, type: self.model.types.INT },
-        { name: 'idmovimiento', value: req.query.idmovimiento, type: self.model.types.INT },
-        { name: 'idUsuario', value: req.query.idUsuario, type: self.model.types.INT },
-        { name: 'saldo', value: req.query.saldo, type: self.model.types.DECIMAL }
-    ];
+    var params = [{
+        name: 'idpoliza',
+        value: req.query.idpoliza,
+        type: self.model.types.INT
+    }, {
+        name: 'idmovimiento',
+        value: req.query.idmovimiento,
+        type: self.model.types.INT
+    }, {
+        name: 'idUsuario',
+        value: req.query.idUsuario,
+        type: self.model.types.INT
+    }, {
+        name: 'saldo',
+        value: req.query.saldo,
+        type: self.model.types.DECIMAL
+    }];
 
     self.model.query('Pol_PolizaReduccionDetalle_INS', params, function(error, result) {
         self.view.expositor(res, {
@@ -262,10 +418,19 @@ ApiInteres.prototype.get_interestUnitsNews = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'empresaID', value: req.query.empresaID, type: self.model.types.INT },
-        { name: 'sucursalID', value: req.query.sucursalID, type: self.model.types.INT },
-        { name: 'financieraID', value: req.query.financieraID, type: self.model.types.INT }
-    ];
+    var params = [{
+        name: 'empresaID',
+        value: req.query.empresaID,
+        type: self.model.types.INT
+    }, {
+        name: 'sucursalID',
+        value: req.query.sucursalID,
+        type: self.model.types.INT
+    }, {
+        name: 'financieraID',
+        value: req.query.financieraID,
+        type: self.model.types.INT
+    }];
 
     self.model.query('uspGetUnidadesInteresNuevas', params, function(error, result) {
         self.view.expositor(res, {
@@ -278,10 +443,19 @@ ApiInteres.prototype.get_interestUnitsPreOwned = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'empresaID', value: req.query.empresaID, type: self.model.types.INT },
-        { name: 'sucursalID', value: req.query.sucursalID, type: self.model.types.INT },
-        { name: 'financieraID', value: req.query.financieraID, type: self.model.types.INT }
-    ];
+    var params = [{
+        name: 'empresaID',
+        value: req.query.empresaID,
+        type: self.model.types.INT
+    }, {
+        name: 'sucursalID',
+        value: req.query.sucursalID,
+        type: self.model.types.INT
+    }, {
+        name: 'financieraID',
+        value: req.query.financieraID,
+        type: self.model.types.INT
+    }];
 
     self.model.query('uspGetUnidadesInteresSeminuevas', params, function(error, result) {
         self.view.expositor(res, {
@@ -319,10 +493,19 @@ ApiInteres.prototype.get_facturaUnidad = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
-        { name: 'idSucursal', value: req.query.idSucursal, type: self.model.types.INT },
-        { name: 'documento', value: req.query.documento, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'idEmpresa',
+        value: req.query.idEmpresa,
+        type: self.model.types.INT
+    }, {
+        name: 'idSucursal',
+        value: req.query.idSucursal,
+        type: self.model.types.INT
+    }, {
+        name: 'documento',
+        value: req.query.documento,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('usp_get_facturaUnidad', params, function(error, result) {
         self.view.expositor(res, {
@@ -335,10 +518,19 @@ ApiInteres.prototype.get_facturaTramites = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
-        { name: 'idSucursal', value: req.query.idSucursal, type: self.model.types.INT },
-        { name: 'documento', value: req.query.documento, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'idEmpresa',
+        value: req.query.idEmpresa,
+        type: self.model.types.INT
+    }, {
+        name: 'idSucursal',
+        value: req.query.idSucursal,
+        type: self.model.types.INT
+    }, {
+        name: 'documento',
+        value: req.query.documento,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('usp_get_facturaTramites', params, function(error, result) {
         self.view.expositor(res, {
@@ -351,10 +543,19 @@ ApiInteres.prototype.get_facturaServicios = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
-        { name: 'idSucursal', value: req.query.idSucursal, type: self.model.types.INT },
-        { name: 'documento', value: req.query.documento, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'idEmpresa',
+        value: req.query.idEmpresa,
+        type: self.model.types.INT
+    }, {
+        name: 'idSucursal',
+        value: req.query.idSucursal,
+        type: self.model.types.INT
+    }, {
+        name: 'documento',
+        value: req.query.documento,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('usp_get_facturaServicio', params, function(error, result) {
         self.view.expositor(res, {
@@ -367,10 +568,19 @@ ApiInteres.prototype.get_facturaOT = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
-        { name: 'idSucursal', value: req.query.idSucursal, type: self.model.types.INT },
-        { name: 'documento', value: req.query.documento, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'idEmpresa',
+        value: req.query.idEmpresa,
+        type: self.model.types.INT
+    }, {
+        name: 'idSucursal',
+        value: req.query.idSucursal,
+        type: self.model.types.INT
+    }, {
+        name: 'documento',
+        value: req.query.documento,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('usp_get_facturaOT', params, function(error, result) {
         self.view.expositor(res, {
@@ -383,10 +593,19 @@ ApiInteres.prototype.get_facturaAccesorios = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
-        { name: 'idSucursal', value: req.query.idSucursal, type: self.model.types.INT },
-        { name: 'documento', value: req.query.documento, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'idEmpresa',
+        value: req.query.idEmpresa,
+        type: self.model.types.INT
+    }, {
+        name: 'idSucursal',
+        value: req.query.idSucursal,
+        type: self.model.types.INT
+    }, {
+        name: 'documento',
+        value: req.query.documento,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('usp_get_facturaAccerosio', params, function(error, result) {
         self.view.expositor(res, {
@@ -399,15 +618,39 @@ ApiInteres.prototype.get_saveSpread = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idempresa', value: req.query.idempresa, type: self.model.types.INT },
-        { name: 'idfinanciera', value: req.query.idfinanciera, type: self.model.types.INT },
-        { name: 'puntos', value: req.query.puntos, type: self.model.types.DECIMAL },
-        { name: 'tiie', value: req.query.tiie, type: self.model.types.DECIMAL },
-        { name: 'penetracion', value: req.query.penetracion, type: self.model.types.DECIMAL },
-        { name: 'quincena', value: req.query.quincena, type: self.model.types.INT },
-        { name: 'mes', value: req.query.mes, type: self.model.types.INT },
-        { name: 'anio', value: req.query.anio, type: self.model.types.INT }
-    ];
+    var params = [{
+        name: 'idempresa',
+        value: req.query.idempresa,
+        type: self.model.types.INT
+    }, {
+        name: 'idfinanciera',
+        value: req.query.idfinanciera,
+        type: self.model.types.INT
+    }, {
+        name: 'puntos',
+        value: req.query.puntos,
+        type: self.model.types.DECIMAL
+    }, {
+        name: 'tiie',
+        value: req.query.tiie,
+        type: self.model.types.DECIMAL
+    }, {
+        name: 'penetracion',
+        value: req.query.penetracion,
+        type: self.model.types.DECIMAL
+    }, {
+        name: 'quincena',
+        value: req.query.quincena,
+        type: self.model.types.INT
+    }, {
+        name: 'mes',
+        value: req.query.mes,
+        type: self.model.types.INT
+    }, {
+        name: 'anio',
+        value: req.query.anio,
+        type: self.model.types.INT
+    }];
 
     self.model.query('uspSaveSpreads', params, function(error, result) {
         self.view.expositor(res, {
@@ -420,9 +663,15 @@ ApiInteres.prototype.get_enganche = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'numeroSerie', value: req.query.vin, type: self.model.types.STRING },
-        { name: 'documento', value: req.query.documento, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'numeroSerie',
+        value: req.query.vin,
+        type: self.model.types.STRING
+    }, {
+        name: 'documento',
+        value: req.query.documento,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('Usp_get_engancheCotizacion', params, function(error, result) {
         self.view.expositor(res, {
@@ -435,10 +684,19 @@ ApiInteres.prototype.get_cabeceraPoliza = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idUsuario', value: req.query.idUsuario, type: self.model.types.INT },
-        { name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
-        { name: 'idtipopoliza', value: req.query.idtipopoliza, type: self.model.types.INT }
-    ];
+    var params = [{
+        name: 'idUsuario',
+        value: req.query.idUsuario,
+        type: self.model.types.INT
+    }, {
+        name: 'idEmpresa',
+        value: req.query.idEmpresa,
+        type: self.model.types.INT
+    }, {
+        name: 'idtipopoliza',
+        value: req.query.idtipopoliza,
+        type: self.model.types.INT
+    }];
 
     self.model.query('Pol_Cabecera_INS', params, function(error, result) {
         self.view.expositor(res, {
@@ -451,14 +709,35 @@ ApiInteres.prototype.get_compensacionDetalle = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idpoliza', value: req.query.idpoliza, type: self.model.types.INT },
-        { name: 'idmovimiento', value: req.query.idmovimiento, type: self.model.types.INT },
-        { name: 'idUsuario', value: req.query.idUsuario, type: self.model.types.INT },
-        { name: 'saldo', value: req.query.saldo, type: self.model.types.DECIMAL },
-        { name: 'tiempo', value: req.query.tiempo, type: self.model.types.STRING },
-        { name: 'facturaUnidad', value: req.query.facturaUnidad, type: self.model.types.STRING },
-        { name: 'fechaSeleccionada', value: req.query.fecha, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'idpoliza',
+        value: req.query.idpoliza,
+        type: self.model.types.INT
+    }, {
+        name: 'idmovimiento',
+        value: req.query.idmovimiento,
+        type: self.model.types.INT
+    }, {
+        name: 'idUsuario',
+        value: req.query.idUsuario,
+        type: self.model.types.INT
+    }, {
+        name: 'saldo',
+        value: req.query.saldo,
+        type: self.model.types.DECIMAL
+    }, {
+        name: 'tiempo',
+        value: req.query.tiempo,
+        type: self.model.types.STRING
+    }, {
+        name: 'facturaUnidad',
+        value: req.query.facturaUnidad,
+        type: self.model.types.STRING
+    }, {
+        name: 'fechaSeleccionada',
+        value: req.query.fecha,
+        type: self.model.types.STRING
+    }];
     console.log(params);
     console.log('----------------------------------')
     self.model.query('Pol_Poliza13Detalle_INS', params, function(error, result) {
@@ -472,18 +751,51 @@ ApiInteres.prototype.get_detalleBproCompensacion = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idpoliza', value: req.query.idpoliza, type: self.model.types.INT },
-        { name: 'idmovimiento', value: req.query.idmovimiento, type: self.model.types.INT },
-        { name: 'idUsuario', value: req.query.idUsuario, type: self.model.types.INT },
-        { name: 'saldo', value: req.query.saldo, type: self.model.types.DECIMAL },
-        { name: 'tipoProducto', value: req.query.tipoProducto, type: self.model.types.STRING },
-        { name: 'documento', value: req.query.documento, type: self.model.types.STRING },
-        { name: 'tiempo', value: req.query.tiempo, type: self.model.types.STRING },
-        { name: 'consecutivo', value: req.query.consecutivo, type: self.model.types.STRING },
-        { name: 'idReciboAutomatico', value: req.query.idReciboAutomatico, type: self.model.types.INT },
-        { name: 'facturaUnidad', value: req.query.facturaUnidad, type: self.model.types.STRING },
-        { name: 'fechaSeleccionada', value: req.query.fecha, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'idpoliza',
+        value: req.query.idpoliza,
+        type: self.model.types.INT
+    }, {
+        name: 'idmovimiento',
+        value: req.query.idmovimiento,
+        type: self.model.types.INT
+    }, {
+        name: 'idUsuario',
+        value: req.query.idUsuario,
+        type: self.model.types.INT
+    }, {
+        name: 'saldo',
+        value: req.query.saldo,
+        type: self.model.types.DECIMAL
+    }, {
+        name: 'tipoProducto',
+        value: req.query.tipoProducto,
+        type: self.model.types.STRING
+    }, {
+        name: 'documento',
+        value: req.query.documento,
+        type: self.model.types.STRING
+    }, {
+        name: 'tiempo',
+        value: req.query.tiempo,
+        type: self.model.types.STRING
+    }, {
+        name: 'consecutivo',
+        value: req.query.consecutivo,
+        type: self.model.types.STRING
+    }, {
+        name: 'idReciboAutomatico',
+        value: req.query.idReciboAutomatico,
+        type: self.model.types.INT
+    }, {
+        name: 'facturaUnidad',
+        value: req.query.facturaUnidad,
+        type: self.model.types.STRING
+    }, {
+        name: 'fechaSeleccionada',
+        value: req.query.fecha,
+        type: self.model.types.STRING
+    }];
     console.log(params);
     console.log('====================================')
     self.model.query('Pol_Poliza13DetalleBPRO_INS', params, function(error, result) {
@@ -497,10 +809,19 @@ ApiInteres.prototype.get_notaCredito = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
-        { name: 'idSucursal', value: req.query.idSucursal, type: self.model.types.INT },
-        { name: 'documento', value: req.query.documento, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'idEmpresa',
+        value: req.query.idEmpresa,
+        type: self.model.types.INT
+    }, {
+        name: 'idSucursal',
+        value: req.query.idSucursal,
+        type: self.model.types.INT
+    }, {
+        name: 'documento',
+        value: req.query.documento,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('usp_get_notacredito', params, function(error, result) {
         self.view.expositor(res, {
@@ -513,9 +834,15 @@ ApiInteres.prototype.get_guardarTraspaso = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'sucursalID', value: req.query.sucursalID, type: self.model.types.INT },
-        { name: 'idmovimientostring', value: req.query.idmovimientostring, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'sucursalID',
+        value: req.query.sucursalID,
+        type: self.model.types.INT
+    }, {
+        name: 'idmovimientostring',
+        value: req.query.idmovimientostring,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('uspSaveTraspaso', params, function(error, result) {
         self.view.expositor(res, {
@@ -528,8 +855,15 @@ ApiInteres.prototype.get_Refacciones = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'sucursalID', value: req.query.sucursalID, type: self.model.types.INT },
-        { name: 'vin', value: req.query.vin, type: self.model.types.STRING }
+    var params = [{
+            name: 'sucursalID',
+            value: req.query.sucursalID,
+            type: self.model.types.INT
+        }, {
+            name: 'vin',
+            value: req.query.vin,
+            type: self.model.types.STRING
+        }
 
     ];
 
@@ -559,7 +893,11 @@ ApiInteres.prototype.get_Meses = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'financieraID', value: req.query.financieraID, type: self.model.types.INT }];
+    var params = [{
+        name: 'financieraID',
+        value: req.query.financieraID,
+        type: self.model.types.INT
+    }];
 
     self.model.query('uspGetMeses', params, function(error, result) {
         self.view.expositor(res, {
@@ -572,8 +910,11 @@ ApiInteres.prototype.get_RecalculaInteres = function(req, res, next) {
 
     var self = this;
 
-    var params = [
-        { name: 'financieraId', value: req.query.financieraId, type: self.model.types.INT }
+    var params = [{
+            name: 'financieraId',
+            value: req.query.financieraId,
+            type: self.model.types.INT
+        }
 
     ];
 
@@ -590,9 +931,11 @@ ApiInteres.prototype.get_ResumenInteresMes = function(req, res, next) {
 
     var self = this;
 
-    var params = [
-        { name: 'idfinanciera', value: req.query.idfinanciera, type: self.model.types.INT }
-    ];
+    var params = [{
+        name: 'idfinanciera',
+        value: req.query.idfinanciera,
+        type: self.model.types.INT
+    }];
 
     self.model.query('PreCierre_SP', params, function(error, result) {
 
@@ -605,9 +948,11 @@ ApiInteres.prototype.get_ResumenInteresMes = function(req, res, next) {
 ApiInteres.prototype.get_historiaFolios = function(req, res, next) {
     var self = this;
 
-    var params = [
-        { name: 'folioTPP', value: req.query.folio, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'folioTPP',
+        value: req.query.folio,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('usp_get_historialFolios', params, function(error, result) {
 
@@ -621,9 +966,11 @@ ApiInteres.prototype.get_movimientosFolio = function(req, res, next) {
 
     var self = this;
 
-    var params = [
-        { name: 'CCP_IDDOCTO', value: req.query.folio, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'CCP_IDDOCTO',
+        value: req.query.folio,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('usp_get_movimientosFolio', params, function(error, result) {
 
@@ -637,9 +984,11 @@ ApiInteres.prototype.get_historialCotizacion = function(req, res, next) {
 
     var self = this;
 
-    var params = [
-        { name: 'folioTPP', value: req.query.folio, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'folioTPP',
+        value: req.query.folio,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('usp_get_historialCotizacion', params, function(error, result) {
 
@@ -653,10 +1002,19 @@ ApiInteres.prototype.get_facturaUnidadH = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
-        { name: 'idSucursal', value: req.query.idSucursal, type: self.model.types.INT },
-        { name: 'documento', value: req.query.documento, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'idEmpresa',
+        value: req.query.idEmpresa,
+        type: self.model.types.INT
+    }, {
+        name: 'idSucursal',
+        value: req.query.idSucursal,
+        type: self.model.types.INT
+    }, {
+        name: 'documento',
+        value: req.query.documento,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('usp_get_facturaUnidadConsulta', params, function(error, result) {
         self.view.expositor(res, {
@@ -669,10 +1027,19 @@ ApiInteres.prototype.get_facturaTramitesH = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
-        { name: 'idSucursal', value: req.query.idSucursal, type: self.model.types.INT },
-        { name: 'documento', value: req.query.documento, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'idEmpresa',
+        value: req.query.idEmpresa,
+        type: self.model.types.INT
+    }, {
+        name: 'idSucursal',
+        value: req.query.idSucursal,
+        type: self.model.types.INT
+    }, {
+        name: 'documento',
+        value: req.query.documento,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('usp_get_facturaTramitesConsulta', params, function(error, result) {
         self.view.expositor(res, {
@@ -685,10 +1052,19 @@ ApiInteres.prototype.get_facturaServiciosH = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
-        { name: 'idSucursal', value: req.query.idSucursal, type: self.model.types.INT },
-        { name: 'documento', value: req.query.documento, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'idEmpresa',
+        value: req.query.idEmpresa,
+        type: self.model.types.INT
+    }, {
+        name: 'idSucursal',
+        value: req.query.idSucursal,
+        type: self.model.types.INT
+    }, {
+        name: 'documento',
+        value: req.query.documento,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('usp_get_facturaServicioConsulta', params, function(error, result) {
         self.view.expositor(res, {
@@ -701,10 +1077,19 @@ ApiInteres.prototype.get_facturaOTH = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
-        { name: 'idSucursal', value: req.query.idSucursal, type: self.model.types.INT },
-        { name: 'documento', value: req.query.documento, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'idEmpresa',
+        value: req.query.idEmpresa,
+        type: self.model.types.INT
+    }, {
+        name: 'idSucursal',
+        value: req.query.idSucursal,
+        type: self.model.types.INT
+    }, {
+        name: 'documento',
+        value: req.query.documento,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('usp_get_facturaOTConsulta', params, function(error, result) {
         self.view.expositor(res, {
@@ -717,10 +1102,19 @@ ApiInteres.prototype.get_facturaAccesoriosH = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
-        { name: 'idSucursal', value: req.query.idSucursal, type: self.model.types.INT },
-        { name: 'documento', value: req.query.documento, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'idEmpresa',
+        value: req.query.idEmpresa,
+        type: self.model.types.INT
+    }, {
+        name: 'idSucursal',
+        value: req.query.idSucursal,
+        type: self.model.types.INT
+    }, {
+        name: 'documento',
+        value: req.query.documento,
+        type: self.model.types.STRING
+    }];
     console.log(params)
     self.model.query('usp_get_facturaAccerosioConsulta', params, function(error, result) {
         self.view.expositor(res, {
@@ -733,9 +1127,11 @@ ApiInteres.prototype.get_movimientoscxp = function(req, res, next) {
 
     var self = this;
 
-    var params = [
-        { name: 'folio', value: req.query.folio, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'folio',
+        value: req.query.folio,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('usp_get_movimientosCxp', params, function(error, result) {
 
@@ -749,10 +1145,15 @@ ApiInteres.prototype.get_movimientoscxc = function(req, res, next) {
 
     var self = this;
 
-    var params = [
-        { name: 'folio', value: req.query.folio, type: self.model.types.STRING },
-        { name: 'documento', value: req.query.documento, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'folio',
+        value: req.query.folio,
+        type: self.model.types.STRING
+    }, {
+        name: 'documento',
+        value: req.query.documento,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('usp_get_movimientoscxc', params, function(error, result) {
 
@@ -766,10 +1167,15 @@ ApiInteres.prototype.get_otGarantia = function(req, res, next) {
 
     var self = this;
 
-    var params = [
-        { name: 'vin', value: req.query.vin, type: self.model.types.STRING },
-        { name: 'factura', value: req.query.factura, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'vin',
+        value: req.query.vin,
+        type: self.model.types.STRING
+    }, {
+        name: 'factura',
+        value: req.query.factura,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('usp_get_otGarantiaExtendida', params, function(error, result) {
 
@@ -783,10 +1189,15 @@ ApiInteres.prototype.get_buscaFactura = function(req, res, next) {
 
     var self = this;
 
-    var params = [
-        { name: 'documento', value: req.query.factura, type: self.model.types.STRING },
-        { name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'documento',
+        value: req.query.factura,
+        type: self.model.types.STRING
+    }, {
+        name: 'idEmpresa',
+        value: req.query.idEmpresa,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('usp_get_comisionDelear', params, function(error, result) {
 
@@ -813,11 +1224,23 @@ ApiInteres.prototype.get_insprevioConciliacion = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idfinanciera', value: req.query.idfinanciera, type: self.model.types.INT },
-        { name: 'sucursalID', value: req.query.idsucursal, type: self.model.types.INT },
-        { name: 'Interes', value: req.query.Interes, type: self.model.types.DECIMAL },
-        { name: 'CTA_NUMCTA', value: req.query.CTA_NUMCTA, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'idfinanciera',
+        value: req.query.idfinanciera,
+        type: self.model.types.INT
+    }, {
+        name: 'sucursalID',
+        value: req.query.idsucursal,
+        type: self.model.types.INT
+    }, {
+        name: 'Interes',
+        value: req.query.Interes,
+        type: self.model.types.DECIMAL
+    }, {
+        name: 'CTA_NUMCTA',
+        value: req.query.CTA_NUMCTA,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('INS_preCierreInteres_SP', params, function(error, result) {
         self.view.expositor(res, {
@@ -830,11 +1253,23 @@ ApiInteres.prototype.get_updprevioConciliacion = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idpreCierreInteres', value: req.query.idpreCierreInteres, type: self.model.types.INT },
-        { name: 'sucursalID', value: req.query.idsucursal, type: self.model.types.INT },
-        { name: 'Interes', value: req.query.Interes, type: self.model.types.DECIMAL },
-        { name: 'CTA_NUMCTA', value: req.query.CTA_NUMCTA, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'idpreCierreInteres',
+        value: req.query.idpreCierreInteres,
+        type: self.model.types.INT
+    }, {
+        name: 'sucursalID',
+        value: req.query.idsucursal,
+        type: self.model.types.INT
+    }, {
+        name: 'Interes',
+        value: req.query.Interes,
+        type: self.model.types.DECIMAL
+    }, {
+        name: 'CTA_NUMCTA',
+        value: req.query.CTA_NUMCTA,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('UPD_preCierreInteres_SP', params, function(error, result) {
         self.view.expositor(res, {
@@ -848,7 +1283,11 @@ ApiInteres.prototype.get_delprevioConciliacion = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idpreCierreInteres', value: req.query.idpreCierreInteres, type: self.model.types.INT }, ];
+    var params = [{
+        name: 'idpreCierreInteres',
+        value: req.query.idpreCierreInteres,
+        type: self.model.types.INT
+    }, ];
 
     self.model.query('DEL_preCierreInteres_SP', params, function(error, result) {
         self.view.expositor(res, {
@@ -862,13 +1301,22 @@ ApiInteres.prototype.get_obtenerCompensacion = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'folio', value: req.query.documento, type: self.model.types.STRING },
-        { name: 'factura', value: req.query.factura, type: self.model.types.STRING },
-        { name: 'hora', value: req.query.tiempo, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'folio',
+        value: req.query.documento,
+        type: self.model.types.STRING
+    }, {
+        name: 'factura',
+        value: req.query.factura,
+        type: self.model.types.STRING
+    }, {
+        name: 'hora',
+        value: req.query.tiempo,
+        type: self.model.types.STRING
+    }];
 
     self.model.queryAllRecordSet('usp_get_compensacion', params, function(error, result) {
-        
+
         self.view.expositor(res, {
             error: error,
             result: result
@@ -880,13 +1328,22 @@ ApiInteres.prototype.get_eliminaCompensacion = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'folio', value: req.query.documento, type: self.model.types.STRING },
-        { name: 'factura', value: req.query.factura, type: self.model.types.STRING },
-        { name: 'hora', value: req.query.tiempo, type: self.model.types.STRING }
-    ];
+    var params = [{
+        name: 'folio',
+        value: req.query.documento,
+        type: self.model.types.STRING
+    }, {
+        name: 'factura',
+        value: req.query.factura,
+        type: self.model.types.STRING
+    }, {
+        name: 'hora',
+        value: req.query.tiempo,
+        type: self.model.types.STRING
+    }];
 
     self.model.query('usp_del_compensacion', params, function(error, result) {
-       
+
         self.view.expositor(res, {
             error: error,
             result: result
@@ -897,8 +1354,12 @@ ApiInteres.prototype.get_obtieneDetalleCompensacion = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'folio', value: req.query.documento, type: self.model.types.STRING }];
-    
+    var params = [{
+        name: 'folio',
+        value: req.query.documento,
+        type: self.model.types.STRING
+    }];
+
 
     self.model.queryAllRecordSet('usp_get_detalleCompensacion', params, function(error, result) {
         console.log(result)
@@ -912,9 +1373,16 @@ ApiInteres.prototype.get_fechaCierreMes = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'folio', value: req.query.documento, type: self.model.types.STRING },
-    { name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT }];
-    
+    var params = [{
+        name: 'folio',
+        value: req.query.documento,
+        type: self.model.types.STRING
+    }, {
+        name: 'idEmpresa',
+        value: req.query.idEmpresa,
+        type: self.model.types.INT
+    }];
+
 
     self.model.queryAllRecordSet('usp_get_fechaCierreMes', params, function(error, result) {
         console.log(result)
@@ -928,8 +1396,11 @@ ApiInteres.prototype.get_getFinancial = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'empresaId', value: req.query.empresaId, type: self.model.types.INT }
-    ];
+    var params = [{
+        name: 'empresaId',
+        value: req.query.empresaId,
+        type: self.model.types.INT
+    }];
 
     self.model.query('uspGetFinancieraSpread', params, function(error, result) {
         self.view.expositor(res, {
@@ -942,19 +1413,151 @@ ApiInteres.prototype.get_saveSpreadFecha = function(req, res, next) {
 
     var self = this;
 
-    var params = [{ name: 'idempresa', value: req.query.idempresa, type: self.model.types.INT },
-        { name: 'idfinanciera', value: req.query.idfinanciera, type: self.model.types.INT },
-        { name: 'puntos', value: req.query.puntos, type: self.model.types.DECIMAL },
-        { name: 'tiie', value: req.query.tiie, type: self.model.types.DECIMAL },
-        { name: 'penetracion', value: req.query.penetracion, type: self.model.types.DECIMAL },
-        { name: 'fecha', value: req.query.fecha, type: self.model.types.STRING }
-      
+    var params = [{
+            name: 'idempresa',
+            value: req.query.idempresa,
+            type: self.model.types.INT
+        }, {
+            name: 'idfinanciera',
+            value: req.query.idfinanciera,
+            type: self.model.types.INT
+        }, {
+            name: 'puntos',
+            value: req.query.puntos,
+            type: self.model.types.DECIMAL
+        }, {
+            name: 'tiie',
+            value: req.query.tiie,
+            type: self.model.types.DECIMAL
+        }, {
+            name: 'penetracion',
+            value: req.query.penetracion,
+            type: self.model.types.DECIMAL
+        }, {
+            name: 'fecha',
+            value: req.query.fecha,
+            type: self.model.types.STRING
+        }
+
     ];
 
     self.model.query('uspSaveSpreadsFecha', params, function(error, result) {
         self.view.expositor(res, {
             error: error,
             result: result
+        });
+    });
+};
+ApiInteres.prototype.post_saveApiPoliza = function(req, res, next) {
+
+    var self = this;
+    var res_p = res;
+    console.log('ENTRE')
+    console.log(req.body.documento);
+    console.log(req.body.idMovimiento);
+    console.log(req.body.idDealer);
+    console.log(JSON.stringify(req.body.json));
+    request({
+        headers: {
+            'IdDealer': req.body.idDealer,
+            'Content-Type': 'application/json'
+        },
+        uri: this.conf.parameters.urlApiBpro + "Procesar",
+        body: JSON.stringify(req.body.json),
+        method: 'POST'
+    }, function(err, res, body) {
+        console.log(err)
+        console.log(JSON.parse(body))
+            // if (!err) {
+        let respuesta = JSON.parse(body);
+        let params = [{
+            name: 'documento',
+            value: req.body.documento,
+            type: self.model.types.STRING
+        }, {
+            name: 'movimientoID',
+            value: req.body.idMovimiento,
+            type: self.model.types.INT
+        }, {
+            name: 'idDealer',
+            value: req.body.idDealer,
+            type: self.model.types.STRING
+        }, {
+            name: 'json',
+            value: JSON.stringify(req.body.json),
+            type: self.model.types.STRING
+        }, {
+            name: 'transaccion',
+            value: respuesta.transaccion,
+            type: self.model.types.STRING
+        }, {
+            name: 'error',
+            value: respuesta.error,
+            type: self.model.types.STRING
+        }];
+        // console.log(params);
+        self.model.query('ins_bitacoraApi', params, function(error, result) {
+            self.view.expositor(res_p, {
+                error: error,
+                result: result
+            });
+        });
+        // } else {
+        //     self.view.expositor(res, {
+        //         error: true,
+        //         result: null
+        //     });
+        // }
+    });
+    // request.post({
+    //         url: this.conf.parameters.urlApiBpro + "Procesar",
+    //         form: JSON.stringify(req.body.json)
+    //     }, function (error, response, body) {
+    //         if (!error && response.statusCode == 200) {
+    //             // res.json(JSON.parse(body));
+    //             console.log(JSON.parse(body))
+    //         }
+    //     })
+
+    // var params = [{ name: 'empresaID', value: req.query.empresaID, type: self.model.types.INT },
+    // { name: 'sucursalID', value: req.query.sucursalID, type: self.model.types.INT },
+    // { name: 'financieraID', value: req.query.financieraID, type: self.model.types.INT }];
+
+    // self.model.query('uspGetUnidadesInteresSeminuevas', params, function(error, result) {
+    //     self.view.expositor(res, {
+    //         error: error,
+    //         result: result
+    //     });
+    // });  
+
+};
+ApiInteres.prototype.get_detallePoliza = function(req, res, next) {
+
+    var self = this;
+    let res_2 = res;
+
+    // var params = [{
+    //     name: 'transaccion',
+    //     value: req.query.transaccion,
+    //     type: self.model.types.INT
+    // }];
+    console.log(req.query.transaccion)
+    console.log(req.query.idDealer)
+        // req.query.idDealer
+    request({
+        headers: {
+            'IdDealer': req.query.idDealer,
+            'Content-Type': 'application/json'
+        },
+        uri: this.conf.parameters.urlApiBpro + "Consultar/" + req.query.transaccion,
+        // body: JSON.stringify(req.body.json),
+        method: 'GET'
+    }, function(err, res, body) {
+        console.log(err)
+        console.log(JSON.parse(body))
+        self.view.expositor(res_2, {
+            error: null,
+            result: JSON.parse(body)
         });
     });
 };
