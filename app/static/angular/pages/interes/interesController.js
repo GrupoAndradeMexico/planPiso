@@ -1528,12 +1528,13 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                                         'iva': '',
                                         'total': value.montoCompensar,
                                         'fecha': '',
-                                        'factura': $scope.unidadCompensacion.CCP_IDDOCTO,
+                                        'factura': $scope.factura_unidad,
                                         'numeroSerie': '',
                                         'saldo': '',
                                         'tipoProducto': 'PLP',
                                         'montoCompensar': value.montoCompensar
                                     });
+                                    value.factura = $scope.factura_unidad;
                                     detalleOc.Detalle.push({
                                         "Partida": 1,
                                         "ConceptoContable": $scope.orc_conceptocontable,
