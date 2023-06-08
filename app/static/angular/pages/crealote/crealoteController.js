@@ -852,7 +852,11 @@ appModule.controller('crealoteController', function($scope, $rootScope, $locatio
                     if ((row.convenioCIE == null) || (row.convenioCIE == undefined) || (row.convenioCIE == "")) {
                         pasaxCIE = true;
                     } else {
-                        pasaxCIE = false;
+                        if(row.cuentaDestino.includes(row.convenioCIE)){
+                            pasaxCIE = false;
+                        }else{                            
+                            pasaxCIE = true;
+                        }
                     }
                     if (pasaxCIE == false) {
                         if ((row.referencia == null) || (row.referencia == undefined) || (row.referencia == "")) {
