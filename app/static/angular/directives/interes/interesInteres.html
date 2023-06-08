@@ -37,7 +37,7 @@
             <tbody>
                 <tr ng-repeat="unidad in lstNewUnits | filter:{excludeField:false}" ng-class="{'alert alert-warning':unidad.ccs==1,'alert alert-danger':unidad.ccs==2,'alert alert-info':unidad.ccs==3}">
                     <td>
-                        <input type="checkbox" ng-model="unidad.isChecked" ng-click="checkUnits(unidad)">
+                        <input type="checkbox" ng-model="unidad.isChecked" ng-click="checkUnits(unidad)" ng-disabled="unidad.poliza == 1">
                     </td>
                     <td>{{unidad.CCP_IDDOCTO}}</td>
                     <td>{{unidad.vehNumserie}}</td>

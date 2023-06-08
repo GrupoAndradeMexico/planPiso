@@ -44,6 +44,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
     $scope.montoCompensar = 0;
     $scope.totalTablaCXP = 0;
     $scope.totalTablaCXC = 0;
+    $scope.fechaRealPago = '';
     var CargarSpreadTiie = _.where($scope.lstPermisoBoton, {
         idModulo: 4,
         Boton: "CargarSpreadTiie"
@@ -1101,6 +1102,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                             console.log(result.data[0][0].FechaHoy, result.data[0][0].fecha, 'Soy la fecha de cierre de mes y la de hoy')
                             $scope.fechaCierreMes = result.data[0][0].fecha;
                             $scope.fechaDiaHoy = result.data[0][0].FechaHoy;
+                            $scope.fechaRealPago = $scope.fechaDiaHoy;
                             if ($scope.fechaCierreMes != $scope.fechaDiaHoy) {
                                 $scope.mostrarFechasElegir = true;
                             }
@@ -2192,7 +2194,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                             value.Partida = key + 1;
                         });
 
-
+                        console.log($scope.fechaRealPago)
                         let jsonData = {
                             "Empresa": $scope.idEmpresaCotizacion,
                             "Sucursal": $scope.idSucursalCotizacion,
@@ -2207,7 +2209,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                                     "Referencia1": "",
                                     "Referencia2": $scope.unidadCompensacion.CCP_IDDOCTO,
                                     "Referencia3": $scope.vin,
-                                    "FechaRealPago": "09/05/2023",
+                                    "FechaRealPago": $scope.fechaRealPago,
                                     "Detalle": loCompensado
                                 }]
                             },
@@ -3262,6 +3264,17 @@ appModule.controller('interesController', function($scope, $rootScope, $location
 
                         });
                         break;
+                    case 'PROCESANDO':
+                        swal({
+                            title: "Póliza en proceso",
+                            text: "¡Su póliza esta en proceso, favor de intentarlo mas tarde!",
+                            type: "warning",
+                            showCancelButton: true,
+                            cancelButtonText: "Cerrar"
+                        }, function() {
+
+                        });
+                        break;
                     case 'ERROR':
                         swal({
                             title: "Ocurrio un problema",
@@ -3287,6 +3300,9 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             function(error) {
                 console.log(error);
             });
+    }
+    $scope.changeDate = function(fecha) {
+        $scope.fechaRealPago = fecha;
     }
 
 });
