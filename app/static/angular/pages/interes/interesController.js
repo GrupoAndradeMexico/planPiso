@@ -1532,9 +1532,11 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                                         'numeroSerie': '',
                                         'saldo': '',
                                         'tipoProducto': 'PLP',
-                                        'montoCompensar': value.montoCompensar
+                                        'montoCompensar': value.montoCompensar,
+                                        'idPersona': $scope.unidadCompensacion.financieraIDBP
                                     });
                                     value.factura = $scope.factura_unidad;
+                                    value.idPersona = $scope.unidadCompensacion.financieraIDBP;
                                     detalleOc.Detalle.push({
                                         "Partida": 1,
                                         "ConceptoContable": $scope.orc_conceptocontable,
