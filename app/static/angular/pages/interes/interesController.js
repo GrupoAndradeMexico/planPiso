@@ -215,6 +215,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                     $scope.interesAcumulado += $scope.lstNewUnits[i].InteresAcumulado;
                     $scope.numUnidades++;
                 }
+                $('#mdlLoading').modal('hide');
             });
         }
         // Obtiene las unidades nuevas desde el tab nuevas
@@ -491,7 +492,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         $('#mdlLoading').modal('show');
         interesFactory.Meses(financialeObj.financieraID).then(function(result) {
             $scope.lstMes = result.data;
-            $('#mdlLoading').modal('hide');
+            // $('#mdlLoading').modal('hide');
         });
     };
     $scope.setCurrentMes = function(mesObj) {
@@ -1068,6 +1069,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         }
     });
     $scope.callCompensation = function() {
+        $('#mdlLoading').modal('show');
         $scope.disabledButton = false;
         var validaS = validaSaldo();
         if (validaS == 0) {
@@ -1081,11 +1083,13 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             $scope.siguienteMostrar = true;
             if ($scope.haveSelection() === false) {
                 swal("Aviso", "No se ha seleccionado ningun registro", "warning");
+                $('#mdlLoading').modal('hide');
             } else {
                 // $scope.listValida = _.where($scope.lstNewUnits, { sePago: true });
                 seleccionados();
                 if ($scope.unidadesSeleccionadas > 1) {
                     swal("Aviso", "Solo se puede seleccionar uno a la vez.", "warning");
+                    $('#mdlLoading').modal('hide');
                 } else {
                     var valida = filterFilter($scope.lstNewUnits, {
                         isChecked: true
@@ -1272,6 +1276,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                                     $scope.totalCompensar();
                                     $scope.sumaTotalCXP()
                                     $scope.sumaTotalCXC();
+                                    $('#mdlLoading').modal('hide');
                                     // });
                                 }, function err(error) {
                                     console.log(error)
@@ -1281,6 +1286,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                                     $scope.currentPanel = "pnlCompensacion";
                                 } else {
                                     swal("Aviso", "No se puede compensar este documento.", "warning");
+                                    $('#mdlLoading').modal('hide');
                                 }
                                 let idPersonaSR = '';
                                 if ($scope.sinregimen.length > 0) {
@@ -1294,6 +1300,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                                     }, function() {
                                         location.reload();
                                     });
+                                    $('#mdlLoading').modal('hide');
                                     // swal("Aviso", "La persona que quiere afectar no tiene régimen fiscal asociado. Los id de persona son los siguientes: " + idPersonaSR, "warning");
                                 }
                                 console.log($scope.facturasTotal, 'TOTAL FACTURAS');
@@ -1335,6 +1342,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             }
         } else {
             swal("Aviso", "No puede seleccionar unidades con saldo 0", "warning");
+            $('#mdlLoading').modal('hide');
         }
     };
     var seleccionados = function() {
