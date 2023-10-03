@@ -550,6 +550,30 @@ appModule.factory('interesFactory', function($http) {
                 headers: { 'Content-Type': 'application/json' }
             });
         },
-
+        saveApiPoliza: function(documento, idMovimiento, json, idDealer) {
+            return $http({
+                url: interesesUrl + 'saveApiPoliza',
+                method: "POST",
+                data: {
+                    documento,
+                    idMovimiento,
+                    idDealer,
+                    json
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        },
+        getDetallePoliza: function(transaccion, idDealer) {
+            return $http({
+                url: interesesUrl + 'detallePoliza/',
+                method: "GET",
+                params: {transaccion, idDealer},
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
     };
 });

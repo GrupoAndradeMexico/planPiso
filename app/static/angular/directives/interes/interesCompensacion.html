@@ -1,6 +1,17 @@
 <div class="row">
     <div class="col-md-6">
         <h2><strong>Validar Compensacion</strong></h2>
+        <div class="col-md-6">
+            <div class="form-group" id="calendar">
+                <label for="fInicio">Fecha promesa de pago:</label>
+                <div class="input-group date" data-provide="datepicker" data-date-format="dd/mm/yyyy">
+                    <input type="text" class="form-control" ng-model="fechaRealPago" ng-change="changeDate(fechaRealPago)">
+                    <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </div>
+                </div> 
+            </div>
+        </div>
     </div>
     <div class="col-md-6">
         <div class="alert alert-info" role="alert">
@@ -25,11 +36,11 @@
     <div class="col-md-12">
         <div class="panel panel-primary">
             <div class="panel-heading">{{unidadCompensacion.CCP_IDDOCTO}}</div>
-            <div class="panel-body">
+            <!-- <div class="panel-body">
                 <div>
                     Cuentas por cobrar {{montoCompensarCxc}}
                 </div>
-            </div>
+            </div> -->
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -159,7 +170,10 @@
 </div>
 <div>
     <button class="btn btn-primary" ng-click="setPnlInteres()" style="margin:10px"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Regresar</button>
-    <button class="btn btn-primary pull-right" ng-click="setPnlCompensacionResumen(saldoCompensar, fechaSeleccionada)" style="margin:10px" ng-disabled="disabledButton" >Siguiente
+    <button class="btn btn-primary pull-right" ng-show="polizaApi == 0" ng-click="setPnlCompensacionResumen(saldoCompensar, fechaSeleccionada)" style="margin:10px" ng-disabled="disabledButton" >Siguiente
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    </button>
+    <button class="btn btn-primary pull-right" ng-show="polizaApi == 1" ng-click="setPnlCompensacionResumenApi(saldoCompensar, fechaSeleccionada)" style="margin:10px" ng-disabled="disabledButton" >Siguiente
         <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
     </button>
 </div>

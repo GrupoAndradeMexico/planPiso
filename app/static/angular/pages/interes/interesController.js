@@ -1,4 +1,4 @@
-appModule.controller('interesController', function($scope, $rootScope, $location, filterFilter, $filter, commonFactory, staticFactory, interesFactory, esquemaFactory, alertFactory, conciliacionFactory, traspasoFactory) {
+appModule.controller('interesController', function ($scope, $rootScope, $location, filterFilter, $filter, commonFactory, staticFactory, interesFactory, esquemaFactory, alertFactory, conciliacionFactory, traspasoFactory) {
     var sessionFactory = JSON.parse(sessionStorage.getItem("sessionFactory"));
     $scope.session = JSON.parse(sessionStorage.getItem("sessionFactory"));
     $scope.lstPermisoBoton = JSON.parse(sessionStorage.getItem("PermisoUsuario"));
@@ -41,7 +41,9 @@ appModule.controller('interesController', function($scope, $rootScope, $location
     $rootScope.puntos = 0;
     $scope.montoCompensar = 0;
     $scope.totalTablaCXP = 0;
-    $scope.totalTablaCXC = 0;
+    $scope.totalTablaCXC = 0;    
+    $scope.fechaRealPago = '';
+    $scope.polizaApi = 0;
     var CargarSpreadTiie = _.where($scope.lstPermisoBoton, { idModulo: 4, Boton: "CargarSpreadTiie" })[0];
     var cambiarEsquema = _.where($scope.lstPermisoBoton, { idModulo: 4, Boton: "cambiarEsquema" })[0];
     var traspasoFinanciera = _.where($scope.lstPermisoBoton, { idModulo: 4, Boton: "traspasoFinanciera" })[0];
@@ -57,58 +59,58 @@ appModule.controller('interesController', function($scope, $rootScope, $location
     $scope.muestracompensacion = compensacion != undefined ? false : true;
     $scope.muestrarecalcularIntereses = recalcularIntereses != undefined ? false : true;
     $scope.facturasCompensacion = [{
-            'tipoFactura': 'Comisión Dealer',
-            'cargo': 0,
-            'iva': '',
-            'total': 0,
-            'fecha': '',
-            'factura': '',
-            'numeroSerie': '',
-            'saldo': '',
-            'tipoProducto': 'CD',
-            'montoCompensar': 0,
-            'bpro': 1
-        },
-        {
-            'tipoFactura': 'Subsidio Dealer',
-            'cargo': 0,
-            'iva': '',
-            'total': 0,
-            'fecha': '',
-            'factura': '',
-            'numeroSerie': '',
-            'saldo': '',
-            'tipoProducto': 'PROV',
-            'montoCompensar': 0,
-        },
-        {
-            'tipoFactura': 'Incentivo Penetración',
-            'cargo': 0,
-            'iva': '',
-            'total': 0,
-            'fecha': '',
-            'factura': '',
-            'numeroSerie': '',
-            'saldo': '',
-            'tipoProducto': 'IP',
-            'montoCompensar': 0,
-            'bpro': 1
-        },
-        {
-            'tipoFactura': 'UDI por pagar',
-            'cargo': 0,
-            'iva': '',
-            'total': 0,
-            'fecha': '',
-            'factura': '',
-            'numeroSerie': '',
-            'saldo': '',
-            'tipoProducto': 'UDI',
-            'montoCompensar': 0,
-            'bpro': 1
-        }
+        'tipoFactura': 'Comisión Dealer',
+        'cargo': 0,
+        'iva': '',
+        'total': 0,
+        'fecha': '',
+        'factura': '',
+        'numeroSerie': '',
+        'saldo': '',
+        'tipoProducto': 'CD',
+        'montoCompensar': 0,
+        'bpro': 1
+    },
+    {
+        'tipoFactura': 'Subsidio Dealer',
+        'cargo': 0,
+        'iva': '',
+        'total': 0,
+        'fecha': '',
+        'factura': '',
+        'numeroSerie': '',
+        'saldo': '',
+        'tipoProducto': 'PROV',
+        'montoCompensar': 0,
+    },
+    {
+        'tipoFactura': 'Incentivo Penetración',
+        'cargo': 0,
+        'iva': '',
+        'total': 0,
+        'fecha': '',
+        'factura': '',
+        'numeroSerie': '',
+        'saldo': '',
+        'tipoProducto': 'IP',
+        'montoCompensar': 0,
+        'bpro': 1
+    },
+    {
+        'tipoFactura': 'UDI por pagar',
+        'cargo': 0,
+        'iva': '',
+        'total': 0,
+        'fecha': '',
+        'factura': '',
+        'numeroSerie': '',
+        'saldo': '',
+        'tipoProducto': 'UDI',
+        'montoCompensar': 0,
+        'bpro': 1
+    }
     ]
-    $scope.initAmounts = function() {
+    $scope.initAmounts = function () {
         $scope.lstNewUnits = [];
         $scope.interesPagado = 0;
         $scope.interesMesActual = 0;
@@ -116,23 +118,38 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         $scope.numUnidades = 0;
     };
 
-    commonFactory.getSucursal(sessionFactory.empresaID, $scope.idUsuario).then(function(result) {
+    commonFactory.getSucursal(sessionFactory.empresaID, $scope.idUsuario).then(function (result) {
         $scope.lstSucursal = result.data;
     });
 
 
-    commonFactory.getFinancial(sessionFactory.empresaID).then(function(result) {
+    commonFactory.getFinancial(sessionFactory.empresaID).then(function (result) {
         $scope.lstFinancial = result.data;
     });
-    interesFactory.getFinancial(sessionFactory.empresaID).then(function(result) {
+    let auxApiPermission = 0;
+    var getApiPermissions = function () {
+        commonFactory.getApiPermissions(sessionFactory.empresaID, 10).then(function (result) {
+            if (result.data[0][0].estatus == 1 || result.data[0][0].estatus == 0)
+                $scope.polizaApi = result.data[0][0].estatus;
+            else if(auxApiPermission <= 2 ){
+                getApiPermissions();
+                auxApiPermission++;
+            }else{
+                $scope.polizaApi = 2;
+                alertFactory.error('Ocurrio un error, favor de reportar a sistemas');
+            }
+        });
+    }
+    getApiPermissions();
+    interesFactory.getFinancial(sessionFactory.empresaID).then(function (result) {
         $scope.lstFinanciale = result.data;
     });
-    $scope.checkUnits = function(value) {
+    $scope.checkUnits = function (value) {
 
         $scope.showButtons = _.where($scope.lstNewUnits, { isChecked: true }).length > 0;
     }
 
-    $scope.setCurrentSucursal = function(sucursalObj) {
+    $scope.setCurrentSucursal = function (sucursalObj) {
         $scope.totalUnidades = 0;
         if (sucursalObj != null) {
             $scope.currentSucursalName = sucursalObj.nombreSucursal;
@@ -157,7 +174,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         }
 
     };
-    $scope.setCurrentFinancial = function(financialObj) {
+    $scope.setCurrentFinancial = function (financialObj) {
         //  $scope.currentPanel = "pnlResumen";
         $scope.currentFinancialName = financialObj.nombre;
         $scope.currentFinancial = financialObj;
@@ -170,13 +187,13 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             $scope.ObtenUnidadesInteresNuevas();
         }
     };
-    $scope.ObtenUnidadesInteres = function() {
+    $scope.ObtenUnidadesInteres = function () {
         $('#mdlLoading').modal('show');
         $scope.activoSeminuevos = false;
         $scope.activoNuevos = false;
         $scope.todos = true;
         $scope.initAmounts();
-        interesFactory.getInterestUnits(sessionFactory.empresaID, $scope.currentSucursal.sucursalID, $scope.currentFinancial.financieraID).then(function(result) {
+        interesFactory.getInterestUnits(sessionFactory.empresaID, $scope.currentSucursal.sucursalID, $scope.currentFinancial.financieraID).then(function (result) {
             $scope.setResetTable('tblUnidadesNuevas', 'Unidades Nuevas', 20);
             $scope.lstNewUnits = [];
             $scope.lstNewUnits = result.data;
@@ -196,13 +213,13 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         });
     }
     // Obtiene las unidades nuevas desde el tab nuevas
-    $scope.ObtenUnidadesInteresNuevas = function() {
+    $scope.ObtenUnidadesInteresNuevas = function () {
         $('#mdlLoading').modal('show');
         $scope.activoSeminuevos = false;
         $scope.activoNuevos = true;
         $scope.todos = false;
         $scope.initAmounts();
-        interesFactory.getInterestUnitsNews(sessionFactory.empresaID, $scope.currentSucursal.sucursalID, $scope.currentFinancial.financieraID).then(function(result) {
+        interesFactory.getInterestUnitsNews(sessionFactory.empresaID, $scope.currentSucursal.sucursalID, $scope.currentFinancial.financieraID).then(function (result) {
             $scope.setResetTable('tblUnidadesNuevas', 'Unidades Nuevas', 20);
             $scope.lstNewUnits = [];
             $scope.lstNewUnits = result.data;
@@ -222,13 +239,13 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         });
     }
     //Obtiene las unidades seminuevas desde el tab seminuevas
-    $scope.ObtenUnidadesInteresSeminuevas = function() {
+    $scope.ObtenUnidadesInteresSeminuevas = function () {
         $('#mdlLoading').modal('show');
         $scope.activoSeminuevos = true;
         $scope.activoNuevos = false;
         $scope.todos = false;
         $scope.initAmounts();
-        interesFactory.getInterestUnitsPreOwned(sessionFactory.empresaID, $scope.currentSucursal.sucursalID, $scope.currentFinancial.financieraID).then(function(result) {
+        interesFactory.getInterestUnitsPreOwned(sessionFactory.empresaID, $scope.currentSucursal.sucursalID, $scope.currentFinancial.financieraID).then(function (result) {
             $scope.setResetTable('tblUnidadesNuevas', 'Unidades Nuevas', 20);
             $scope.lstNewUnits = [];
             $scope.lstNewUnits = result.data;
@@ -247,7 +264,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             }
         });
     }
-    $scope.setCurrentFinance2 = function(financialObj) {
+    $scope.setCurrentFinance2 = function (financialObj) {
         //  $scope.currentPanel = "pnlResumen";
 
         $rootScope.currentFinancialName2 = financialObj.nombre;
@@ -257,21 +274,21 @@ appModule.controller('interesController', function($scope, $rootScope, $location
 
         // $scope.getNewUnitsBySucursal(sessionFactory.empresaID, $scope.currentSucursal.sucursalID);
 
-        commonFactory.getSchemas(financialObj.financieraID).then(function(result) {
+        commonFactory.getSchemas(financialObj.financieraID).then(function (result) {
             $rootScope.lstSchemas = result.data;
         });
     };
     $('#mdlLoading').modal('show');
 
-    $scope.getSchemas = function(financialId) {
+    $scope.getSchemas = function (financialId) {
         $('#mdlLoading').modal('show');
         $scope.currentSchemaName = financialId.nombre;
-        commonFactory.getSchemas(financialId).then(function(result) {
+        commonFactory.getSchemas(financialId).then(function (result) {
             $rootScope.lstSchemas = result.data;
             // $('#mdlLoading').modal('hide');
         });
     };
-    $scope.setCurrentSchema2 = function(financialId) {
+    $scope.setCurrentSchema2 = function (financialId) {
         console.log("financialId", financialId);
         $scope.currentSchemaName2 = financialId.nombre;
         $scope.currentSchema2 = financialId;
@@ -283,7 +300,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
 
     $scope.ObtenUnidadesInteres();
 
-    $scope.filterDay = function(days) {
+    $scope.filterDay = function (days) {
         $scope.interesPagado = 0;
         $scope.interesMesActual = 0;
         $scope.interesAcumulado = 0;
@@ -338,9 +355,9 @@ appModule.controller('interesController', function($scope, $rootScope, $location
 
 
 
-    $scope.getSchemas = function(financialId) {
+    $scope.getSchemas = function (financialId) {
         $('#mdlLoading').modal('show');
-        commonFactory.getSchemas(financialId).then(function(result) {
+        commonFactory.getSchemas(financialId).then(function (result) {
             $('#tblSchemas').DataTable().destroy();
             $rootScope.lstSchemas = result.data;
             // $('#mdlLoading').modal('hide');
@@ -349,27 +366,27 @@ appModule.controller('interesController', function($scope, $rootScope, $location
 
 
 
-    $scope.setPnlInteres = function() {
+    $scope.setPnlInteres = function () {
         $scope.currentPanel = "pnlInteres";
         $scope.setResetTable('tblUnidadesNuevas', 'Unidades Nuevas', 20);
         //  location.reload();
     };
 
-    $scope.setPnlInteresMovimientos = function() {
+    $scope.setPnlInteresMovimientos = function () {
         $scope.currentPanel = "pnlInteresMovimientos";
     };
 
-    $scope.setBackToDetailUnit = function(unidad) {
+    $scope.setBackToDetailUnit = function (unidad) {
         $scope.currentPanel = "pnlDetalleUnidad";
     }
     /////////////////////////
-    $scope.setPnlSpread = function() {
+    $scope.setPnlSpread = function () {
         $scope.currentPanel = "pnlSpread";
         $scope.setResetTable('tablaSpread', 'Tabla Spread', 10);
         //  location.reload();
         //  $scope.showwarningspread=true;
     };
-    commonFactory.getSpreads(sessionFactory.empresaID).then(function(result) {
+    commonFactory.getSpreads(sessionFactory.empresaID).then(function (result) {
         if (result.data.length > 0) {
             if ($scope.lstSpreads == undefined) {
                 $scope.lstSpreads = result.data[0];
@@ -377,10 +394,10 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             }
         }
     });
-    $scope.CargarNuevo = function() {
+    $scope.CargarNuevo = function () {
         $('#selectReporte').modal('show');
     };
-    $scope.editDetail = function(edit) {
+    $scope.editDetail = function (edit) {
         $('#selectReporte').modal('show');
         $scope.idfinanciera = edit.idfinanciera;
         $scope.puntos = edit.puntos;
@@ -393,17 +410,17 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         $scope.currentFinancialName2 = $scope.currentFinancial2.nombre;
 
     };
-    commonFactory.getFinancial($scope.session.empresaID).then(function(result) {
+    commonFactory.getFinancial($scope.session.empresaID).then(function (result) {
         $scope.lstFinancial = result.data;
 
     });
-    $scope.setCurrentFinance2 = function(financialObj) {
+    $scope.setCurrentFinance2 = function (financialObj) {
         //  $scope.currentPanel = "pnlResumen";
         $scope.currentFinancialName2 = financialObj.nombre;
         $scope.currentFinancial2 = financialObj;
         // $scope.getNewUnitsBySucursal(sessionFactory.empresaID, $scope.currentSucursal.sucursalID);
     };
-    $scope.GuardarDetalleSpread = function(puntos, tiie, penetracion,quincena, mes, anio) {
+    $scope.GuardarDetalleSpread = function (puntos, tiie, penetracion, quincena, mes, anio) {
         var data = {
             idempresa: sessionFactory.empresaID,
             idfinanciera: $scope.currentFinancial2.financieraID,
@@ -414,9 +431,9 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             mes: mes,
             anio: anio
         };
-        interesFactory.saveSpread(data).then(function(resultSchema) {
+        interesFactory.saveSpread(data).then(function (resultSchema) {
 
-            commonFactory.getSpreads(sessionFactory.empresaID).then(function(result) {
+            commonFactory.getSpreads(sessionFactory.empresaID).then(function (result) {
                 if (result.data.length > 0) {
                     $scope.lstSpreads = result.data[0];
 
@@ -428,7 +445,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         });
 
     }
-    $scope.GuardarDetalleSpreadCalendar = function(puntos, tiie, penetracion, fecha) {
+    $scope.GuardarDetalleSpreadCalendar = function (puntos, tiie, penetracion, fecha) {
         var data = {
             idempresa: sessionFactory.empresaID,
             idfinanciera: $scope.currentFinancial2.financieraID,
@@ -437,9 +454,9 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             penetracion: penetracion,
             fecha: fecha
         };
-        interesFactory.saveSpreadFecha(data).then(function(resultSchema) {
+        interesFactory.saveSpreadFecha(data).then(function (resultSchema) {
 
-            commonFactory.getSpreads(sessionFactory.empresaID).then(function(result) {
+            commonFactory.getSpreads(sessionFactory.empresaID).then(function (result) {
                 if (result.data.length > 0) {
                     $scope.lstSpreads = result.data[0];
 
@@ -451,32 +468,32 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         });
 
     }
-    $scope.setPnlRecalcular = function() {
+    $scope.setPnlRecalcular = function () {
         $scope.currentPanel = "pnlRecalcular";
         $scope.deshabilitaBoton = false;
         //  location.reload();
-        commonFactory.getFinancial(sessionFactory.empresaID).then(function(result) {
+        commonFactory.getFinancial(sessionFactory.empresaID).then(function (result) {
             $scope.lstFinanciale = result.data;
         });
         $scope.currentFinancialeName = 'Selecciona Financiera';
     };
-    $scope.setCurrentFinanciale = function(financialeObj) {
+    $scope.setCurrentFinanciale = function (financialeObj) {
         //  $scope.currentPanel = "pnlResumen";
         $scope.currentFinancialeName = financialeObj.nombre;
         $scope.currentFinanciale = financialeObj;
         $('#mdlLoading').modal('show');
-        interesFactory.Meses(financialeObj.financieraID).then(function(result) {
+        interesFactory.Meses(financialeObj.financieraID).then(function (result) {
             $scope.lstMes = result.data;
             $('#mdlLoading').modal('hide');
         });
     };
-    $scope.setCurrentMes = function(mesObj) {
+    $scope.setCurrentMes = function (mesObj) {
         //  $scope.currentPanel = "pnlResumen";
         $scope.currentMesName = mesObj.mes;
         $scope.currentMes = mesObj;
 
     };
-    $scope.recalculaInteres = function() {
+    $scope.recalculaInteres = function () {
         swal({
             title: "Recalcular Intereses",
             text: "¿Esta seguro de recalcular intereses?",
@@ -485,13 +502,13 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             closeOnConfirm: true,
             confirmButtonText: "Recalcula",
             cancelButtonText: "Cerrar"
-        }, function() {
+        }, function () {
             $('#mdlLoading').modal('show');
             $scope.deshabilitaBoton = true;
             var data = {
                 financieraId: $scope.currentFinanciale.financieraID
             };
-            interesFactory.RecalculaInteres(data).then(function(result) {
+            interesFactory.RecalculaInteres(data).then(function (result) {
                 if (result.data.length > 0) {
                     $('#mdlLoading').modal('hide');
                     $scope.deshabilitaBoton = false;
@@ -509,21 +526,21 @@ appModule.controller('interesController', function($scope, $rootScope, $location
     // $scope.reporteCaratula = function() {
     //     $('#selectReporte').modal('hide');
     ///////////////////////////
-    $scope.setPnlDetalleUnidad = function(unidad) {
+    $scope.setPnlDetalleUnidad = function (unidad) {
         historiaFolios(unidad.CCP_IDDOCTO);
-        interesFactory.getDetailUnits(unidad.unidadID).then(function(result) {
+        interesFactory.getDetailUnits(unidad.unidadID).then(function (result) {
             $scope.unitDetail = result.data[0];
             var data = {
                 CCP_IDDOCTO: unidad.CCP_IDDOCTO
             };
-            interesFactory.getSchemaMovements(data).then(function(resultSchema) {
+            interesFactory.getSchemaMovements(data).then(function (resultSchema) {
                 /*no debe de venir de aqui eliminar esquema factory es de movimientos*/
                 $scope.lstSchemeDetail = resultSchema.data[0];
                 $scope.unitDetail = resultSchema.data[1][0];
                 $scope.unitDetailEsquema = resultSchema.data[2][0];
                 $scope.lstInteresesMov = resultSchema.data[3];
                 $scope.TotalInteresMov = 0;
-                $scope.lstInteresesMov.forEach(function(item) {
+                $scope.lstInteresesMov.forEach(function (item) {
                     $scope.TotalInteresMov += item.totalInteres;
 
                 });
@@ -534,11 +551,11 @@ appModule.controller('interesController', function($scope, $rootScope, $location
 
     };
 
-    $scope.setPnlCambioAgencia = function() {
+    $scope.setPnlCambioAgencia = function () {
         $scope.currentPanel = "pnlAgencia";
     };
 
-    $scope.setPnlTraspasoFinanciero = function(typeTraspaso) {
+    $scope.setPnlTraspasoFinanciero = function (typeTraspaso) {
         var validaS = validaSaldo();
         if (validaS == 0) {
             $scope.typeTraspaso = typeTraspaso;
@@ -559,17 +576,17 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         }
     };
 
-    $scope.regresarTraspaso = function() {
+    $scope.regresarTraspaso = function () {
         $scope.currentPanel = "pnlFinanciera";
     }
 
-    $scope.setPnlResumen = function() {
+    $scope.setPnlResumen = function () {
         $scope.currentPanel = "pnlResumen";
     };
 
-    $scope.setPnlPagoResumen = function() {
+    $scope.setPnlPagoResumen = function () {
         var isok = 0;
-        $scope.lstSelectPay.forEach(function(item) {
+        $scope.lstSelectPay.forEach(function (item) {
             if (item.InteresMes == 0 || item.InteresMes == undefined) {
                 isok++;
 
@@ -583,9 +600,9 @@ appModule.controller('interesController', function($scope, $rootScope, $location
 
         }
     };
-    $scope.setPnlPagoUnidadResumen = function() {
+    $scope.setPnlPagoUnidadResumen = function () {
         var isok = 0;
-        $scope.lstSelectPay.forEach(function(item) {
+        $scope.lstSelectPay.forEach(function (item) {
             if (item.InteresMes == 0 || item.InteresMes == undefined) {
                 isok++;
 
@@ -603,10 +620,10 @@ appModule.controller('interesController', function($scope, $rootScope, $location
 
 
 
-    $scope.setTableStyle = function(tblID) {
+    $scope.setTableStyle = function (tblID) {
         staticFactory.setTableStyleOne(tblID);
     };
-    $scope.setResetTable = function(tblID, display, length) {
+    $scope.setResetTable = function (tblID, display, length) {
         staticFactory.setTableStyleClass('.' + tblID, display, length)
         // $('.' + tblID).DataTable().clear();
         // $('.' + tblID).DataTable().destroy();
@@ -621,20 +638,20 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         // }, 100);
         $('#mdlLoading').modal('hide');
     };
-    $scope.setDelayTableStyle = function(tblID) {
-        setTimeout(function() {
+    $scope.setDelayTableStyle = function (tblID) {
+        setTimeout(function () {
             staticFactory.setTableStyleOne(tblID);
         }, 500);
     };
 
-    $scope.initDashboardCounters = function() {
+    $scope.initDashboardCounters = function () {
         $scope.interesPagado = 0;
         $scope.interesMesActual = 0;
         $scope.interesAcumulado = 0;
         $scope.numUnidades = 0;
     };
 
-    $scope.checkAllUnits = function() {
+    $scope.checkAllUnits = function () {
         for (var i = 0; i < $scope.lstNewUnits.length; i++) {
             $scope.lstNewUnits[i].isChecked = $scope.allUnits.isChecked;
         }
@@ -643,17 +660,17 @@ appModule.controller('interesController', function($scope, $rootScope, $location
 
 
 
-    $scope.PagoReduccion = function() {
+    $scope.PagoReduccion = function () {
         swal({
-                title: "¿Esta seguro?",
-                text: "Se aplicará el pago de reducción para las unidades seleccionadas.",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#21B9BB",
-                confirmButtonText: "Pagar",
-                closeOnConfirm: true
-            },
-            function() {
+            title: "¿Esta seguro?",
+            text: "Se aplicará el pago de reducción para las unidades seleccionadas.",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#21B9BB",
+            confirmButtonText: "Pagar",
+            closeOnConfirm: true
+        },
+            function () {
 
                 var paraReduccion = {
                     idUsuario: $scope.idUsuario,
@@ -661,11 +678,11 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                     idtipopoliza: 10 //pago reduccion
                 }
 
-                interesFactory.ReduccionFinanciera(paraReduccion).then(function(respuesta) {
+                interesFactory.ReduccionFinanciera(paraReduccion).then(function (respuesta) {
                     $scope.LastId = respuesta.data[0].LastId;
                     $scope.lstUnitsReduccions = filterFilter($scope.lstNewUnits, { isChecked: true });
                     $scope.guardaReduccionDetalle();
-                }, function(error) {
+                }, function (error) {
                     $scope.error(error.data.Message);
                 });
 
@@ -675,7 +692,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
     };
     $scope.LastId = 0;
     var contReduccionDetalle = 0;
-    $scope.guardaReduccionDetalle = function() {
+    $scope.guardaReduccionDetalle = function () {
         if (contReduccionDetalle < $scope.lstUnitsReduccions.length) {
             var item = $scope.lstUnitsReduccions[contReduccionDetalle];
             var paraReduccionDetalle = {
@@ -685,18 +702,18 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                 saldo: item.pagoReduccion
             }
 
-            interesFactory.ReduccionFinancieraDetalle(paraReduccionDetalle).then(function(response) {
+            interesFactory.ReduccionFinancieraDetalle(paraReduccionDetalle).then(function (response) {
                 if (response.length != 0) {
                     if (contReduccionDetalle < $scope.lstUnitsReduccions.length) {
                         contReduccionDetalle++;
                         $scope.guardaReduccionDetalle();
                     }
                 }
-            }, function(error) {
+            }, function (error) {
                 $scope.error(error.data.Message);
             });
         } else {
-            angular.forEach($scope.lstUnitsReduccions, function(value, key) {
+            angular.forEach($scope.lstUnitsReduccions, function (value, key) {
                 value.idUsuario = $scope.idUsuario;
                 value.idPoliza = $scope.LastId;
                 value.estatus = 1;
@@ -726,21 +743,21 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             // });
         }
     }
-    $scope.success = function() {
+    $scope.success = function () {
         swal("Ok", "Finalizó con exito", "success");
-        setTimeout(function() {
+        setTimeout(function () {
             console.log('Termino');
             window.location = "/interes";
         }, 1000);
     };
 
-    $scope.error = function(msg) {
+    $scope.error = function (msg) {
         swal("Error", "Finalizó con errores :" + msg, "error");
-        setTimeout(function() {
+        setTimeout(function () {
             console.log('Termino');
         }, 1000);
     };
-    $scope.haveSelection = function() {
+    $scope.haveSelection = function () {
         for (var i = 0; i < $scope.lstNewUnits.length; i++) {
             if ($scope.lstNewUnits[i].isChecked === true) {
                 return true;
@@ -749,13 +766,13 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         return false;
     };
 
-    $scope.callPayInteres = function() {
+    $scope.callPayInteres = function () {
         $scope.lstSelectPay = [];
         $scope.currentPanel = "pnlPagoInteres";
-        conciliacionFactory.getCuentas().then(function(result) {
+        conciliacionFactory.getCuentas().then(function (result) {
             $scope.lstCuentas = result.data;
         });
-        $scope.lstNewUnits.forEach(function(item) {
+        $scope.lstNewUnits.forEach(function (item) {
             if (item.isChecked === true) {
                 item.InteresMes = item.InteresMesActual;
                 $scope.lstSelectPay.push(item);
@@ -772,7 +789,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
     };
     $scope.incremental = 0;
     $scope.consecNum = 0;
-    $scope.Sumar = function(unidad) {
+    $scope.Sumar = function (unidad) {
         if (unidad.InteresMes == undefined) {
             unidad.InteresMes = '0';
             unidad.InteresMes = unidad.InteresMesActual;
@@ -826,7 +843,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
     //         });
     //     }
     // }
-    $scope.CrearPago = function() {
+    $scope.CrearPago = function () {
         swal({
             title: "¿Esta seguro?",
             text: "Se creara  el pago de la unidad e interes para las unidades seleccionadas.",
@@ -835,12 +852,12 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             confirmButtonColor: "#21B9BB",
             confirmButtonText: "Aplicar",
             closeOnConfirm: true
-        }, function() {
+        }, function () {
             if ($scope.haveSelection() === false) {
                 swal("Aviso", "No se ha seleccionado ningun registro", "warning");
             } else {
 
-                $scope.lstNewUnits.forEach(function(item) {
+                $scope.lstNewUnits.forEach(function (item) {
                     if (item.isChecked === true) {
                         var data = {
                             CCP_IDDOCTO: item.CCP_IDDOCTO,
@@ -857,11 +874,11 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                             usuarioID: $scope.idUsuario,
                         };
 
-                        interesFactory.insPago(data).then(function(result) {
+                        interesFactory.insPago(data).then(function (result) {
                             $scope.consecPago++;
 
 
-                        }, function(error) {
+                        }, function (error) {
                             $scope.error(error.data.Message);
 
                         });
@@ -872,7 +889,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         });
     }
 
-    $scope.$watch('consecProvision', function() {
+    $scope.$watch('consecProvision', function () {
         $scope.listPoliza = _.where($scope.lstNewUnits, { isChecked: true });
         if ($scope.consecProvision == $scope.listPoliza.length) {
             if ($scope.existeProvision == 0) {
@@ -885,11 +902,11 @@ appModule.controller('interesController', function($scope, $rootScope, $location
 
     });
 
-    $scope.$watch('consecPago', function() {
+    $scope.$watch('consecPago', function () {
         $scope.listPoliza = _.where($scope.lstNewUnits, { isChecked: true });
         if ($scope.consecPago > 0 && $scope.consecPago == $scope.listPoliza.length) {
             swal("Pago de unidad e interes", "Guardado correctamente");
-            setTimeout(function() {
+            setTimeout(function () {
                 console.log('Termino');
                 window.location = "/pagoInteres";
             }, 1000);
@@ -897,7 +914,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
 
     });
 
-    $scope.guardandoPoliza = function() {
+    $scope.guardandoPoliza = function () {
         var saplica = 0;
         var item = $scope.listPoliza[$scope.incremental];
         if ($scope.listPoliza.length == ($scope.incremental + 1)) {
@@ -917,7 +934,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         };
 
 
-        interesFactory.getGuardaProvision(params).then(function(result) {
+        interesFactory.getGuardaProvision(params).then(function (result) {
             $scope.consecNum = result.data[0][0].consecutivo;
             var insercion = result.data[0][0];
             console.log("insercion", insercion);
@@ -934,12 +951,12 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             } else {
                 swal("Poliza pago interes", "Guardado correctamente");
             }
-        }, function(error) {
+        }, function (error) {
             console.log("Error", error);
         });
     }
 
-    $scope.procesaPoliza = function(consecNum) {
+    $scope.procesaPoliza = function (consecNum) {
         var saplica = 0;
         var item = $scope.listPoliza[$scope.incremental];
         if ($scope.listPoliza.length == ($scope.incremental + 1)) {
@@ -952,13 +969,13 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         };
 
 
-        interesFactory.getProcesaProvision(params).then(function(result) {
+        interesFactory.getProcesaProvision(params).then(function (result) {
 
             if (result.statusText == 'OK') {
                 $scope.incremental = 0;
                 $scope.consecNum = 0;
                 swal("Poliza pago interes", "Guardado correctamente");
-                setTimeout(function() {
+                setTimeout(function () {
                     console.log('Termino');
                     window.location = "/provision";
                 }, 1000);
@@ -966,12 +983,12 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             } else {
                 swal("Poliza pago interes", "Hubo un problema", "warning");
             }
-        }, function(error) {
+        }, function (error) {
             console.log("Error", error);
         });
     }
 
-    $scope.callPayCapital = function() {
+    $scope.callPayCapital = function () {
         var validaS = validaSaldo();
         if (validaS == 0) {
             if ($scope.haveSelection() === false) {
@@ -986,24 +1003,24 @@ appModule.controller('interesController', function($scope, $rootScope, $location
 
     };
 
-    $scope.callPay = function() {
+    $scope.callPay = function () {
         $scope.consec2Pago = 0;
         if ($scope.haveSelection() === false) {
             swal("Aviso", "No se ha seleccionado ningun registro", "warning");
         } else {
-            $scope.lstNewUnits.forEach(function(item) {
+            $scope.lstNewUnits.forEach(function (item) {
                 if (item.isChecked === true) {
                     var data = {
                         CCP_IDDOCTO: item.CCP_IDDOCTO
                     };
 
-                    interesFactory.validaPago(data).then(function(result) {
+                    interesFactory.validaPago(data).then(function (result) {
                         $scope.consec2Pago++;
                         item.sePago = result.data[0].sePago;
                         if (result.data[0].interesMes > 0)
                             item.InteresMes = result.data[0].interesMes;
 
-                    }, function(error) {
+                    }, function (error) {
                         $scope.error(error.data.Message);
 
                     });
@@ -1013,7 +1030,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         }
     }
 
-    $scope.$watch('consec2Pago', function() {
+    $scope.$watch('consec2Pago', function () {
         $scope.listPoliza = _.where($scope.lstNewUnits, { isChecked: true });
         $scope.listValida = _.where($scope.lstNewUnits, { sePago: true });
         if ($scope.consec2Pago > 0 && $scope.consec2Pago == $scope.listPoliza.length) {
@@ -1022,7 +1039,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                 swal("Aviso", "Ya se han pagado algunos documentos elegidos", "warning");
             } else {
                 $scope.currentPanel = "pnlPago";
-                $scope.lstNewUnits.forEach(function(item) {
+                $scope.lstNewUnits.forEach(function (item) {
                     if (item.isChecked === true) {
                         $scope.lstSelectPay.push(item);
 
@@ -1031,7 +1048,8 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             }
         }
     });
-    $scope.callCompensation = function() {
+    $scope.callCompensation = function () {        
+        $('#mdlLoading').modal('show');
         $scope.disabledButton = false;
         var validaS = validaSaldo();
         if (validaS == 0) {
@@ -1044,12 +1062,14 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             $scope.montoCompensarCxc = 0;
             $scope.siguienteMostrar = true;
             if ($scope.haveSelection() === false) {
-                swal("Aviso", "No se ha seleccionado ningun registro", "warning");
+                swal("Aviso", "No se ha seleccionado ningun registro", "warning");                
+                $('#mdlLoading').modal('hide');
             } else {
                 // $scope.listValida = _.where($scope.lstNewUnits, { sePago: true });
                 seleccionados();
                 if ($scope.unidadesSeleccionadas > 1) {
                     swal("Aviso", "Solo se puede seleccionar uno a la vez.", "warning");
+                    $('#mdlLoading').modal('hide');
                 } else {
                     var valida = filterFilter($scope.lstNewUnits, { isChecked: true });
                     $scope.unidadesEnProceso = [];
@@ -1057,13 +1077,14 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                     var promesaUnidadEnProceso = [];
                     var promesaSaldoTPP = [];
                     $scope.mostrarFechasElegir = false;
-                    valida.forEach(function(item, key) {
+                    valida.forEach(function (item, key) {
                         promesaUnidadEnProceso.push(traspasoFactory.unidadEnProceso(item.CCP_IDDOCTO, item.empresaID));
                         promesaSaldoTPP.push(traspasoFactory.unidadSinSaldo(item.CCP_IDDOCTO, item.empresaID));
                         interesFactory.fechaCierreMes(item.CCP_IDDOCTO, item.empresaID).then(function success(result) {
                             console.log(result.data[0][0].FechaHoy, result.data[0][0].fecha, 'Soy la fecha de cierre de mes y la de hoy')
                             $scope.fechaCierreMes = result.data[0][0].fecha;
                             $scope.fechaDiaHoy = result.data[0][0].FechaHoy;
+                            $scope.fechaRealPago = $scope.fechaDiaHoy;
                             if ($scope.fechaCierreMes != $scope.fechaDiaHoy) {
                                 $scope.mostrarFechasElegir = true;
                             }
@@ -1071,13 +1092,13 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                             console.log('Ocurrió un error al obtener las fechas de cierre de mes')
                         });
                     });
-                    Promise.all(promesaUnidadEnProceso).then(function(results) {
+                    Promise.all(promesaUnidadEnProceso).then(function (results) {
                         console.log('REsultado unidades en proceso ', results);
-                        angular.forEach(results, function(value, key) {
+                        angular.forEach(results, function (value, key) {
 
                             if (value.data.length > 0) {
                                 console.log(value, 'RESULTS')
-                                angular.forEach(value.data, function(value2, key) {
+                                angular.forEach(value.data, function (value2, key) {
                                     $scope.unidadesEnProceso.push(value2);
                                 });
 
@@ -1087,7 +1108,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                         if ($scope.unidadesEnProceso.length > 0) {
                             var tieneCplp = false;
                             $scope.estatusCplp;
-                            angular.forEach($scope.unidadesEnProceso, function(valueProceso, key) {
+                            angular.forEach($scope.unidadesEnProceso, function (valueProceso, key) {
                                 if (valueProceso.tipoPoliza == 'CPLP') {
                                     $scope.estatusCplp = valueProceso.estatusDescripcion;
                                     tieneCplp = true;
@@ -1115,12 +1136,12 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                             // });
                         }
                     });
-                    Promise.all(promesaSaldoTPP).then(function(results) {
+                    Promise.all(promesaSaldoTPP).then(function (results) {
                         console.log('REsultado comprueba saldos TPP ', results);
-                        angular.forEach(results, function(value, key) {
+                        angular.forEach(results, function (value, key) {
 
                             if (value.data.length > 0) {
-                                angular.forEach(value.data, function(value2, key) {
+                                angular.forEach(value.data, function (value2, key) {
                                     $scope.unidadesSinSaldo.push(value2);
                                 });
 
@@ -1131,12 +1152,12 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                             swal({
                                 title: "Compensación",
                                 text: "La unidad ya no tiene saldo, favor de validar con sistemas"
-                            }, function() {
+                            }, function () {
                                 location.reload();
                             });
                         }
                     });
-                    $scope.lstNewUnits.forEach(function(item) {
+                    $scope.lstNewUnits.forEach(function (item) {
                         if (item.isChecked === true) {
                             $scope.unidadCompensacion = item;
                             console.log(item, 'SOY EL SELECCIONADO');
@@ -1148,16 +1169,16 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                             facturas.push(interesFactory.facturaAccesorios(item.empresaID, item.sucursalID, item.CCP_IDDOCTO));
                             // facturas.push(interesFactory.notaCredito(item.empresaID, item.sucursalID, item.CCP_IDDOCTO));
 
-                            Promise.all(facturas).then(function(results) {
+                            Promise.all(facturas).then(function (results) {
                                 console.log(results, 'Facturaaaas')
                                 $scope.facturasTotal = [];
                                 $scope.sinregimen = [];
                                 var contadorFacturas = 0;
                                 $scope.ocGarantias = [];
-                                angular.forEach(results, function(value, key) {
+                                angular.forEach(results, function (value, key) {
                                     console.log(value.data.length);
                                     if (value.data.length > 0) {
-                                        angular.forEach(value.data, function(value2, key) {
+                                        angular.forEach(value.data, function (value2, key) {
                                             if (value2.tipoProducto == 'FA' && value2.garantia == 1) {
                                                 interesFactory.otGarantia(value2.numeroSerie, value2.factura).then(function success(result) {
                                                     console.log(result.data, 'Soy la Ot relacionada ')
@@ -1172,10 +1193,10 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                                                 });
                                             }
                                             // 06/09/2022 Se agrega validación de REgimen Fiscal 
-                                            if(!value2.regimenFiscal){
+                                            if (!value2.regimenFiscal) {
                                                 $scope.sinregimen.push(value2)
                                             }
-                                            
+
                                             // if (value2.tipoProducto != 'NCR') {
                                             $scope.montoTotal = $scope.montoTotal + value2.saldo;
                                             // } else if (value2.tipoProducto == 'NCR') {
@@ -1199,7 +1220,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                                             if (value2.tipoProducto == 'FU') {
                                                 $scope.saldoFU = value2.montoCompensar;
                                             }
-                                            $scope.$apply(function() {
+                                            $scope.$apply(function () {
                                                 $scope.facturasTotal.push(value2);
                                             });
                                             $scope.montoCompensarCxc = Number($scope.montoCompensarCxc) + Number(value2.montoCompensar);
@@ -1212,7 +1233,13 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                                     $scope.engancheCotizacion = result.data[0];
                                     $scope.financieraCotizacion = result.data[0].nombre;
                                     $scope.factura_unidad = result.data[0].ucn_idFactura;
-                                    $scope.idSucursalCotizacion = result.data[0].ucu_idsucursal;
+                                    $scope.idSucursalCotizacion = result.data[0].ucu_idsucursal;                                    
+                                    $scope.idEmpresaCotizacion = result.data[0].ucu_idempresa;
+                                    $scope.complemento = result.data[0].complemento;
+                                    $scope.nombreBD = result.data[0].nombreBD;
+                                    $scope.orc_conceptocontable = result.data[0].orc_conceptocontable;
+                                    $scope.vin = item.vehNumserie;
+                                    $scope.areaAfectacion = result.data[0].areaAfectacion;
                                     // $scope.$apply(function() {
 
                                     $scope.diferenciaPP = $scope.montoTotal;
@@ -1226,7 +1253,8 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                                     // totalCompensar();
                                     $scope.totalCompensar();
                                     $scope.sumaTotalCXP()
-                                    $scope.sumaTotalCXC();
+                                    $scope.sumaTotalCXC();                                    
+                                    $('#mdlLoading').modal('hide');
                                     // });
                                 }, function err(error) {
                                     console.log(error)
@@ -1235,22 +1263,24 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                                 if (contadorFacturas > 0) {
                                     $scope.currentPanel = "pnlCompensacion";
                                 } else {
-                                    swal("Aviso", "No se puede compensar este documento.", "warning");
+                                    swal("Aviso", "No se puede compensar este documento.", "warning");                                    
+                                    $('#mdlLoading').modal('hide');
                                 }
                                 let idPersonaSR = '';
                                 if ($scope.sinregimen.length > 0) {
-                                    angular.forEach($scope.sinregimen, function(sinregimen, key){
+                                    angular.forEach($scope.sinregimen, function (sinregimen, key) {
                                         idPersonaSR = idPersonaSR + sinregimen.idPersona + ','
                                     });
                                     idPersonaSR = idPersonaSR.slice(0, -1);
                                     swal({
                                         title: "Compensación",
                                         text: "La persona que quiere afectar no tiene régimen fiscal asociado. Los id de persona son los siguientes: " + idPersonaSR
-                                    }, function() {
+                                    }, function () {
                                         location.reload();
-                                    });
+                                    });                                    
+                                    $('#mdlLoading').modal('hide');
                                     // swal("Aviso", "La persona que quiere afectar no tiene régimen fiscal asociado. Los id de persona son los siguientes: " + idPersonaSR, "warning");
-                                } 
+                                }
                                 console.log($scope.facturasTotal, 'TOTAL FACTURAS');
                                 // totalCompensar();
                                 $scope.totalCompensar();
@@ -1289,10 +1319,11 @@ appModule.controller('interesController', function($scope, $rootScope, $location
 
             }
         } else {
-            swal("Aviso", "No puede seleccionar unidades con saldo 0", "warning");
+            swal("Aviso", "No puede seleccionar unidades con saldo 0", "warning");            
+            $('#mdlLoading').modal('hide');
         }
     };
-    var seleccionados = function() {
+    var seleccionados = function () {
         $scope.unidadesSeleccionadas = 0;
         for (var i = 0; i < $scope.lstNewUnits.length; i++) {
             if ($scope.lstNewUnits[i].isChecked === true) {
@@ -1341,16 +1372,93 @@ appModule.controller('interesController', function($scope, $rootScope, $location
     // }
 
 
-    $scope.setPnlCompensacion = function() {
+    $scope.setPnlCompensacion = function () {
         $scope.currentPanel = "pnlCompensacion";
     };
-    $scope.setPnlCompensacionResumen = function(saldoCompensar, fecha) {
+    $scope.setPnlCompensacionResumen = function (saldoCompensar, fecha) {
         $scope.fechaCompensacion = fecha;
         var fechaComparar = fecha;
         // console.log(fecha, 'Soy la fecha que el usuario selecciono')
         // console.log($scope.facturasTotal, 'Validar estas factura');
         // console.log($scope.facturasCompensacion, 'Validar CD')
-        if(!fechaComparar){
+        if (!fechaComparar) {
+            fechaComparar = $scope.fechaDiaHoy;
+        }
+        let auxFechaE = fechaComparar.split('/');
+        $scope.documentoFecha = '';
+        console.log(auxFechaE[2] + '-' + (auxFechaE[1] - 1).toString() + '-' + auxFechaE[0]);
+        let fechaEaux = new Date(auxFechaE[2] + '-' + (auxFechaE[1] - 1).toString() + '-' + auxFechaE[0]);
+        angular.forEach($scope.facturasTotal, function (value, key) {
+            let auxFecha = value.fecha.split('/');
+            console.log(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
+            let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
+            if (fechaFaux > fechaEaux) {
+                $scope.documentoFecha = $scope.documentoFecha + value.factura + ',';
+            }
+        });
+        angular.forEach($scope.facturasCompensacion, function (value, key) {
+            let auxFecha = value.fecha.split('/');
+            console.log(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
+            let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
+            if (fechaFaux > fechaEaux) {
+                $scope.documentoFecha = $scope.documentoFecha + value.factura + ',';
+            }
+        });
+        if ($scope.documentoFecha) {
+            swal("Aviso", "El documento " + $scope.documentoFecha + " tiene una fecha posterior, no puede realziar la compensación", "warning");
+        } else {
+            $scope.mostrarMensajeFecha = '';
+            if ($scope.fechaCierreMes != $scope.fechaDiaHoy && !fecha) {
+                swal("Aviso", "Debe seleccionar una fecha", "warning");
+            } else {
+                var isok = 0;
+                if (saldoCompensar - $scope.saldoFinanciera <= 0) {
+                    $scope.currentPanel = "pnlCompensacionResumen";
+                    $scope.saldoCompensar = saldoCompensar;
+                } else {
+                    // swal("Aviso", "No puede ser mayor el saldo a compensar que el saldo e la financiera", "warning");
+                    if (fecha) {
+                        $scope.mostrarMensajeFecha = 'con la fecha: ' + fecha;
+                    }
+                    swal({
+                        title: "¿Esta seguro?",
+                        text: "Se creara la compensación para la unidad seleccionada " + $scope.mostrarMensajeFecha + ".",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#21B9BB",
+                        confirmButtonText: "Aplicar",
+                        closeOnConfirm: true
+                    }, function () {
+                        $scope.disabledButton = true;
+                        $scope.totalCompensar();
+                        $scope.sumaTotalCXP();
+                        $scope.sumaTotalCXC();
+                        $('#mdlLoading').modal('hide');
+                        var paraCompensacion = {
+                            idUsuario: $scope.idUsuario,
+                            idEmpresa: sessionFactory.empresaID,
+                            idtipopoliza: 8 //cambio de financiera
+                        }
+
+                        interesFactory.cabeceraPoliza(paraCompensacion).then(function (respuesta) {
+                            $scope.LastId = respuesta.data[0].LastId;
+                            $scope.lstUnitsCompensacion = filterFilter($scope.lstNewUnits, { isChecked: true });
+                            $scope.guardaCompensacionDetalle();
+                        }, function (error) {
+                            $scope.error(error.data.Message);
+                        });
+                        // $scope.setPnlInteres();
+                    });
+
+                }
+            }
+        }
+
+    };
+    $scope.setPnlCompensacionResumenApi = function(saldoCompensar, fecha) {
+        $scope.fechaCompensacion = fecha;
+        var fechaComparar = fecha;
+        if (!fechaComparar) {
             fechaComparar = $scope.fechaDiaHoy;
         }
         let auxFechaE = fechaComparar.split('/');
@@ -1398,33 +1506,354 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                         confirmButtonText: "Aplicar",
                         closeOnConfirm: true
                     }, function() {
-                        $scope.disabledButton = true;
-                        $scope.totalCompensar();
-                        $scope.sumaTotalCXP();
-                        $scope.sumaTotalCXC();
-                        $('#mdlLoading').modal('hide');
-                        var paraCompensacion = {
-                            idUsuario: $scope.idUsuario,
-                            idEmpresa: sessionFactory.empresaID,
-                            idtipopoliza: 8 //cambio de financiera
+                        console.log('Aquí formare el json', $scope.factura_unidad)
+                        $scope.lstUnitsCompensacion = filterFilter($scope.lstNewUnits, {
+                            isChecked: true
+                        });
+                        var item = $scope.lstUnitsCompensacion[0];
+                        var tiempo = tiempo;
+                        // Agrego al arreglo la de compra  
+                        var saldoNcr = 0;
+                        var FacturaUN = 0;
+                        var auxConta = 1;
+                        let loCompensado = [];
+                        let detalleComplemento = [];
+                        let detalleOc = {
+                            "IdProveedor": '',
+                            "Area": '',
+                            "TipoComprobante": '',
+                            "FechaOrden": '',
+                            "FechaAplicacion": '',
+                            "Anticipo": '',
+                            "CantidadAnticipo": '',
+                            "PorcentajeAnticipo": '',
+                            "FechaAnticipo": '',
+                            "Detalle": []
+                        };
+                        let generaOc = 0;
+                        angular.forEach($scope.ocGarantias, function(value, key) {
+                            $scope.facturasTotal.push({
+                                'tipoFactura': 'PAG',
+                                'cargo': value.montoCompensar,
+                                'iva': '',
+                                'total': value.montoCompensar,
+                                'fecha': '',
+                                'factura': value.oce_folioorden,
+                                'numeroSerie': '',
+                                'saldo': '',
+                                'tipoProducto': 'PAG',
+                                'montoCompensar': value.montoCompensar,
+                                'idPersona': value.idPersona
+                            });
+
+                        });
+                        var montoNCA = 0;
+                        var tipoPoliza = 2
+                        angular.forEach($scope.facturasCompensacion, function(value, key) {
+                            if (value.montoCompensar > 0) {
+                                $scope.facturasTotal.push(value);
+                                if (value.tipoProducto == 'PROV') {
+                                    tipoPoliza = 3
+                                    $scope.facturasTotal.push({
+                                        'tipoFactura': 'DEALER',
+                                        'cargo': value.montoCompensar,
+                                        'iva': '',
+                                        'total': value.montoCompensar,
+                                        'fecha': '',
+                                        'factura': $scope.factura_unidad,
+                                        'numeroSerie': '',
+                                        'saldo': '',
+                                        'tipoProducto': 'PLP',
+                                        'montoCompensar': value.montoCompensar,
+                                        'idPersona': $scope.unidadCompensacion.financieraIDBP
+                                    });
+                                    value.factura = $scope.factura_unidad;
+                                    value.idPersona = $scope.unidadCompensacion.financieraIDBP;
+                                    detalleOc.Detalle.push({
+                                        "Partida": 1,
+                                        "ConceptoContable": $scope.orc_conceptocontable,
+                                        "Cantidad": 1,
+                                        "Producto": "PLAN PISO",
+                                        "PrecioUnitario": value.montoCompensar,
+                                        "TasaIva": 16,
+                                        "Descuento": 0
+                                    });
+                                    generaOc = 1;
+                                }
+                                if (value.bpro) {
+                                    montoNCA = montoNCA + Number(value.montoCompensar);
+                                    value.factura = $scope.factura_unidad;
+                                }
+                            }
+                        });
+                        console.log(montoNCA, 'ANDALE PLEASE')
+                        if (generaOc == 1) {
+                            detalleOc.IdProveedor = $scope.unidadCompensacion.financieraIDBP;
+                            detalleOc.Area = $scope.areaAfectacion;
+                            detalleOc.TipoComprobante = 1;
+                            detalleOc.FechaOrden = $scope.fechaDiaHoy;
+                            detalleOc.FechaAplicacion = $scope.fechaDiaHoy;
+                            detalleOc.Anticipo = 0;
+                            detalleOc.CantidadAnticipo = 0;
+                            detalleOc.PorcentajeAnticipo = 0
+                            detalleOc.FechaAnticipo = ''
                         }
 
-                        interesFactory.cabeceraPoliza(paraCompensacion).then(function(respuesta) {
-                            $scope.LastId = respuesta.data[0].LastId;
-                            $scope.lstUnitsCompensacion = filterFilter($scope.lstNewUnits, { isChecked: true });
-                            $scope.guardaCompensacionDetalle();
-                        }, function(error) {
-                            $scope.error(error.data.Message);
+                        if (montoNCA > 0) {
+                            var paraCompensacionDetalleNca = {
+                                "TipoProducto": "NCA",
+                                "SubProducto": "UNI",
+                                "Origen": "",
+                                "Destino": "",
+                                "Moneda": "PE",
+                                "TipoCambio": "1",
+                                "Cantidad": 1,
+                                "CostoUnitario": (montoNCA - ((montoNCA / 1.16) * 0.16)),
+                                "VentaUnitario": montoNCA,
+                                "DescuentoUnitario": 0,
+                                "TasaIva": 16,
+                                "Iva": (montoNCA / 1.16) * 0.16,
+                                "ISAN": "",
+                                "RetIVA": "",
+                                "RetISR": "",
+                                "IEPS": "",
+                                "Persona1": $scope.unidadCompensacion.financieraIDBP,
+                                "Persona2": 0,
+                                "DocumentoAfectado": $scope.facturaDealer,
+                                "Referencia1": "",
+                                "Version": $scope.vin,
+                                "Referencia2": $scope.facturaDealer,
+                                "TasaRetIva": "",
+                                "TasaRetIsr": "",
+                                "Importado": "",
+                                "UUID": "",
+                                "Numserie": $scope.vin
+                            }
+                            detalleComplemento.push({
+                                "IDpersona": $scope.idPersonaDealer,
+                                "Documento": $scope.facturaDealer,
+                                "Conscartera": $scope.consCarteraDealer,
+                                "Importe": montoNCA,
+                                "Concepto": $scope.carteraDealer,
+                                "Formapago": "71",
+                                "Banco": "01",
+                                "Referencia": "01",
+                                "Numerocuenta": "0101",
+                                "Chequevoucher": "01",
+                                "Fechaingreso": $scope.fechaDiaHoy
+                            });
+                            loCompensado.push(paraCompensacionDetalleNca);
+                        }
+                        console.log($scope.saldoCompensar - saldoNcr, 'COMPRA');
+                        $scope.facturasTotal.push({
+                            'tipoFactura': 'Compra',
+                            'cargo': $scope.saldoCXC,
+                            'iva': '',
+                            'total': $scope.saldoCXC,
+                            'fecha': '',
+                            'factura': $scope.unidadCompensacion.CCP_IDDOCTO,
+                            'numeroSerie': '',
+                            'saldo': '',
+                            'tipoProducto': 'COMPRA'
                         });
-                        // $scope.setPnlInteres();
+
+                        var paraCompensacionDetalle;
+                        var promises = [];
+                        console.log(paraCompensacionDetalleNca);
+                        let saldoCOMPRA = montoNCA > 0 ? ($scope.saldoCXC + montoNCA) : $scope.saldoCXC;
+                        $scope.facturasTotal.map((value) => {
+                            if (value.montoCompensar > 0 || value.tipoProducto == 'COMPRA') {
+                                switch (value.tipoProducto) {
+                                    case 'FU':
+                                        paraCompensacionDetalle = {
+                                                "TipoProducto": value.tipoProducto,
+                                                "SubProducto": "UNI",
+                                                "Origen": "",
+                                                "Destino": "",
+                                                "Moneda": "PE",
+                                                "TipoCambio": "1",
+                                                "Cantidad": 1,
+                                                "CostoUnitario": (value.montoCompensar - ((value.montoCompensar / 1.16) * 0.16)),
+                                                "VentaUnitario": value.montoCompensar,
+                                                "DescuentoUnitario": 0,
+                                                "TasaIva": 16,
+                                                "Iva": (value.montoCompensar / 1.16) * 0.16,
+                                                "ISAN": "",
+                                                "RetIVA": "",
+                                                "RetISR": "",
+                                                "IEPS": "",
+                                                "Persona1": value.idPersona,
+                                                "Persona2": 0,
+                                                "DocumentoAfectado": value.factura,
+                                                "Referencia1": "",
+                                                "Version": $scope.vin,
+                                                "Referencia2": value.factura,
+                                                "TasaRetIva": "",
+                                                "TasaRetIsr": "",
+                                                "Importado": "",
+                                                "UUID": "",
+                                                "Numserie": $scope.vin
+                                            }
+                                        break;
+                                    case 'COMPRA':
+                                        paraCompensacionDetalle = {
+                                                "TipoProducto": value.tipoProducto,
+                                                "SubProducto": "UNI",
+                                                "Origen": "",
+                                                "Destino": "",
+                                                "Moneda": "PE",
+                                                "TipoCambio": "1",
+                                                "Cantidad": 1,
+                                                "CostoUnitario": (saldoCOMPRA - ((saldoCOMPRA / 1.16) * 0.16)),
+                                                "VentaUnitario": saldoCOMPRA,
+                                                "DescuentoUnitario": 0,
+                                                "TasaIva": 16,
+                                                "Iva": (saldoCOMPRA / 1.16) * 0.16,
+                                                "ISAN": "",
+                                                "RetIVA": "",
+                                                "RetISR": "",
+                                                "IEPS": "",
+                                                "Persona1": $scope.unidadCompensacion.financieraIDBP,
+                                                "Persona2": 0,
+                                                "DocumentoAfectado": value.factura,
+                                                "Referencia1": "",
+                                                "Version": $scope.vin,
+                                                "Referencia2": value.factura,
+                                                "TasaRetIva": "",
+                                                "TasaRetIsr": "",
+                                                "Importado": "",
+                                                "UUID": "",
+                                                "Numserie": $scope.vin
+                                            }
+                                        break;
+                                    default:
+                                        paraCompensacionDetalle = {
+                                                "TipoProducto": value.tipoProducto,
+                                                "SubProducto": "UNI",
+                                                "Origen": "",
+                                                "Destino": "",
+                                                "Moneda": "PE",
+                                                "TipoCambio": "1",
+                                                "Cantidad": 1,
+                                                "CostoUnitario": (value.montoCompensar - ((value.montoCompensar / 1.16) * 0.16)),
+                                                "VentaUnitario": value.montoCompensar,
+                                                "DescuentoUnitario": 0,
+                                                "TasaIva": 16,
+                                                "Iva": (value.montoCompensar / 1.16) * 0.16,
+                                                "ISAN": "",
+                                                "RetIVA": "",
+                                                "RetISR": "",
+                                                "IEPS": "",
+                                                "Persona1": value.idPersona,
+                                                "Persona2": 0,
+                                                "DocumentoAfectado": value.factura,
+                                                "Referencia1": "",
+                                                "Version": $scope.vin,
+                                                "Referencia2": value.factura,
+                                                "TasaRetIva": "",
+                                                "TasaRetIsr": "",
+                                                "Importado": "",
+                                                "UUID": "",
+                                                "Numserie": $scope.vin
+                                            }
+                                }
+                                if (value.tipoProducto == 'FU' || value.tipoProducto == 'FA' || value.tipoProducto == 'FS') {
+                                    detalleComplemento.push({
+                                        "IDpersona": value.idPersona,
+                                        "Documento": value.factura,
+                                        "Conscartera": value.CCP_CONSCARTERA,
+                                        "Importe": value.montoCompensar,
+                                        "Concepto": value.CCP_CARTERA,
+                                        "Formapago": "71",
+                                        "Banco": "01",
+                                        "Referencia": "01",
+                                        "Numerocuenta": "0101",
+                                        "Chequevoucher": "01",
+                                        "Fechaingreso": $scope.fechaDiaHoy
+                                    });
+                                }
+
+                                console.log(paraCompensacionDetalle, 'Lo que insertare de facturas')
+                                loCompensado.push(paraCompensacionDetalle);                                  
+                            }
+
+                        });
+                        angular.forEach(loCompensado, function(value, key) {
+                            value.Partida = key + 1;
+                        });
+                        angular.forEach(detalleComplemento, function(value, key) {
+                            value.Partida = key + 1;
+                        });
+
+                        console.log($scope.fechaRealPago)
+                        let jsonData = {
+                            "Empresa": $scope.idEmpresaCotizacion,
+                            "Sucursal": $scope.idSucursalCotizacion,
+                            "Tipo": tipoPoliza,
+                            "Contabilidad": {
+                                "Polizas": [{
+                                    "Proceso": "CPLP" + $scope.complemento,
+                                    "DocumentoOrigen": $scope.factura_unidad,
+                                    "Canal": "CPLP" + $scope.complemento,
+                                    "Fecha": $scope.fechaDiaHoy,
+                                    "Documento": $scope.factura_unidad,
+                                    "Referencia1": "",
+                                    "Referencia2": $scope.unidadCompensacion.CCP_IDDOCTO,
+                                    "Referencia3": $scope.vin,
+                                    "FechaRealPago": $scope.fechaRealPago,
+                                    "Detalle": loCompensado
+                                }]
+                            },
+                            "Complemento": {
+                                "Cobrador": "DIRECTO",
+                                "Moneda": "PE",
+                                "Tipocambio": 1,
+                                "Detalle": detalleComplemento
+                            }
+                        }
+                        if (generaOc == 1) {
+                            jsonData.OrdenCompra = detalleOc
+                            detalleOc.IdProveedor = $scope.unidadCompensacion.financieraIDBP;
+                            detalleOc.Area = $scope.areaAfectacion;
+                            detalleOc.TipoComprobante = 1;
+                            detalleOc.FechaOrden = $scope.fechaDiaHoy;
+                            detalleOc.FechaAplicacion = $scope.fechaDiaHoy;
+                            detalleOc.Anticipo = 0;
+                            detalleOc.CantidadAnticipo = 0;
+                            detalleOc.PorcentajeAnticipo = 0
+                            detalleOc.FechaAnticipo = ''
+                        }
+                        console.log(jsonData);
+
+                        function escapeString(str) {
+                            return JSON.stringify(str)
+                        }
+                        let messageWithQuotes = JSON.stringify(jsonData)
+                        let jsonApi = {
+                                "Proceso": "PLANPISO",
+                                "jsonData": messageWithQuotes
+                            }
+                            
+                        console.log(jsonApi);
+                        interesFactory.saveApiPoliza($scope.unidadCompensacion.CCP_IDDOCTO, $scope.unidadCompensacion.movimientoID, jsonApi, $scope.nombreBD).then(function success(resultApi) {
+                            console.log(resultApi)
+                            if (resultApi.data[0].respuesta == 1) {
+                                swal("Éxito", "Se esta procesando su póliza.", "success");
+                                setTimeout(function() {
+                                    window.location = "/interes";
+                                }, 1000);
+                            }
+                        }, function error(error) {
+                            console.log(error, 'Error al tratar de consumir la API ')
+                        })
+
                     });
 
                 }
             }
         }
-
     };
-    $scope.guardaCompensacionDetalle = function() {
+    $scope.guardaCompensacionDetalle = function () {
         var tiempo = new Date().toLocaleTimeString();
         var item = $scope.lstUnitsCompensacion[0];
         var paraCompensacionDetalle = {
@@ -1437,16 +1866,16 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             fecha: $scope.fechaCompensacion
         }
 
-        interesFactory.compensacionDetalle(paraCompensacionDetalle).then(function(response) {
+        interesFactory.compensacionDetalle(paraCompensacionDetalle).then(function (response) {
             $scope.idReciboAutomatico = response.data[0].success
             detalleBproCompensacion(tiempo);
             // $scope.setPnlInteres();
-        }, function(error) {
+        }, function (error) {
             $scope.error(error.data.Message);
         });
 
     };
-    var detalleBproCompensacion = function(tiempo) {
+    var detalleBproCompensacion = function (tiempo) {
         var item = $scope.lstUnitsCompensacion[0];
         // var d = new Date();
         // var hora = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
@@ -1488,7 +1917,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         //         });
         //     }
         // });
-        angular.forEach($scope.ocGarantias, function(value, key) {
+        angular.forEach($scope.ocGarantias, function (value, key) {
             $scope.facturasTotal.push({
                 'tipoFactura': 'PAG',
                 'cargo': value.montoCompensar,
@@ -1504,7 +1933,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
 
         });
         var montoNCA = 0;
-        angular.forEach($scope.facturasCompensacion, function(value, key) {
+        angular.forEach($scope.facturasCompensacion, function (value, key) {
             if (value.montoCompensar > 0) {
                 // if (value.tipoProducto == 'IP' || value.tipoProducto == 'UDI' || value.tipoProducto == 'CD') {
                 //     $scope.facturasTotal.push({
@@ -1655,7 +2084,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                                     'pagoCompensacion': $scope.unidadCompensacion.saldo - $scope.saldoCompensar - saldoNcr,
                                     'estatus': 1
                                 }];
-                                interesFactory.insertaDocumentosLoteCompensacion(preLoteCompensacion).then(function(result) {
+                                interesFactory.insertaDocumentosLoteCompensacion(preLoteCompensacion).then(function (result) {
                                     console.log(result)
                                 }, function err(error) {
                                     console.log(error)
@@ -1701,7 +2130,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                             compensacionSubsidioDealer = 0;
                             compensacionCompra = 0;
                             var detalleCompensacion = result.data[1];
-                            angular.forEach(detalleCompensacion, function(valueDetalleCompensacion, key) {
+                            angular.forEach(detalleCompensacion, function (valueDetalleCompensacion, key) {
                                 if (valueDetalleCompensacion.TipoProducto == 'FU' || valueDetalleCompensacion.TipoProducto == 'FA' || valueDetalleCompensacion.TipoProducto == 'FS' || valueDetalleCompensacion.TipoProducto == 'NCA') {
                                     compensacionFacturas = Number(compensacionFacturas) + Number(valueDetalleCompensacion.VentaUnitario);
                                 }
@@ -1741,7 +2170,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                                 console.log(result.data, 'Respuesta Compensacion')
                                 if (result.data[0].respuesta == 1) {
                                     swal("Atención", "Ocurrió un error, intentelo nuevamente, si persiste el problema favor de comunicarse con sistemas.", "warning");
-                                    setTimeout(function() {
+                                    setTimeout(function () {
                                         window.location = "/interes";
                                     }, 1000);
                                 } else if (result.data[0].respuesta == -1) {
@@ -1800,7 +2229,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                                 'pagoCompensacion': $scope.unidadCompensacion.saldo - $scope.saldoCompensar - saldoNcr,
                                 'estatus': 1
                             }];
-                            interesFactory.insertaDocumentosLoteCompensacion(preLoteCompensacion).then(function(result) {
+                            interesFactory.insertaDocumentosLoteCompensacion(preLoteCompensacion).then(function (result) {
                                 console.log(result)
                             }, function err(error) {
                                 console.log(error)
@@ -1846,7 +2275,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                         compensacionSubsidioDealer = 0;
                         compensacionCompra = 0;
                         var detalleCompensacion = result.data[1];
-                        angular.forEach(detalleCompensacion, function(valueDetalleCompensacion, key) {
+                        angular.forEach(detalleCompensacion, function (valueDetalleCompensacion, key) {
                             if (valueDetalleCompensacion.TipoProducto == 'FU' || valueDetalleCompensacion.TipoProducto == 'FA' || valueDetalleCompensacion.TipoProducto == 'FS' || valueDetalleCompensacion.TipoProducto == 'NCA') {
                                 compensacionFacturas = Number(compensacionFacturas) + Number(valueDetalleCompensacion.VentaUnitario);
                             }
@@ -1886,7 +2315,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                             console.log(result.data, 'Respuesta Compensacion')
                             if (result.data[0].respuesta == 1) {
                                 swal("Atención", "Ocurrió un error, intentelo nuevamente, si persiste el problema favor de comunicarse con sistemas.", "warning");
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     window.location = "/interes";
                                 }, 1000);
                             } else if (result.data[0].respuesta == -1) {
@@ -1908,7 +2337,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         }
 
     };
-    $scope.CreaCompensacion = function() {
+    $scope.CreaCompensacion = function () {
         swal({
             title: "¿Esta seguro?",
             text: "Se creara la compensación de la unidad  para la unidad seleccionada.",
@@ -1917,12 +2346,12 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             confirmButtonColor: "#21B9BB",
             confirmButtonText: "Aplicar",
             closeOnConfirm: true
-        }, function() {
+        }, function () {
             if ($scope.haveSelection() === false) {
                 swal("Aviso", "No se ha seleccionado ningun registro", "warning");
             } else {
 
-                $scope.lstNewUnits.forEach(function(item) {
+                $scope.lstNewUnits.forEach(function (item) {
                     if (item.isChecked === true) {
                         var data = {
                             CCP_IDDOCTO: item.CCP_IDDOCTO,
@@ -1934,11 +2363,11 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                             usuarioID: $scope.idUsuario,
                         };
 
-                        interesFactory.insCompensacion(data).then(function(result) {
+                        interesFactory.insCompensacion(data).then(function (result) {
                             $scope.consecCompensacion++;
 
 
-                        }, function(error) {
+                        }, function (error) {
                             $scope.error(error.data.Message);
 
                         });
@@ -1949,18 +2378,18 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         });
     }
 
-    $scope.$watch('consecCompensacion', function() {
+    $scope.$watch('consecCompensacion', function () {
         $scope.listPoliza = _.where($scope.lstNewUnits, { isChecked: true });
         if ($scope.consecCompensacion > 0 && $scope.consecCompensacion == $scope.listPoliza.length) {
             swal("Compensación", "Guardado correctamente");
-            setTimeout(function() {
+            setTimeout(function () {
                 console.log('Termino');
                 window.location = "/compensacion";
             }, 1000);
         }
 
     });
-    $scope.sumaCompensar = function(factura, index, oldValue) {
+    $scope.sumaCompensar = function (factura, index, oldValue) {
         console.log(factura, index, event)
         $scope.montoCompensarCxc = 0;
         if (factura.montoCompensar <= factura.saldo) {
@@ -1972,7 +2401,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             // $scope.auxSumaCxp = 0;
             // $scope.auxSumaCxp = $scope.auxSumaCxp + $scope.unidadCompensacion.montoCompensar;
             // totalCompensar();
-            angular.forEach($scope.facturasTotal, function(value, key) {
+            angular.forEach($scope.facturasTotal, function (value, key) {
                 if (value.tipoProducto == 'FU') {
                     auxSumaCxc = value.montoCompensar
                 }
@@ -2001,7 +2430,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         $scope.sumaTotalCXP();
         $scope.sumaTotalCXC();
     };
-    $scope.sumaCompensarCxP = function(newValue, oldValue) {
+    $scope.sumaCompensarCxP = function (newValue, oldValue) {
         console.log(newValue, oldValue, 'CuentasXpagar')
         if (newValue <= $scope.unidadCompensacion.saldo) {
             $scope.unidadCompensacion.montoCompensar = newValue;
@@ -2013,12 +2442,12 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         $scope.sumaTotalCXP();
         $scope.sumaTotalCXC();
     };
-    $scope.sumaCompensarOc = function() {
+    $scope.sumaCompensarOc = function () {
         $scope.totalCompensar();
         $scope.sumaTotalCXP();
         $scope.sumaTotalCXC();
     }
-    $scope.validaCD = function(saldo, newValue, oldValue, index) {
+    $scope.validaCD = function (saldo, newValue, oldValue, index) {
         console.log(saldo, newValue, oldValue, index, 'CD VALIDA');
         if (saldo == 0) {
             $scope.facturasCompensacion[index].montoCompensar = 0;
@@ -2031,22 +2460,22 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         }
         $scope.totalCompensar();
     };
-    $scope.totalCompensar = function() {
+    $scope.totalCompensar = function () {
         $scope.montoCompensar = 0;
         $scope.saldoCXC = 0;
         $scope.saldoGarantia = 0;
         $scope.saldoFacturasCompensacion = 0;
         $scope.montoCompensar = Number($scope.unidadCompensacion.montoCompensar);
-        angular.forEach($scope.ocGarantias, function(value, key) {
+        angular.forEach($scope.ocGarantias, function (value, key) {
             $scope.saldoGarantia = Number($scope.saldoGarantia) + Number(value.montoCompensar);
         });
         $scope.montoCompensar = Number($scope.montoCompensar) + $scope.saldoGarantia
         $scope.montoCompensar = Number($scope.montoCompensar) - Number($scope.diferenciaPP);
         console.log($scope.montoCompensar, 'Soy el monto a compensarrrr');
-        angular.forEach($scope.facturasTotal, function(value, key) {
+        angular.forEach($scope.facturasTotal, function (value, key) {
             $scope.saldoCXC = $scope.saldoCXC + Number(value.montoCompensar);
         });
-        angular.forEach($scope.facturasCompensacion, function(value, key) {
+        angular.forEach($scope.facturasCompensacion, function (value, key) {
             if (value.tipoProducto == 'PROV') {
                 // $scope.saldoCXC = $scope.saldoCXC - Number(value.montoCompensar);
                 $scope.montoCompensar = Number($scope.montoCompensar) + Number(value.montoCompensar);
@@ -2059,7 +2488,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             }
 
         });
-        angular.forEach($scope.facturasCompensacion, function(value, key) {
+        angular.forEach($scope.facturasCompensacion, function (value, key) {
             $scope.saldoFacturasCompensacion = Number($scope.saldoFacturasCompensacion) + Number(value.montoCompensar);
         });
 
@@ -2067,25 +2496,25 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         $scope.sumaTotalCXC();
         $scope.sumaTotalCXP();
     };
-    $scope.sumaTotalCXP = function() {
+    $scope.sumaTotalCXP = function () {
         $scope.totalTablaCXP = 0;
         $scope.totalTablaCXP = Number($scope.totalTablaCXP) + Number($scope.unidadCompensacion.montoCompensar);
 
-        angular.forEach($scope.ocGarantias, function(value, key) {
+        angular.forEach($scope.ocGarantias, function (value, key) {
             $scope.totalTablaCXP = Number($scope.totalTablaCXP) + Number(value.montoCompensar);
         });
-        angular.forEach($scope.facturasCompensacion, function(value, key) {
+        angular.forEach($scope.facturasCompensacion, function (value, key) {
             if (value.tipoProducto == 'PROV') {
                 $scope.totalTablaCXP = Number($scope.totalTablaCXP) + Number(value.montoCompensar);
             }
         });
     };
-    $scope.sumaTotalCXC = function() {
+    $scope.sumaTotalCXC = function () {
         $scope.totalTablaCXC = 0;
-        angular.forEach($scope.facturasTotal, function(value, key) {
+        angular.forEach($scope.facturasTotal, function (value, key) {
             $scope.totalTablaCXC = Number($scope.totalTablaCXC) + Number(value.montoCompensar);
         });
-        angular.forEach($scope.facturasCompensacion, function(value, key) {
+        angular.forEach($scope.facturasCompensacion, function (value, key) {
             if (value.tipoProducto != 'PROV') {
                 $scope.totalTablaCXC = Number($scope.totalTablaCXC) + Number(value.montoCompensar);
             }
@@ -2094,10 +2523,10 @@ appModule.controller('interesController', function($scope, $rootScope, $location
     ///////////////////////////////
     /////traspaso sucursal
     ///////////////////////////////
-    $scope.TraspasoSucursal = function(unidad) {
+    $scope.TraspasoSucursal = function (unidad) {
         $scope.unidad = unidad;
         $('#modaltraspasoSucursal').modal('show');
-        interesFactory.Refacciones(unidad.sucursalID, unidad.vin).then(function(result) {
+        interesFactory.Refacciones(unidad.sucursalID, unidad.vin).then(function (result) {
             $scope.lstRefacciones = result.data;
         });
     }
@@ -2105,8 +2534,8 @@ appModule.controller('interesController', function($scope, $rootScope, $location
     /////////////////////////////
     ///////////////////////////
     // Obtiene historial de folios
-    var historiaFolios = function(folio) {
-        interesFactory.historiaFolios(folio).then(function(result) {
+    var historiaFolios = function (folio) {
+        interesFactory.historiaFolios(folio).then(function (result) {
             console.log(result.data, 'HISTORIAL');
             $scope.historialFolios = result.data;
             var promises = [];
@@ -2116,10 +2545,10 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             Promise.all(promises).then(function response(result) {
                 var respuesta = result;
                 $scope.ocHistorial = [];
-                angular.forEach(respuesta, function(value, key) {
+                angular.forEach(respuesta, function (value, key) {
                     if (value.data.length > 0) {
-                        angular.forEach(value.data, function(value2, key) {
-                            $scope.$apply(function() {
+                        angular.forEach(value.data, function (value2, key) {
+                            $scope.$apply(function () {
                                 $scope.ocHistorial.push(value2);
                             });
                         });
@@ -2156,13 +2585,13 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                 })
 
 
-                Promise.all(facturas).then(function(results) {
+                Promise.all(facturas).then(function (results) {
                     var resultadoFacturas = results
                     $scope.cotizacionHistorial[0].detalle = [];
-                    angular.forEach(resultadoFacturas, function(value, key) {
+                    angular.forEach(resultadoFacturas, function (value, key) {
                         if (value.data.length > 0) {
-                            angular.forEach(value.data, function(value2, key) {
-                                $scope.$apply(function() {
+                            angular.forEach(value.data, function (value2, key) {
+                                $scope.$apply(function () {
                                     $scope.cotizacionHistorial[0].detalle.push(value2);
                                 });
                             });
@@ -2175,7 +2604,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             console.log(err)
         });
     };
-    $scope.movimientoscxp = function(folio) {
+    $scope.movimientoscxp = function (folio) {
         $scope.movimientos = [];
         $scope.documentoModal = "";
         $scope.documentoModal = folio;
@@ -2187,7 +2616,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             console.log(err, 'Ocurrió un error al obtener los movimientos')
         });
     };
-    $scope.movimientocxc = function(folio, documento) {
+    $scope.movimientocxc = function (folio, documento) {
         $scope.movimientos = [];
         $scope.documentoModal = "";
         $scope.documentoModal = folio;
@@ -2199,7 +2628,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             console.log(err, 'Ocurrió un error al obtener los movimientos')
         });
     };
-    $scope.buscaComision = function(factura, index) {
+    $scope.buscaComision = function (factura, index) {
         $scope.facturaDealer = factura;
         console.log(factura, index);
         interesFactory.buscaFactura(factura, sessionFactory.empresaID).then(function success(result) {
@@ -2215,9 +2644,9 @@ appModule.controller('interesController', function($scope, $rootScope, $location
     };
     // 
     // Valida si el saldo de la unidad en plan piso tiene saldo 0, si tiene saldo 0 no debe permitir realizar operaciones
-    var validaSaldo = function() {
+    var validaSaldo = function () {
         var saldoCero = 0;
-        $scope.lstNewUnits.forEach(function(item) {
+        $scope.lstNewUnits.forEach(function (item) {
             if (item.isChecked === true && item.saldo == 0) {
                 saldoCero++;
             }
@@ -2226,13 +2655,13 @@ appModule.controller('interesController', function($scope, $rootScope, $location
     };
     // ////////////////////////////////////////////////////
 
-    $scope.AgregarDetail = function() {
+    $scope.AgregarDetail = function () {
         $scope.agregareditar = true;
         $scope.nuevo = 1;
         $scope.ctrl = {};
 
     }
-    $scope.GuardarDetail = function() {
+    $scope.GuardarDetail = function () {
         if ($scope.nuevo == 1) {
             // var newobject={
             //     dia:$scope.ctrl.dia,
@@ -2247,7 +2676,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                 //,usuarioID: localStorage.getItem('idUsuario')
             };
 
-            interesFactory.insprevioConciliacion(params).then(function(result) {
+            interesFactory.insprevioConciliacion(params).then(function (result) {
                 swal('Guardado', 'Registro guardado con exito', 'success');
                 $scope.regresatabla();
 
@@ -2276,7 +2705,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                 //,usuarioID: localStorage.getItem('idUsuario')
             };
 
-            interesFactory.updprevioConciliacion(params).then(function(result) {
+            interesFactory.updprevioConciliacion(params).then(function (result) {
                 swal('Guardado', 'Registro guardada con exito', 'success');
                 $scope.regresatabla();
 
@@ -2285,10 +2714,10 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         }
         $scope.agregareditar = false;
     }
-    $scope.CancelarDetail = function() {
+    $scope.CancelarDetail = function () {
         $scope.agregareditar = false;
     }
-    $scope.EditarDetail = function(item) {
+    $scope.EditarDetail = function (item) {
         $scope.agregareditar = true;
         $scope.ctrl = {};
         $scope.nuevo = 0;
@@ -2300,19 +2729,19 @@ appModule.controller('interesController', function($scope, $rootScope, $location
         $scope.ctrl.Interes = item.Interes;
 
     }
-    $scope.BorrarDetail = function(item) {
+    $scope.BorrarDetail = function (item) {
         var params = {
             idpreCierreInteres: item.idpreCierreInteres
             //,usuarioID: localStorage.getItem('idUsuario')
         };
 
-        interesFactory.delprevioConciliacion(params).then(function(result) {
+        interesFactory.delprevioConciliacion(params).then(function (result) {
             swal('Guardado', 'registro borrado con exito', 'success');
             $scope.regresatabla();
 
         });
     }
-    $scope.regresatabla = function() {
+    $scope.regresatabla = function () {
 
         interesFactory.ResumenInteresMes($scope.lstSelectPay[0].financieraID).then(function success(result) {
             $scope.lstInteresesMes = result.data;
@@ -2323,15 +2752,15 @@ appModule.controller('interesController', function($scope, $rootScope, $location
 
 
     }
-    $scope.CalculaTotal = function() {
+    $scope.CalculaTotal = function () {
         $scope.TotalInteres = 0;
-        $scope.lstInteresesMes.forEach(function(item) {
+        $scope.lstInteresesMes.forEach(function (item) {
             $scope.TotalInteres += item.Interes;
 
         });
 
     }
-    $scope.showMsgpreCierre = function() {
+    $scope.showMsgpreCierre = function () {
         swal({
             title: "¿Esta seguro?",
             text: "Se creara la poliza del Precierre.",
@@ -2340,7 +2769,7 @@ appModule.controller('interesController', function($scope, $rootScope, $location
             confirmButtonColor: "#21B9BB",
             confirmButtonText: "Aplicar",
             closeOnConfirm: true
-        }, function() {
+        }, function () {
             if ($scope.haveSelection() === false) {
                 swal("Aviso", "No se ha seleccionado ningun registro", "warning");
             } else {
@@ -2350,18 +2779,18 @@ appModule.controller('interesController', function($scope, $rootScope, $location
                     totalInteres: $scope.TotalInteres
                 }
 
-                interesFactory.ProvisionFinancieraDetalle(paraProvision).then(function(respuesta) {
+                interesFactory.ProvisionFinancieraDetalle(paraProvision).then(function (respuesta) {
                     $scope.LastId = respuesta.data[0].LastId;
                     if (respuesta.data[0].success != 0) {
                         swal({
                             title: "Provisión Plan Piso",
                             text: "Se ha efectuado correctamente su Provisión.",
                             type: "warning"
-                        }, function() {
+                        }, function () {
                             location.reload();
                         });
                     }
-                }, function(error) {
+                }, function (error) {
                     $scope.error(error.data.Message);
                 });
 
@@ -2369,8 +2798,62 @@ appModule.controller('interesController', function($scope, $rootScope, $location
 
         });
     };
-    $scope.recargar = function() {
+    $scope.recargar = function () {
         location.reload();
     }
+    $scope.detallePoliza = function(unidad) {
+        interesFactory.getDetallePoliza(unidad.transaccion, unidad.IdDealer).then(function(respuesta) {
+                console.log(respuesta);
+                switch (respuesta.data.status) {
+                    case 'COMPLETO':
+                        swal({
+                            title: "Póliza procesada",
+                            text: "¡COMPLETO!",
+                            type: "success",
+                            showCancelButton: true,
+                            cancelButtonText: "Cerrar"
+                        }, function() {
 
+                        });
+                        break;
+                    case 'PROCESANDO':
+                        swal({
+                            title: "Póliza en proceso",
+                            text: "¡Su póliza esta en proceso, favor de intentarlo mas tarde!",
+                            type: "warning",
+                            showCancelButton: true,
+                            cancelButtonText: "Cerrar"
+                        }, function() {
+
+                        });
+                        break;
+                    case 'ERROR':
+                        swal({
+                            title: "Ocurrio un problema",
+                            text: respuesta.data.error.mensaje + ' ¿Desea volver a intentarlo?',
+                            type: "warning",
+                            showCancelButton: true,
+                            closeOnConfirm: true,
+                            confirmButtonText: "Compensar",
+                            cancelButtonText: "Cerrar"
+                        }, function() {
+                            $scope.lstNewUnits.forEach(function(item) {
+                                if(item.movimientoID == unidad.movimientoID){
+                                    item.isChecked = true;
+                                }
+                            });
+                            $scope.callCompensation();
+                        });
+                        break;
+                    default:
+                        console.log('Ocurrio un error al intentar consultar el estatus de la poliza', respuesta.data[0]);
+                }
+            },
+            function(error) {
+                console.log(error);
+            });
+    }
+    $scope.changeDate = function(fecha) {
+        $scope.fechaRealPago = fecha;
+    }
 });
