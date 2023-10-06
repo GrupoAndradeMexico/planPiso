@@ -2,7 +2,7 @@
     "WSGeneraPdf": "http://192.168.20.89:8091/WS_Gen_Pdf.asmx?WSDL",
     "jsReport": "http://192.168.20.92:5488/api/report",
     "urlApi": "http://192.168.20.89:",
-    "urlApiBpro": "http://192.168.20.89:8058/api/v1/ProcesadorSolicitudes/",
+    "urlApiBpro": "http://192.168.20.89:8787/api/v1/ProcesadorSolicitudes/",
     "port": 4900,
     "SQL_user": "sa",
     "SQL_password": "S0p0rt3",
