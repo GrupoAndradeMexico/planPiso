@@ -2637,6 +2637,9 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
             $scope.facturasCompensacion[index].saldo = result.data[0].saldo;
             $scope.facturasCompensacion[index].fecha = result.data[0].fecha;
             $scope.facturasCompensacion[index].factura = result.data[0].documento;
+            $scope.carteraDealer = result.data[0].CCP_CARTERA;
+            $scope.consCarteraDealer = result.data[0].CCP_CONSCARTERA;
+            $scope.idPersonaDealer = result.data[0].idPersona;
         }, function error(err) {
             console.log('Ocurrió un problema al intentar obtener los datos de la factura de Comision dealer');
         });
