@@ -27,5 +27,13 @@ appModule.factory('polizaFactory', function($http) {
                 headers: { 'Content-Type': 'application/json' }
             });
         },
+        obtienePolizaApi: function(parametros) {
+            return $http({
+                url: polUrl + 'obtienePolizaApi/',
+                method: "GET",
+                params: parametros,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        },
     };
 });

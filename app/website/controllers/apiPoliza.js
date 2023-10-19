@@ -55,5 +55,17 @@ ApiPoliza.prototype.get_CancelaPoliza= function(req, res, next) {
         });
     });
 };    
+ApiPoliza.prototype.get_obtienePolizaApi= function(req, res, next) {
+    var self = this;
+    var params = [  { name: 'empresaID', value: req.query.empresaID, type: self.model.types.INT },
+    { name: 'periodo', value: req.query.periodo, type: self.model.types.INT }
+          ];
 
+    self.model.query('usp_get_compensacionApi', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+}; 
 module.exports = ApiPoliza;
