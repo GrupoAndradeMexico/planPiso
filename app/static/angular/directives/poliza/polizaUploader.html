@@ -3,7 +3,7 @@
         <h1>Hola</h1>
     </div>
 </div>-->
-<div ng-show="polizaApi == 0">
+<div ng-if="polizaApi == 0">
     <div class="row" >
         <div class="dropdown setInline">
             <label>Periodo: </label>
@@ -19,7 +19,8 @@
     </div>
     <div class="row">
         <hr>
-        <div ng-init="obtienePeriodosActivos();">
+        <div >
+            <!-- ng-init="obtienePeriodosActivos();" -->
             <div class="col-sm-12">
                 <table id="tblNormalesCancelars" class="table tblNormalesCancel">
                     <thead>
@@ -53,29 +54,37 @@
         </div>
     </div>
 </div>
-<div ng-show="polizaApi == 1">
-    <div class="col-sm-12">
-        <table id="tblNormalesCancelars" class="table tblNormalesCancel">
-            <thead>
-                <tr>
-                    <th>Agencia</th>
-                    <th>Documento</th>
-                    <th>acción</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="api in detalleApi">
-                    <td> {{api.IdDealer}} </td>
-                    <td> {{ api.documento }} </td>
-                    <td>
-                        <button class="btn btn-danger btn-sm" ng-click="CancelaPolizaApi(api);">
-                            <i class="fa fa-file-text" aria-hidden="true"></i> Cancelar
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+
+<div class="row">
+    <div class="col-md-12">
+        <div ng-if="polizaApi == 1">
+            <div class="col-sm-12">
+                <table id="tblNormalesCancelars" class="table tblNormalesCancel">
+                    <thead>
+                        <tr>
+                            <th>Agencia</th>
+                            <th>Documento</th>
+                            <th>Número de serie</th>
+                            <th>Factura</th>
+                            <th>acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="api in detalleApi">
+                            <td> {{api.IdDealer}} </td>
+                            <td> {{ api.Referencia2 }} </td>                            
+                            <td> {{api.VIN}} </td>
+                            <td> {{ api.factura }} </td>
+                            <td>
+                                <button class="btn btn-danger btn-sm" ng-click="CancelaPoliza(api);">
+                                    <i class="fa fa-file-text" aria-hidden="true"></i> Cancelar
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
-
 <modal-cierre-mes></modal-cierre-mes>

@@ -38,7 +38,10 @@ appModule.controller('polizaController', function ($scope, polizaFactory, static
                 periodo: 10
             }).then(function (result) {
                 $scope.detalleApi = result.data;
+                $scope.setResetTable('tblNormalesCancel', 'Cancelacion', 6);
             })
+        } else if ($scope.polizaApi == 0) {
+            $scope.obtienePeriodosActivos()
         }
     });
     $scope.setPeriodo = function (item) {
@@ -127,39 +130,44 @@ appModule.controller('polizaController', function ($scope, polizaFactory, static
             showLoaderOnConfirm: true
         }, function () {
             $('#mdlLoading').modal('show');
-            var parametros = {
-                agencia: item.agencia,
-                documento: item.documento,
-                fechabusqueda: item.fecha,
-                horabusqueda: item.hora,
-                fecha: fecha
-
-            }
-            polizaFactory.CancelaPoliza(parametros).then(function (result) {
-                //swal("Aviso", "Se ha cancelado correctamente", "warning");
-                $scope.fechaSeleccionada = undefined;
+            if ($scope.polizaApi == 1) {
+                $scope.CancelaPolizaApi(item, fecha);
+            } {
                 var parametros = {
-                    idEmpresa: $scope.session.empresaID,
-                    periodo: $scope.currentNombrePeriodo
+                    agencia: item.agencia,
+                    documento: item.documento,
+                    fechabusqueda: item.fecha,
+                    horabusqueda: item.hora,
+                    fecha: fecha
 
                 }
-                polizaFactory.obtienePeriodosActivos(parametros).then(function (result) {
-                    if (result.data.length != 0) {
-                        $scope.lstPendiente = result.data[0];
-                        $scope.setResetTable('tblNormalesCancel', 'Cancelacion', 6);
+                polizaFactory.CancelaPoliza(parametros).then(function (result) {
+                    //swal("Aviso", "Se ha cancelado correctamente", "warning");
+                    $scope.fechaSeleccionada = undefined;
+                    var parametros = {
+                        idEmpresa: $scope.session.empresaID,
+                        periodo: $scope.currentNombrePeriodo
+
                     }
-                    $('#mdlLoading').modal('hide');
-                    swal("Aviso", "Se ha cancelado correctamente", "warning");
+                    polizaFactory.obtienePeriodosActivos(parametros).then(function (result) {
+                        if (result.data.length != 0) {
+                            $scope.lstPendiente = result.data[0];
+                            $scope.setResetTable('tblNormalesCancel', 'Cancelacion', 6);
+                        }
+                        $('#mdlLoading').modal('hide');
+                        swal("Aviso", "Se ha cancelado correctamente", "warning");
+                    });
+                }, function (error) {
+                    console.log("Error", error);
                 });
-            }, function (error) {
-                console.log("Error", error);
-            });
+            }
+
         });
     }
     $scope.setResetTable = function (tblID, display, length) {
         staticFactory.setTableStyleClass('.' + tblID, display, length)
     };
-    $scope.CancelaPolizaApi = function (api) {
+    $scope.CancelaPolizaApi = function (api, fecha) {
         let jsonApi = JSON.parse(api.json)
         console.log(JSON.stringify(JSON.parse(api.json)))
         console.log(JSON.parse(jsonApi.jsonData))
@@ -168,11 +176,16 @@ appModule.controller('polizaController', function ($scope, polizaFactory, static
         jsonCompensacion.Tipo = 9;
         jsonCompensacion.Contabilidad.Polizas[0].Proceso = 'D' + jsonCompensacion.Contabilidad.Polizas[0].Proceso;
         jsonCompensacion.Contabilidad.Polizas[0].Canal = 'D' + jsonCompensacion.Contabilidad.Polizas[0].Canal;
+        if(fecha){
+            jsonCompensacion.Contabilidad.Polizas[0].Fecha = fecha;
+            jsonCompensacion.Contabilidad.Polizas[0].FechaRealPago = fecha;
+        }
         console.log(jsonCompensacion)
 
         jsonCompensacion.CancelaComplemento = [];
         interesFactory.getDetallePoliza(api.transaccion, api.IdDealer).then(function (respuesta) {
             console.log(respuesta);
+            $('#mdlLoading').modal('hide');
             switch (respuesta.data.status) {
                 case 'COMPLETO':
                     let complementos = JSON.parse(respuesta.data.jsonData)
@@ -198,7 +211,7 @@ appModule.controller('polizaController', function ($scope, polizaFactory, static
                         "jsonData": messageWithQuotes
                     }
                     console.log(jsonApi)
-                    interesFactory.saveApiPoliza(api.documento, api.movimientoID, jsonApi, api.IdDealer).then(function success(resultApi) {
+                    interesFactory.saveApiPoliza(api.Referencia2, api.movimientoID, jsonApi, api.IdDealer).then(function success(resultApi) {
                         console.log(resultApi)
                         if (resultApi.data[0].respuesta == 1) {
                             swal("Éxito", "Se esta procesando su póliza.", "success");
