@@ -66,7 +66,7 @@
                             <th>Documento</th>
                             <th>Número de serie</th>
                             <th>Factura</th>
-                            <th>acción</th>
+                            <th>Acción</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -76,8 +76,11 @@
                             <td> {{api.VIN}} </td>
                             <td> {{ api.factura }} </td>
                             <td>
-                                <button class="btn btn-danger btn-sm" ng-click="CancelaPoliza(api);">
+                                <button class="btn btn-danger btn-sm" ng-click="CancelaPoliza(api);" ng-if="api.idTipoPoliza == 10">
                                     <i class="fa fa-file-text" aria-hidden="true"></i> Cancelar
+                                </button>
+                                <button class="btn btn-primary btn-sm" ng-click="ConsultarPoliza(api);" ng-if="api.idTipoPoliza == 13">
+                                    <i class="fa fa-file-text" aria-hidden="true"></i> Consultar
                                 </button>
                             </td>
                         </tr>

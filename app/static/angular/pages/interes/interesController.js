@@ -1392,7 +1392,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
             let auxFecha = value.fecha.split('/');
             console.log(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
             let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
-            if (fechaFaux > fechaEaux) {
+            if (fechaFaux > fechaEaux && value.montoCompensar > 0) {
                 $scope.documentoFecha = $scope.documentoFecha + value.factura + ',';
             }
         });
@@ -1400,7 +1400,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
             let auxFecha = value.fecha.split('/');
             console.log(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
             let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
-            if (fechaFaux > fechaEaux) {
+            if (fechaFaux > fechaEaux && value.montoCompensar > 0) {
                 $scope.documentoFecha = $scope.documentoFecha + value.factura + ',';
             }
         });
@@ -1456,6 +1456,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
 
     };
     $scope.setPnlCompensacionResumenApi = function(saldoCompensar, fecha) {
+
         $scope.fechaCompensacion = fecha;
         var fechaComparar = fecha;
         if (!fechaComparar) {
@@ -1469,7 +1470,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
             let auxFecha = value.fecha.split('/');
             console.log(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
             let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
-            if (fechaFaux > fechaEaux) {
+            if (fechaFaux > fechaEaux && value.montoCompensar > 0) {
                 $scope.documentoFecha = $scope.documentoFecha + value.factura + ',';
             }
         });
@@ -1477,7 +1478,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
             let auxFecha = value.fecha.split('/');
             console.log(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
             let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
-            if (fechaFaux > fechaEaux) {
+            if (fechaFaux > fechaEaux && value.montoCompensar > 0) {
                 $scope.documentoFecha = $scope.documentoFecha + value.factura + ',';
             }
         });
@@ -1506,6 +1507,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                         confirmButtonText: "Aplicar",
                         closeOnConfirm: true
                     }, function() {
+                        $('#mdlLoading').modal('show');
                         console.log('Aquí formare el json', $scope.factura_unidad)
                         $scope.lstUnitsCompensacion = filterFilter($scope.lstNewUnits, {
                             isChecked: true
@@ -1795,7 +1797,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                     "Proceso": "CPLP" + $scope.complemento,
                                     "DocumentoOrigen": $scope.factura_unidad,
                                     "Canal": "CPLP" + $scope.complemento,
-                                    "Fecha": $scope.fechaDiaHoy,
+                                    "Fecha": $scope.fechaCompensacion,
                                     "Documento": $scope.factura_unidad,
                                     "Referencia1": "",
                                     "Referencia2": $scope.unidadCompensacion.CCP_IDDOCTO,
@@ -1835,15 +1837,20 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                             }
                             
                         console.log(jsonApi);
-                        interesFactory.saveApiPoliza($scope.unidadCompensacion.CCP_IDDOCTO, $scope.unidadCompensacion.movimientoID, jsonApi, $scope.nombreBD).then(function success(resultApi) {
+                        interesFactory.saveApiPoliza($scope.unidadCompensacion.CCP_IDDOCTO, $scope.unidadCompensacion.movimientoID, jsonApi, $scope.nombreBD, 10).then(function success(resultApi) {
                             console.log(resultApi)
+                            $('#mdlLoading').modal('hide');
                             if (resultApi.data[0].respuesta == 1) {
                                 swal("Éxito", "Se esta procesando su póliza.", "success");
                                 setTimeout(function() {
                                     window.location = "/interes";
                                 }, 1000);
+                            }else{
+                                swal("Atención", "Ocurrió un error, favor de comunicarse con sistemas.", "warning");
                             }
                         }, function error(error) {
+                            $('#mdlLoading').modal('hide');
+                            swal("Atención", "Ocurrió un error, favor de comunicarse con sistemas.", "warning");
                             console.log(error, 'Error al tratar de consumir la API ')
                         })
 

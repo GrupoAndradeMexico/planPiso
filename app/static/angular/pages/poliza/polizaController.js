@@ -176,7 +176,7 @@ appModule.controller('polizaController', function ($scope, polizaFactory, static
         jsonCompensacion.Tipo = 9;
         jsonCompensacion.Contabilidad.Polizas[0].Proceso = 'D' + jsonCompensacion.Contabilidad.Polizas[0].Proceso;
         jsonCompensacion.Contabilidad.Polizas[0].Canal = 'D' + jsonCompensacion.Contabilidad.Polizas[0].Canal;
-        if(fecha){
+        if (fecha) {
             jsonCompensacion.Contabilidad.Polizas[0].Fecha = fecha;
             jsonCompensacion.Contabilidad.Polizas[0].FechaRealPago = fecha;
         }
@@ -211,7 +211,7 @@ appModule.controller('polizaController', function ($scope, polizaFactory, static
                         "jsonData": messageWithQuotes
                     }
                     console.log(jsonApi)
-                    interesFactory.saveApiPoliza(api.Referencia2, api.movimientoID, jsonApi, api.IdDealer).then(function success(resultApi) {
+                    interesFactory.saveApiPoliza(api.Referencia2, api.movimientoID, jsonApi, api.IdDealer, 13).then(function success(resultApi) {
                         console.log(resultApi)
                         if (resultApi.data[0].respuesta == 1) {
                             swal("Éxito", "Se esta procesando su póliza.", "success");
@@ -260,5 +260,51 @@ appModule.controller('polizaController', function ($scope, polizaFactory, static
                 console.log(error);
             });
     }
+    $scope.ConsultarPoliza = function (api) {
+        interesFactory.getDetallePoliza(api.transaccion, api.IdDealer).then(function(respuesta) {
+            console.log(respuesta);
+            switch (respuesta.data.status) {
+                case 'COMPLETO':
+                    swal({
+                        title: "Póliza procesada",
+                        text: "¡COMPLETO!",
+                        type: "success",
+                        showCancelButton: true,
+                        cancelButtonText: "Cerrar"
+                    }, function() {
 
+                    });
+                    break;
+                case 'PROCESANDO':
+                    swal({
+                        title: "Póliza en proceso",
+                        text: "¡Su póliza esta en proceso, favor de intentarlo mas tarde!",
+                        type: "warning",
+                        showCancelButton: true,
+                        cancelButtonText: "Cerrar"
+                    }, function() {
+
+                    });
+                    break;
+                case 'ERROR':
+                    swal({
+                        title: "Ocurrio un problema",
+                        text: respuesta.data.error.mensaje,
+                        type: "warning",
+                        // showCancelButton: true,
+                        closeOnConfirm: true,
+                        confirmButtonText: "Cerrar",
+                        // cancelButtonText: "Cerrar"
+                    }, function() {
+                        
+                    });
+                    break;
+                default:
+                    console.log('Ocurrio un error al intentar consultar el estatus de la poliza', respuesta.data[0]);
+            }
+        },
+        function(error) {
+            console.log(error);
+        });
+    }
 });

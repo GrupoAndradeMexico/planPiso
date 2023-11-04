@@ -1005,6 +1005,10 @@ ApiInteres.prototype.post_saveApiPoliza = function (req, res, next) {
             name: 'error',
             value: respuesta.error,
             type: self.model.types.STRING
+        }, {
+            name: 'idTipoPoliza',
+            value: req.body.idTipoPoliza,
+            type: self.model.types.INT
         }];
         // console.log(params);
         self.model.query('ins_bitacoraApi', params, function (error, result) {

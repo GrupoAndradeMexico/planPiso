@@ -550,7 +550,7 @@ appModule.factory('interesFactory', function($http) {
                 headers: { 'Content-Type': 'application/json' }
             });
         },
-        saveApiPoliza: function(documento, idMovimiento, json, idDealer) {
+        saveApiPoliza: function(documento, idMovimiento, json, idDealer, idTipoPoliza) {
             return $http({
                 url: interesesUrl + 'saveApiPoliza',
                 method: "POST",
@@ -558,7 +558,8 @@ appModule.factory('interesFactory', function($http) {
                     documento,
                     idMovimiento,
                     idDealer,
-                    json
+                    json,
+                    idTipoPoliza
                 },
                 headers: {
                     'Content-Type': 'application/json'
