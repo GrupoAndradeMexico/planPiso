@@ -41,7 +41,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
     $rootScope.puntos = 0;
     $scope.montoCompensar = 0;
     $scope.totalTablaCXP = 0;
-    $scope.totalTablaCXC = 0;
+    $scope.totalTablaCXC = 0;    
     $scope.fechaRealPago = '';
     $scope.polizaApi = 0;
     var CargarSpreadTiie = _.where($scope.lstPermisoBoton, { idModulo: 4, Boton: "CargarSpreadTiie" })[0];
@@ -131,10 +131,10 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
         commonFactory.getApiPermissions(sessionFactory.empresaID, 10).then(function (result) {
             if (result.data[0][0].estatus == 1 || result.data[0][0].estatus == 0)
                 $scope.polizaApi = result.data[0][0].estatus;
-            else if (auxApiPermission <= 2) {
+            else if(auxApiPermission <= 2 ){
                 getApiPermissions();
                 auxApiPermission++;
-            } else {
+            }else{
                 $scope.polizaApi = 2;
                 alertFactory.error('Ocurrio un error, favor de reportar a sistemas');
             }
@@ -1048,7 +1048,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
             }
         }
     });
-    $scope.callCompensation = function () {
+    $scope.callCompensation = function () {        
         $('#mdlLoading').modal('show');
         $scope.disabledButton = false;
         var validaS = validaSaldo();
@@ -1062,7 +1062,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
             $scope.montoCompensarCxc = 0;
             $scope.siguienteMostrar = true;
             if ($scope.haveSelection() === false) {
-                swal("Aviso", "No se ha seleccionado ningun registro", "warning");
+                swal("Aviso", "No se ha seleccionado ningun registro", "warning");                
                 $('#mdlLoading').modal('hide');
             } else {
                 // $scope.listValida = _.where($scope.lstNewUnits, { sePago: true });
@@ -1233,7 +1233,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                     $scope.engancheCotizacion = result.data[0];
                                     $scope.financieraCotizacion = result.data[0].nombre;
                                     $scope.factura_unidad = result.data[0].ucn_idFactura;
-                                    $scope.idSucursalCotizacion = result.data[0].ucu_idsucursal;
+                                    $scope.idSucursalCotizacion = result.data[0].ucu_idsucursal;                                    
                                     $scope.idEmpresaCotizacion = result.data[0].ucu_idempresa;
                                     $scope.complemento = result.data[0].complemento;
                                     $scope.nombreBD = result.data[0].nombreBD;
@@ -1253,7 +1253,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                     // totalCompensar();
                                     $scope.totalCompensar();
                                     $scope.sumaTotalCXP()
-                                    $scope.sumaTotalCXC();
+                                    $scope.sumaTotalCXC();                                    
                                     $('#mdlLoading').modal('hide');
                                     // });
                                 }, function err(error) {
@@ -1263,7 +1263,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                 if (contadorFacturas > 0) {
                                     $scope.currentPanel = "pnlCompensacion";
                                 } else {
-                                    swal("Aviso", "No se puede compensar este documento.", "warning");
+                                    swal("Aviso", "No se puede compensar este documento.", "warning");                                    
                                     $('#mdlLoading').modal('hide');
                                 }
                                 let idPersonaSR = '';
@@ -1277,7 +1277,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                         text: "La persona que quiere afectar no tiene régimen fiscal asociado. Los id de persona son los siguientes: " + idPersonaSR
                                     }, function () {
                                         location.reload();
-                                    });
+                                    });                                    
                                     $('#mdlLoading').modal('hide');
                                     // swal("Aviso", "La persona que quiere afectar no tiene régimen fiscal asociado. Los id de persona son los siguientes: " + idPersonaSR, "warning");
                                 }
@@ -1319,7 +1319,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
 
             }
         } else {
-            swal("Aviso", "No puede seleccionar unidades con saldo 0", "warning");
+            swal("Aviso", "No puede seleccionar unidades con saldo 0", "warning");            
             $('#mdlLoading').modal('hide');
         }
     };
@@ -1383,9 +1383,6 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
         // console.log($scope.facturasCompensacion, 'Validar CD')
         if (!fechaComparar) {
             fechaComparar = $scope.fechaDiaHoy;
-        }
-        if (!$scope.fechaCompensacion) {
-            $scope.fechaCompensacion = $scope.fechaDiaHoy;
         }
         let auxFechaE = fechaComparar.split('/');
         $scope.documentoFecha = '';
@@ -1458,18 +1455,21 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
         }
 
     };
-    $scope.setPnlCompensacionResumenApi = function (saldoCompensar, fecha) {
+    $scope.setPnlCompensacionResumenApi = function(saldoCompensar, fecha) {
 
         $scope.fechaCompensacion = fecha;
         var fechaComparar = fecha;
         if (!fechaComparar) {
             fechaComparar = $scope.fechaDiaHoy;
         }
+        if (!$scope.fechaCompensacion) {
+            $scope.fechaCompensacion = $scope.fechaDiaHoy;
+        }
         let auxFechaE = fechaComparar.split('/');
         $scope.documentoFecha = '';
         console.log(auxFechaE[2] + '-' + (auxFechaE[1] - 1).toString() + '-' + auxFechaE[0]);
         let fechaEaux = new Date(auxFechaE[2] + '-' + (auxFechaE[1] - 1).toString() + '-' + auxFechaE[0]);
-        angular.forEach($scope.facturasTotal, function (value, key) {
+        angular.forEach($scope.facturasTotal, function(value, key) {
             let auxFecha = value.fecha.split('/');
             console.log(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
             let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
@@ -1477,7 +1477,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                 $scope.documentoFecha = $scope.documentoFecha + value.factura + ',';
             }
         });
-        angular.forEach($scope.facturasCompensacion, function (value, key) {
+        angular.forEach($scope.facturasCompensacion, function(value, key) {
             let auxFecha = value.fecha.split('/');
             console.log(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
             let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
@@ -1509,7 +1509,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                         confirmButtonColor: "#21B9BB",
                         confirmButtonText: "Aplicar",
                         closeOnConfirm: true
-                    }, function () {
+                    }, function() {
                         $('#mdlLoading').modal('show');
                         console.log('Aquí formare el json', $scope.factura_unidad)
                         $scope.lstUnitsCompensacion = filterFilter($scope.lstNewUnits, {
@@ -1536,7 +1536,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                             "Detalle": []
                         };
                         let generaOc = 0;
-                        angular.forEach($scope.ocGarantias, function (value, key) {
+                        angular.forEach($scope.ocGarantias, function(value, key) {
                             $scope.facturasTotal.push({
                                 'tipoFactura': 'PAG',
                                 'cargo': value.montoCompensar,
@@ -1554,7 +1554,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                         });
                         var montoNCA = 0;
                         var tipoPoliza = 2
-                        angular.forEach($scope.facturasCompensacion, function (value, key) {
+                        angular.forEach($scope.facturasCompensacion, function(value, key) {
                             if (value.montoCompensar > 0) {
                                 $scope.facturasTotal.push(value);
                                 if (value.tipoProducto == 'PROV') {
@@ -1671,96 +1671,96 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                 switch (value.tipoProducto) {
                                     case 'FU':
                                         paraCompensacionDetalle = {
-                                            "TipoProducto": value.tipoProducto,
-                                            "SubProducto": "UNI",
-                                            "Origen": "",
-                                            "Destino": "",
-                                            "Moneda": "PE",
-                                            "TipoCambio": "1",
-                                            "Cantidad": 1,
-                                            "CostoUnitario": (value.montoCompensar - ((value.montoCompensar / 1.16) * 0.16)),
-                                            "VentaUnitario": value.montoCompensar,
-                                            "DescuentoUnitario": 0,
-                                            "TasaIva": 16,
-                                            "Iva": (value.montoCompensar / 1.16) * 0.16,
-                                            "ISAN": "",
-                                            "RetIVA": "",
-                                            "RetISR": "",
-                                            "IEPS": "",
-                                            "Persona1": value.idPersona,
-                                            "Persona2": 0,
-                                            "DocumentoAfectado": value.factura,
-                                            "Referencia1": "",
-                                            "Version": $scope.vin,
-                                            "Referencia2": value.factura,
-                                            "TasaRetIva": "",
-                                            "TasaRetIsr": "",
-                                            "Importado": "",
-                                            "UUID": "",
-                                            "Numserie": $scope.vin
-                                        }
+                                                "TipoProducto": value.tipoProducto,
+                                                "SubProducto": "UNI",
+                                                "Origen": "",
+                                                "Destino": "",
+                                                "Moneda": "PE",
+                                                "TipoCambio": "1",
+                                                "Cantidad": 1,
+                                                "CostoUnitario": (value.montoCompensar - ((value.montoCompensar / 1.16) * 0.16)),
+                                                "VentaUnitario": value.montoCompensar,
+                                                "DescuentoUnitario": 0,
+                                                "TasaIva": 16,
+                                                "Iva": (value.montoCompensar / 1.16) * 0.16,
+                                                "ISAN": "",
+                                                "RetIVA": "",
+                                                "RetISR": "",
+                                                "IEPS": "",
+                                                "Persona1": value.idPersona,
+                                                "Persona2": 0,
+                                                "DocumentoAfectado": value.factura,
+                                                "Referencia1": "",
+                                                "Version": $scope.vin,
+                                                "Referencia2": value.factura,
+                                                "TasaRetIva": "",
+                                                "TasaRetIsr": "",
+                                                "Importado": "",
+                                                "UUID": "",
+                                                "Numserie": $scope.vin
+                                            }
                                         break;
                                     case 'COMPRA':
                                         paraCompensacionDetalle = {
-                                            "TipoProducto": value.tipoProducto,
-                                            "SubProducto": "UNI",
-                                            "Origen": "",
-                                            "Destino": "",
-                                            "Moneda": "PE",
-                                            "TipoCambio": "1",
-                                            "Cantidad": 1,
-                                            "CostoUnitario": (saldoCOMPRA - ((saldoCOMPRA / 1.16) * 0.16)),
-                                            "VentaUnitario": saldoCOMPRA,
-                                            "DescuentoUnitario": 0,
-                                            "TasaIva": 16,
-                                            "Iva": (saldoCOMPRA / 1.16) * 0.16,
-                                            "ISAN": "",
-                                            "RetIVA": "",
-                                            "RetISR": "",
-                                            "IEPS": "",
-                                            "Persona1": $scope.unidadCompensacion.financieraIDBP,
-                                            "Persona2": 0,
-                                            "DocumentoAfectado": value.factura,
-                                            "Referencia1": "",
-                                            "Version": $scope.vin,
-                                            "Referencia2": value.factura,
-                                            "TasaRetIva": "",
-                                            "TasaRetIsr": "",
-                                            "Importado": "",
-                                            "UUID": "",
-                                            "Numserie": $scope.vin
-                                        }
+                                                "TipoProducto": value.tipoProducto,
+                                                "SubProducto": "UNI",
+                                                "Origen": "",
+                                                "Destino": "",
+                                                "Moneda": "PE",
+                                                "TipoCambio": "1",
+                                                "Cantidad": 1,
+                                                "CostoUnitario": (saldoCOMPRA - ((saldoCOMPRA / 1.16) * 0.16)),
+                                                "VentaUnitario": saldoCOMPRA,
+                                                "DescuentoUnitario": 0,
+                                                "TasaIva": 16,
+                                                "Iva": (saldoCOMPRA / 1.16) * 0.16,
+                                                "ISAN": "",
+                                                "RetIVA": "",
+                                                "RetISR": "",
+                                                "IEPS": "",
+                                                "Persona1": $scope.unidadCompensacion.financieraIDBP,
+                                                "Persona2": 0,
+                                                "DocumentoAfectado": value.factura,
+                                                "Referencia1": "",
+                                                "Version": $scope.vin,
+                                                "Referencia2": value.factura,
+                                                "TasaRetIva": "",
+                                                "TasaRetIsr": "",
+                                                "Importado": "",
+                                                "UUID": "",
+                                                "Numserie": $scope.vin
+                                            }
                                         break;
                                     default:
                                         paraCompensacionDetalle = {
-                                            "TipoProducto": value.tipoProducto,
-                                            "SubProducto": "UNI",
-                                            "Origen": "",
-                                            "Destino": "",
-                                            "Moneda": "PE",
-                                            "TipoCambio": "1",
-                                            "Cantidad": 1,
-                                            "CostoUnitario": (value.montoCompensar - ((value.montoCompensar / 1.16) * 0.16)),
-                                            "VentaUnitario": value.montoCompensar,
-                                            "DescuentoUnitario": 0,
-                                            "TasaIva": 16,
-                                            "Iva": (value.montoCompensar / 1.16) * 0.16,
-                                            "ISAN": "",
-                                            "RetIVA": "",
-                                            "RetISR": "",
-                                            "IEPS": "",
-                                            "Persona1": value.idPersona,
-                                            "Persona2": 0,
-                                            "DocumentoAfectado": value.factura,
-                                            "Referencia1": "",
-                                            "Version": $scope.vin,
-                                            "Referencia2": value.factura,
-                                            "TasaRetIva": "",
-                                            "TasaRetIsr": "",
-                                            "Importado": "",
-                                            "UUID": "",
-                                            "Numserie": $scope.vin
-                                        }
+                                                "TipoProducto": value.tipoProducto,
+                                                "SubProducto": "UNI",
+                                                "Origen": "",
+                                                "Destino": "",
+                                                "Moneda": "PE",
+                                                "TipoCambio": "1",
+                                                "Cantidad": 1,
+                                                "CostoUnitario": (value.montoCompensar - ((value.montoCompensar / 1.16) * 0.16)),
+                                                "VentaUnitario": value.montoCompensar,
+                                                "DescuentoUnitario": 0,
+                                                "TasaIva": 16,
+                                                "Iva": (value.montoCompensar / 1.16) * 0.16,
+                                                "ISAN": "",
+                                                "RetIVA": "",
+                                                "RetISR": "",
+                                                "IEPS": "",
+                                                "Persona1": value.idPersona,
+                                                "Persona2": 0,
+                                                "DocumentoAfectado": value.factura,
+                                                "Referencia1": "",
+                                                "Version": $scope.vin,
+                                                "Referencia2": value.factura,
+                                                "TasaRetIva": "",
+                                                "TasaRetIsr": "",
+                                                "Importado": "",
+                                                "UUID": "",
+                                                "Numserie": $scope.vin
+                                            }
                                 }
                                 if (value.tipoProducto == 'FU' || value.tipoProducto == 'FA' || value.tipoProducto == 'FS') {
                                     detalleComplemento.push({
@@ -1779,14 +1779,14 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                 }
 
                                 console.log(paraCompensacionDetalle, 'Lo que insertare de facturas')
-                                loCompensado.push(paraCompensacionDetalle);
+                                loCompensado.push(paraCompensacionDetalle);                                  
                             }
 
                         });
-                        angular.forEach(loCompensado, function (value, key) {
+                        angular.forEach(loCompensado, function(value, key) {
                             value.Partida = key + 1;
                         });
-                        angular.forEach(detalleComplemento, function (value, key) {
+                        angular.forEach(detalleComplemento, function(value, key) {
                             value.Partida = key + 1;
                         });
 
@@ -1835,20 +1835,20 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                         }
                         let messageWithQuotes = JSON.stringify(jsonData)
                         let jsonApi = {
-                            "Proceso": "PLANPISO",
-                            "jsonData": messageWithQuotes
-                        }
-
+                                "Proceso": "PLANPISO",
+                                "jsonData": messageWithQuotes
+                            }
+                            
                         console.log(jsonApi);
                         interesFactory.saveApiPoliza($scope.unidadCompensacion.CCP_IDDOCTO, $scope.unidadCompensacion.movimientoID, jsonApi, $scope.nombreBD, 10).then(function success(resultApi) {
                             console.log(resultApi)
                             $('#mdlLoading').modal('hide');
                             if (resultApi.data[0].respuesta == 1) {
                                 swal("Éxito", "Se esta procesando su póliza.", "success");
-                                setTimeout(function () {
+                                setTimeout(function() {
                                     window.location = "/interes";
                                 }, 1000);
-                            } else {
+                            }else{
                                 swal("Atención", "Ocurrió un error, favor de comunicarse con sistemas.", "warning");
                             }
                         }, function error(error) {
@@ -2814,59 +2814,59 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
     $scope.recargar = function () {
         location.reload();
     }
-    $scope.detallePoliza = function (unidad) {
-        interesFactory.getDetallePoliza(unidad.transaccion, unidad.IdDealer).then(function (respuesta) {
-            console.log(respuesta);
-            switch (respuesta.data.status) {
-                case 'COMPLETO':
-                    swal({
-                        title: "Póliza procesada",
-                        text: "¡COMPLETO!",
-                        type: "success",
-                        showCancelButton: true,
-                        cancelButtonText: "Cerrar"
-                    }, function () {
+    $scope.detallePoliza = function(unidad) {
+        interesFactory.getDetallePoliza(unidad.transaccion, unidad.IdDealer).then(function(respuesta) {
+                console.log(respuesta);
+                switch (respuesta.data.status) {
+                    case 'COMPLETO':
+                        swal({
+                            title: "Póliza procesada",
+                            text: "¡COMPLETO!",
+                            type: "success",
+                            showCancelButton: true,
+                            cancelButtonText: "Cerrar"
+                        }, function() {
 
-                    });
-                    break;
-                case 'PROCESANDO':
-                    swal({
-                        title: "Póliza en proceso",
-                        text: "¡Su póliza esta en proceso, favor de intentarlo mas tarde!",
-                        type: "warning",
-                        showCancelButton: true,
-                        cancelButtonText: "Cerrar"
-                    }, function () {
-
-                    });
-                    break;
-                case 'ERROR':
-                    swal({
-                        title: "Ocurrio un problema",
-                        text: respuesta.data.error.mensaje + ' ¿Desea volver a intentarlo?',
-                        type: "warning",
-                        showCancelButton: true,
-                        closeOnConfirm: true,
-                        confirmButtonText: "Compensar",
-                        cancelButtonText: "Cerrar"
-                    }, function () {
-                        $scope.lstNewUnits.forEach(function (item) {
-                            if (item.movimientoID == unidad.movimientoID) {
-                                item.isChecked = true;
-                            }
                         });
-                        $scope.callCompensation();
-                    });
-                    break;
-                default:
-                    console.log('Ocurrio un error al intentar consultar el estatus de la poliza', respuesta.data[0]);
-            }
-        },
-            function (error) {
+                        break;
+                    case 'PROCESANDO':
+                        swal({
+                            title: "Póliza en proceso",
+                            text: "¡Su póliza esta en proceso, favor de intentarlo mas tarde!",
+                            type: "warning",
+                            showCancelButton: true,
+                            cancelButtonText: "Cerrar"
+                        }, function() {
+
+                        });
+                        break;
+                    case 'ERROR':
+                        swal({
+                            title: "Ocurrio un problema",
+                            text: respuesta.data.error.mensaje + ' ¿Desea volver a intentarlo?',
+                            type: "warning",
+                            showCancelButton: true,
+                            closeOnConfirm: true,
+                            confirmButtonText: "Compensar",
+                            cancelButtonText: "Cerrar"
+                        }, function() {
+                            $scope.lstNewUnits.forEach(function(item) {
+                                if(item.movimientoID == unidad.movimientoID){
+                                    item.isChecked = true;
+                                }
+                            });
+                            $scope.callCompensation();
+                        });
+                        break;
+                    default:
+                        console.log('Ocurrio un error al intentar consultar el estatus de la poliza', respuesta.data[0]);
+                }
+            },
+            function(error) {
                 console.log(error);
             });
     }
-    $scope.changeDate = function (fecha) {
+    $scope.changeDate = function(fecha) {
         $scope.fechaRealPago = fecha;
     }
 });
