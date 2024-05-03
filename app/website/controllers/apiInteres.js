@@ -483,7 +483,8 @@ ApiInteres.prototype.get_detalleBproCompensacion = function (req, res, next) {
     { name: 'consecutivo', value: req.query.consecutivo, type: self.model.types.STRING },
     { name: 'idReciboAutomatico', value: req.query.idReciboAutomatico, type: self.model.types.INT },
     { name: 'facturaUnidad', value: req.query.facturaUnidad, type: self.model.types.STRING },
-    { name: 'fechaSeleccionada', value: req.query.fecha, type: self.model.types.STRING }
+    { name: 'fechaSeleccionada', value: req.query.fecha, type: self.model.types.STRING },
+    { name: 'tipoPago', value: req.query.tipoPago, type: self.model.types.STRING }
     ];
     console.log(params);
     console.log('====================================')
@@ -1073,6 +1074,21 @@ ApiInteres.prototype.get_detallePoliza = function (req, res, next) {
         self.view.expositor(res_2, {
             error: null,
             result: JSON.parse(body)
+        });
+    });
+};
+ApiInteres.prototype.get_obtieneTipoPago = function (req, res, next) {
+
+    var self = this;
+
+    var params = [{ name: 'idSucursal', value: req.query.idSucursal, type: self.model.types.INT }
+
+    ];
+
+    self.model.query('SEL_OBTIENE_TIPO_PAGO_COMPENSACION_SP', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
         });
     });
 };

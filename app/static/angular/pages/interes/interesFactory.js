@@ -575,6 +575,16 @@ appModule.factory('interesFactory', function($http) {
                     'Content-Type': 'application/json'
                 }
             });
+        },
+        obtieneTipoPago: function(idSucursal) {
+            return $http({
+                url: interesesUrl + 'obtieneTipoPago/',
+                method: "GET",
+                params: {idSucursal},
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
         }
     };
 });

@@ -41,7 +41,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
     $rootScope.puntos = 0;
     $scope.montoCompensar = 0;
     $scope.totalTablaCXP = 0;
-    $scope.totalTablaCXC = 0;    
+    $scope.totalTablaCXC = 0;
     $scope.fechaRealPago = '';
     $scope.polizaApi = 0;
     var CargarSpreadTiie = _.where($scope.lstPermisoBoton, { idModulo: 4, Boton: "CargarSpreadTiie" })[0];
@@ -131,10 +131,10 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
         commonFactory.getApiPermissions(sessionFactory.empresaID, 10).then(function (result) {
             if (result.data[0][0].estatus == 1 || result.data[0][0].estatus == 0)
                 $scope.polizaApi = result.data[0][0].estatus;
-            else if(auxApiPermission <= 2 ){
+            else if (auxApiPermission <= 2) {
                 getApiPermissions();
                 auxApiPermission++;
-            }else{
+            } else {
                 $scope.polizaApi = 2;
                 alertFactory.error('Ocurrio un error, favor de reportar a sistemas');
             }
@@ -1048,7 +1048,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
             }
         }
     });
-    $scope.callCompensation = function () {        
+    $scope.callCompensation = function () {
         $('#mdlLoading').modal('show');
         $scope.disabledButton = false;
         var validaS = validaSaldo();
@@ -1062,7 +1062,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
             $scope.montoCompensarCxc = 0;
             $scope.siguienteMostrar = true;
             if ($scope.haveSelection() === false) {
-                swal("Aviso", "No se ha seleccionado ningun registro", "warning");                
+                swal("Aviso", "No se ha seleccionado ningun registro", "warning");
                 $('#mdlLoading').modal('hide');
             } else {
                 // $scope.listValida = _.where($scope.lstNewUnits, { sePago: true });
@@ -1168,7 +1168,11 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                             facturas.push(interesFactory.facturaOT(item.empresaID, item.sucursalID, item.CCP_IDDOCTO));
                             facturas.push(interesFactory.facturaAccesorios(item.empresaID, item.sucursalID, item.CCP_IDDOCTO));
                             // facturas.push(interesFactory.notaCredito(item.empresaID, item.sucursalID, item.CCP_IDDOCTO));
-
+                            interesFactory.obtieneTipoPago(item.sucursalID).then(function success(resultTipoPago) {
+                                $scope.tipoPago = resultTipoPago.data;
+                            }, function error(err) {
+                                alertFactory.error('Ocurrio un error al intentar obtener el tipo de pago, favor de volver a intentar, si persisten los problemas reportar con sistemas')
+                            })
                             Promise.all(facturas).then(function (results) {
                                 console.log(results, 'Facturaaaas')
                                 $scope.facturasTotal = [];
@@ -1233,7 +1237,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                     $scope.engancheCotizacion = result.data[0];
                                     $scope.financieraCotizacion = result.data[0].nombre;
                                     $scope.factura_unidad = result.data[0].ucn_idFactura;
-                                    $scope.idSucursalCotizacion = result.data[0].ucu_idsucursal;                                    
+                                    $scope.idSucursalCotizacion = result.data[0].ucu_idsucursal;
                                     $scope.idEmpresaCotizacion = result.data[0].ucu_idempresa;
                                     $scope.complemento = result.data[0].complemento;
                                     $scope.nombreBD = result.data[0].nombreBD;
@@ -1253,7 +1257,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                     // totalCompensar();
                                     $scope.totalCompensar();
                                     $scope.sumaTotalCXP()
-                                    $scope.sumaTotalCXC();                                    
+                                    $scope.sumaTotalCXC();
                                     $('#mdlLoading').modal('hide');
                                     // });
                                 }, function err(error) {
@@ -1263,7 +1267,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                 if (contadorFacturas > 0) {
                                     $scope.currentPanel = "pnlCompensacion";
                                 } else {
-                                    swal("Aviso", "No se puede compensar este documento.", "warning");                                    
+                                    swal("Aviso", "No se puede compensar este documento.", "warning");
                                     $('#mdlLoading').modal('hide');
                                 }
                                 let idPersonaSR = '';
@@ -1277,7 +1281,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                         text: "La persona que quiere afectar no tiene régimen fiscal asociado. Los id de persona son los siguientes: " + idPersonaSR
                                     }, function () {
                                         location.reload();
-                                    });                                    
+                                    });
                                     $('#mdlLoading').modal('hide');
                                     // swal("Aviso", "La persona que quiere afectar no tiene régimen fiscal asociado. Los id de persona son los siguientes: " + idPersonaSR, "warning");
                                 }
@@ -1319,7 +1323,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
 
             }
         } else {
-            swal("Aviso", "No puede seleccionar unidades con saldo 0", "warning");            
+            swal("Aviso", "No puede seleccionar unidades con saldo 0", "warning");
             $('#mdlLoading').modal('hide');
         }
     };
@@ -1375,302 +1379,308 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
     $scope.setPnlCompensacion = function () {
         $scope.currentPanel = "pnlCompensacion";
     };
-    $scope.setPnlCompensacionResumen = function (saldoCompensar, fecha) {
-        $scope.fechaCompensacion = fecha;
-        var fechaComparar = fecha;
-        // console.log(fecha, 'Soy la fecha que el usuario selecciono')
-        // console.log($scope.facturasTotal, 'Validar estas factura');
-        // console.log($scope.facturasCompensacion, 'Validar CD')
-        if (!fechaComparar) {
-            fechaComparar = $scope.fechaDiaHoy;
-        }
-        let auxFechaE = fechaComparar.split('/');
-        $scope.documentoFecha = '';
-        console.log(auxFechaE[2] + '-' + (auxFechaE[1] - 1).toString() + '-' + auxFechaE[0]);
-        let fechaEaux = new Date(auxFechaE[2] + '-' + (auxFechaE[1] - 1).toString() + '-' + auxFechaE[0]);
-        angular.forEach($scope.facturasTotal, function (value, key) {
-            let auxFecha = value.fecha.split('/');
-            console.log(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
-            let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
-            if (fechaFaux > fechaEaux && value.montoCompensar > 0) {
-                $scope.documentoFecha = $scope.documentoFecha + value.factura + ',';
+    $scope.setPnlCompensacionResumen = function (saldoCompensar, fecha, tipoPagoSelect) {
+        if (tipoPagoSelect) {
+            $scope.tipoPagoSeleccionado = tipoPagoSelect.tipoPago;
+            $scope.fechaCompensacion = fecha;
+            var fechaComparar = fecha;
+            // console.log(fecha, 'Soy la fecha que el usuario selecciono')
+            // console.log($scope.facturasTotal, 'Validar estas factura');
+            // console.log($scope.facturasCompensacion, 'Validar CD')
+            if (!fechaComparar) {
+                fechaComparar = $scope.fechaDiaHoy;
             }
-        });
-        angular.forEach($scope.facturasCompensacion, function (value, key) {
-            let auxFecha = value.fecha.split('/');
-            console.log(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
-            let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
-            if (fechaFaux > fechaEaux && value.montoCompensar > 0) {
-                $scope.documentoFecha = $scope.documentoFecha + value.factura + ',';
-            }
-        });
-        if ($scope.documentoFecha) {
-            swal("Aviso", "El documento " + $scope.documentoFecha + " tiene una fecha posterior, no puede realziar la compensación", "warning");
-        } else {
-            $scope.mostrarMensajeFecha = '';
-            if ($scope.fechaCierreMes != $scope.fechaDiaHoy && !fecha) {
-                swal("Aviso", "Debe seleccionar una fecha", "warning");
+            let auxFechaE = fechaComparar.split('/');
+            $scope.documentoFecha = '';
+            console.log(auxFechaE[2] + '-' + (auxFechaE[1] - 1).toString() + '-' + auxFechaE[0]);
+            let fechaEaux = new Date(auxFechaE[2] + '-' + (auxFechaE[1] - 1).toString() + '-' + auxFechaE[0]);
+            angular.forEach($scope.facturasTotal, function (value, key) {
+                let auxFecha = value.fecha.split('/');
+                console.log(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
+                let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
+                if (fechaFaux > fechaEaux && value.montoCompensar > 0) {
+                    $scope.documentoFecha = $scope.documentoFecha + value.factura + ',';
+                }
+            });
+            angular.forEach($scope.facturasCompensacion, function (value, key) {
+                let auxFecha = value.fecha.split('/');
+                console.log(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
+                let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
+                if (fechaFaux > fechaEaux && value.montoCompensar > 0) {
+                    $scope.documentoFecha = $scope.documentoFecha + value.factura + ',';
+                }
+            });
+            if ($scope.documentoFecha) {
+                swal("Aviso", "El documento " + $scope.documentoFecha + " tiene una fecha posterior, no puede realziar la compensación", "warning");
             } else {
-                var isok = 0;
-                if (saldoCompensar - $scope.saldoFinanciera <= 0) {
-                    $scope.currentPanel = "pnlCompensacionResumen";
-                    $scope.saldoCompensar = saldoCompensar;
+                $scope.mostrarMensajeFecha = '';
+                if ($scope.fechaCierreMes != $scope.fechaDiaHoy && !fecha) {
+                    swal("Aviso", "Debe seleccionar una fecha", "warning");
                 } else {
-                    // swal("Aviso", "No puede ser mayor el saldo a compensar que el saldo e la financiera", "warning");
-                    if (fecha) {
-                        $scope.mostrarMensajeFecha = 'con la fecha: ' + fecha;
-                    }
-                    swal({
-                        title: "¿Esta seguro?",
-                        text: "Se creara la compensación para la unidad seleccionada " + $scope.mostrarMensajeFecha + ".",
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#21B9BB",
-                        confirmButtonText: "Aplicar",
-                        closeOnConfirm: true
-                    }, function () {
-                        $scope.disabledButton = true;
-                        $scope.totalCompensar();
-                        $scope.sumaTotalCXP();
-                        $scope.sumaTotalCXC();
-                        $('#mdlLoading').modal('hide');
-                        var paraCompensacion = {
-                            idUsuario: $scope.idUsuario,
-                            idEmpresa: sessionFactory.empresaID,
-                            idtipopoliza: 8 //cambio de financiera
+                    var isok = 0;
+                    if (saldoCompensar - $scope.saldoFinanciera <= 0) {
+                        $scope.currentPanel = "pnlCompensacionResumen";
+                        $scope.saldoCompensar = saldoCompensar;
+                    } else {
+                        // swal("Aviso", "No puede ser mayor el saldo a compensar que el saldo e la financiera", "warning");
+                        if (fecha) {
+                            $scope.mostrarMensajeFecha = 'con la fecha: ' + fecha;
                         }
+                        swal({
+                            title: "¿Esta seguro?",
+                            text: "Se creara la compensación para la unidad seleccionada " + $scope.mostrarMensajeFecha + ".",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#21B9BB",
+                            confirmButtonText: "Aplicar",
+                            closeOnConfirm: true
+                        }, function () {
+                            $scope.disabledButton = true;
+                            $scope.totalCompensar();
+                            $scope.sumaTotalCXP();
+                            $scope.sumaTotalCXC();
+                            $('#mdlLoading').modal('hide');
+                            var paraCompensacion = {
+                                idUsuario: $scope.idUsuario,
+                                idEmpresa: sessionFactory.empresaID,
+                                idtipopoliza: 8 //cambio de financiera
+                            }
 
-                        interesFactory.cabeceraPoliza(paraCompensacion).then(function (respuesta) {
-                            $scope.LastId = respuesta.data[0].LastId;
-                            $scope.lstUnitsCompensacion = filterFilter($scope.lstNewUnits, { isChecked: true });
-                            $scope.guardaCompensacionDetalle();
-                        }, function (error) {
-                            $scope.error(error.data.Message);
+                            interesFactory.cabeceraPoliza(paraCompensacion).then(function (respuesta) {
+                                $scope.LastId = respuesta.data[0].LastId;
+                                $scope.lstUnitsCompensacion = filterFilter($scope.lstNewUnits, { isChecked: true });
+                                $scope.guardaCompensacionDetalle();
+                            }, function (error) {
+                                $scope.error(error.data.Message);
+                            });
+                            // $scope.setPnlInteres();
                         });
-                        // $scope.setPnlInteres();
-                    });
 
+                    }
                 }
             }
+        } else {
+            alertFactory.warning('Debe seleccionar el tipo de pago');
         }
+
 
     };
-    $scope.setPnlCompensacionResumenApi = function(saldoCompensar, fecha) {
-
-        $scope.fechaCompensacion = fecha;
-        var fechaComparar = fecha;
-        if (!fechaComparar) {
-            fechaComparar = $scope.fechaDiaHoy;
-        }
-        if (!$scope.fechaCompensacion) {
-            $scope.fechaCompensacion = $scope.fechaDiaHoy;
-        }
-        let auxFechaE = fechaComparar.split('/');
-        $scope.documentoFecha = '';
-        console.log(auxFechaE[2] + '-' + (auxFechaE[1] - 1).toString() + '-' + auxFechaE[0]);
-        let fechaEaux = new Date(auxFechaE[2] + '-' + (auxFechaE[1] - 1).toString() + '-' + auxFechaE[0]);
-        angular.forEach($scope.facturasTotal, function(value, key) {
-            let auxFecha = value.fecha.split('/');
-            console.log(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
-            let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
-            if (fechaFaux > fechaEaux && value.montoCompensar > 0) {
-                $scope.documentoFecha = $scope.documentoFecha + value.factura + ',';
+    $scope.setPnlCompensacionResumenApi = function (saldoCompensar, fecha, tipoPagoSelect) {
+        if (tipoPagoSelect) {
+            $scope.fechaCompensacion = fecha;
+            var fechaComparar = fecha;
+            if (!fechaComparar) {
+                fechaComparar = $scope.fechaDiaHoy;
             }
-        });
-        angular.forEach($scope.facturasCompensacion, function(value, key) {
-            let auxFecha = value.fecha.split('/');
-            console.log(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
-            let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
-            if (fechaFaux > fechaEaux && value.montoCompensar > 0) {
-                $scope.documentoFecha = $scope.documentoFecha + value.factura + ',';
+            if (!$scope.fechaCompensacion) {
+                $scope.fechaCompensacion = $scope.fechaDiaHoy;
             }
-        });
-        if ($scope.documentoFecha) {
-            swal("Aviso", "El documento " + $scope.documentoFecha + " tiene una fecha posterior, no puede realziar la compensación", "warning");
-        } else {
-            $scope.mostrarMensajeFecha = '';
-            if ($scope.fechaCierreMes != $scope.fechaDiaHoy && !fecha) {
-                swal("Aviso", "Debe seleccionar una fecha", "warning");
+            let auxFechaE = fechaComparar.split('/');
+            $scope.documentoFecha = '';
+            console.log(auxFechaE[2] + '-' + (auxFechaE[1] - 1).toString() + '-' + auxFechaE[0]);
+            let fechaEaux = new Date(auxFechaE[2] + '-' + (auxFechaE[1] - 1).toString() + '-' + auxFechaE[0]);
+            angular.forEach($scope.facturasTotal, function (value, key) {
+                let auxFecha = value.fecha.split('/');
+                console.log(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
+                let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
+                if (fechaFaux > fechaEaux && value.montoCompensar > 0) {
+                    $scope.documentoFecha = $scope.documentoFecha + value.factura + ',';
+                }
+            });
+            angular.forEach($scope.facturasCompensacion, function (value, key) {
+                let auxFecha = value.fecha.split('/');
+                console.log(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
+                let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
+                if (fechaFaux > fechaEaux && value.montoCompensar > 0) {
+                    $scope.documentoFecha = $scope.documentoFecha + value.factura + ',';
+                }
+            });
+            if ($scope.documentoFecha) {
+                swal("Aviso", "El documento " + $scope.documentoFecha + " tiene una fecha posterior, no puede realziar la compensación", "warning");
             } else {
-                var isok = 0;
-                if (saldoCompensar - $scope.saldoFinanciera <= 0) {
-                    $scope.currentPanel = "pnlCompensacionResumen";
-                    $scope.saldoCompensar = saldoCompensar;
+                $scope.mostrarMensajeFecha = '';
+                if ($scope.fechaCierreMes != $scope.fechaDiaHoy && !fecha) {
+                    swal("Aviso", "Debe seleccionar una fecha", "warning");
                 } else {
-                    // swal("Aviso", "No puede ser mayor el saldo a compensar que el saldo e la financiera", "warning");
-                    if (fecha) {
-                        $scope.mostrarMensajeFecha = 'con la fecha: ' + fecha;
-                    }
-                    swal({
-                        title: "¿Esta seguro?",
-                        text: "Se creara la compensación para la unidad seleccionada " + $scope.mostrarMensajeFecha + ".",
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#21B9BB",
-                        confirmButtonText: "Aplicar",
-                        closeOnConfirm: true
-                    }, function() {
-                        $('#mdlLoading').modal('show');
-                        console.log('Aquí formare el json', $scope.factura_unidad)
-                        $scope.lstUnitsCompensacion = filterFilter($scope.lstNewUnits, {
-                            isChecked: true
-                        });
-                        var item = $scope.lstUnitsCompensacion[0];
-                        var tiempo = tiempo;
-                        // Agrego al arreglo la de compra  
-                        var saldoNcr = 0;
-                        var FacturaUN = 0;
-                        var auxConta = 1;
-                        let loCompensado = [];
-                        let detalleComplemento = [];
-                        let detalleOc = {
-                            "IdProveedor": '',
-                            "Area": '',
-                            "TipoComprobante": '',
-                            "FechaOrden": '',
-                            "FechaAplicacion": '',
-                            "Anticipo": '',
-                            "CantidadAnticipo": '',
-                            "PorcentajeAnticipo": '',
-                            "FechaAnticipo": '',
-                            "Detalle": []
-                        };
-                        let generaOc = 0;
-                        angular.forEach($scope.ocGarantias, function(value, key) {
+                    var isok = 0;
+                    if (saldoCompensar - $scope.saldoFinanciera <= 0) {
+                        $scope.currentPanel = "pnlCompensacionResumen";
+                        $scope.saldoCompensar = saldoCompensar;
+                    } else {
+                        // swal("Aviso", "No puede ser mayor el saldo a compensar que el saldo e la financiera", "warning");
+                        if (fecha) {
+                            $scope.mostrarMensajeFecha = 'con la fecha: ' + fecha;
+                        }
+                        swal({
+                            title: "¿Esta seguro?",
+                            text: "Se creara la compensación para la unidad seleccionada " + $scope.mostrarMensajeFecha + ".",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#21B9BB",
+                            confirmButtonText: "Aplicar",
+                            closeOnConfirm: true
+                        }, function () {
+                            $('#mdlLoading').modal('show');
+                            console.log('Aquí formare el json', $scope.factura_unidad)
+                            $scope.lstUnitsCompensacion = filterFilter($scope.lstNewUnits, {
+                                isChecked: true
+                            });
+                            var item = $scope.lstUnitsCompensacion[0];
+                            var tiempo = tiempo;
+                            // Agrego al arreglo la de compra  
+                            var saldoNcr = 0;
+                            var FacturaUN = 0;
+                            var auxConta = 1;
+                            let loCompensado = [];
+                            let detalleComplemento = [];
+                            let detalleOc = {
+                                "IdProveedor": '',
+                                "Area": '',
+                                "TipoComprobante": '',
+                                "FechaOrden": '',
+                                "FechaAplicacion": '',
+                                "Anticipo": '',
+                                "CantidadAnticipo": '',
+                                "PorcentajeAnticipo": '',
+                                "FechaAnticipo": '',
+                                "Detalle": []
+                            };
+                            let generaOc = 0;
+                            angular.forEach($scope.ocGarantias, function (value, key) {
+                                $scope.facturasTotal.push({
+                                    'tipoFactura': 'PAG',
+                                    'cargo': value.montoCompensar,
+                                    'iva': '',
+                                    'total': value.montoCompensar,
+                                    'fecha': '',
+                                    'factura': value.oce_folioorden,
+                                    'numeroSerie': '',
+                                    'saldo': '',
+                                    'tipoProducto': 'PAG',
+                                    'montoCompensar': value.montoCompensar,
+                                    'idPersona': value.idPersona
+                                });
+
+                            });
+                            var montoNCA = 0;
+                            var tipoPoliza = 2
+                            angular.forEach($scope.facturasCompensacion, function (value, key) {
+                                if (value.montoCompensar > 0) {
+                                    $scope.facturasTotal.push(value);
+                                    if (value.tipoProducto == 'PROV') {
+                                        tipoPoliza = 3
+                                        $scope.facturasTotal.push({
+                                            'tipoFactura': 'DEALER',
+                                            'cargo': value.montoCompensar,
+                                            'iva': '',
+                                            'total': value.montoCompensar,
+                                            'fecha': '',
+                                            'factura': $scope.factura_unidad,
+                                            'numeroSerie': '',
+                                            'saldo': '',
+                                            'tipoProducto': 'PLP',
+                                            'montoCompensar': value.montoCompensar,
+                                            'idPersona': $scope.unidadCompensacion.financieraIDBP
+                                        });
+                                        value.factura = $scope.factura_unidad;
+                                        value.idPersona = $scope.unidadCompensacion.financieraIDBP;
+                                        detalleOc.Detalle.push({
+                                            "Partida": 1,
+                                            "ConceptoContable": $scope.orc_conceptocontable,
+                                            "Cantidad": 1,
+                                            "Producto": "PLAN PISO",
+                                            "PrecioUnitario": value.montoCompensar,
+                                            "TasaIva": 16,
+                                            "Descuento": 0
+                                        });
+                                        generaOc = 1;
+                                    }
+                                    if (value.bpro) {
+                                        montoNCA = montoNCA + Number(value.montoCompensar);
+                                        value.factura = $scope.factura_unidad;
+                                    }
+                                }
+                            });
+                            console.log(montoNCA, 'ANDALE PLEASE')
+                            if (generaOc == 1) {
+                                detalleOc.IdProveedor = $scope.unidadCompensacion.financieraIDBP;
+                                detalleOc.Area = $scope.areaAfectacion;
+                                detalleOc.TipoComprobante = 1;
+                                detalleOc.FechaOrden = $scope.fechaDiaHoy;
+                                detalleOc.FechaAplicacion = $scope.fechaDiaHoy;
+                                detalleOc.Anticipo = 0;
+                                detalleOc.CantidadAnticipo = 0;
+                                detalleOc.PorcentajeAnticipo = 0
+                                detalleOc.FechaAnticipo = ''
+                            }
+
+                            if (montoNCA > 0) {
+                                var paraCompensacionDetalleNca = {
+                                    "TipoProducto": "NCA",
+                                    "SubProducto": "UNI",
+                                    "Origen": "",
+                                    "Destino": "",
+                                    "Moneda": "PE",
+                                    "TipoCambio": "1",
+                                    "Cantidad": 1,
+                                    "CostoUnitario": (montoNCA - ((montoNCA / 1.16) * 0.16)),
+                                    "VentaUnitario": montoNCA,
+                                    "DescuentoUnitario": 0,
+                                    "TasaIva": 16,
+                                    "Iva": (montoNCA / 1.16) * 0.16,
+                                    "ISAN": "",
+                                    "RetIVA": "",
+                                    "RetISR": "",
+                                    "IEPS": "",
+                                    "Persona1": $scope.unidadCompensacion.financieraIDBP,
+                                    "Persona2": 0,
+                                    "DocumentoAfectado": $scope.facturaDealer,
+                                    "Referencia1": "",
+                                    "Version": $scope.vin,
+                                    "Referencia2": $scope.facturaDealer,
+                                    "TasaRetIva": "",
+                                    "TasaRetIsr": "",
+                                    "Importado": "",
+                                    "UUID": "",
+                                    "Numserie": $scope.vin
+                                }
+                                detalleComplemento.push({
+                                    "IDpersona": $scope.idPersonaDealer,
+                                    "Documento": $scope.facturaDealer,
+                                    "Conscartera": $scope.consCarteraDealer,
+                                    "Importe": montoNCA,
+                                    "Concepto": $scope.carteraDealer,
+                                    "Formapago": tipoPagoSelect.tipoPago,
+                                    "Banco": "01",
+                                    "Referencia": "01",
+                                    "Numerocuenta": "0101",
+                                    "Chequevoucher": "01",
+                                    "Fechaingreso": $scope.fechaDiaHoy
+                                });
+                                loCompensado.push(paraCompensacionDetalleNca);
+                            }
+                            console.log($scope.saldoCompensar - saldoNcr, 'COMPRA');
                             $scope.facturasTotal.push({
-                                'tipoFactura': 'PAG',
-                                'cargo': value.montoCompensar,
+                                'tipoFactura': 'Compra',
+                                'cargo': $scope.saldoCXC,
                                 'iva': '',
-                                'total': value.montoCompensar,
+                                'total': $scope.saldoCXC,
                                 'fecha': '',
-                                'factura': value.oce_folioorden,
+                                'factura': $scope.unidadCompensacion.CCP_IDDOCTO,
                                 'numeroSerie': '',
                                 'saldo': '',
-                                'tipoProducto': 'PAG',
-                                'montoCompensar': value.montoCompensar,
-                                'idPersona': value.idPersona
+                                'tipoProducto': 'COMPRA'
                             });
 
-                        });
-                        var montoNCA = 0;
-                        var tipoPoliza = 2
-                        angular.forEach($scope.facturasCompensacion, function(value, key) {
-                            if (value.montoCompensar > 0) {
-                                $scope.facturasTotal.push(value);
-                                if (value.tipoProducto == 'PROV') {
-                                    tipoPoliza = 3
-                                    $scope.facturasTotal.push({
-                                        'tipoFactura': 'DEALER',
-                                        'cargo': value.montoCompensar,
-                                        'iva': '',
-                                        'total': value.montoCompensar,
-                                        'fecha': '',
-                                        'factura': $scope.factura_unidad,
-                                        'numeroSerie': '',
-                                        'saldo': '',
-                                        'tipoProducto': 'PLP',
-                                        'montoCompensar': value.montoCompensar,
-                                        'idPersona': $scope.unidadCompensacion.financieraIDBP
-                                    });
-                                    value.factura = $scope.factura_unidad;
-                                    value.idPersona = $scope.unidadCompensacion.financieraIDBP;
-                                    detalleOc.Detalle.push({
-                                        "Partida": 1,
-                                        "ConceptoContable": $scope.orc_conceptocontable,
-                                        "Cantidad": 1,
-                                        "Producto": "PLAN PISO",
-                                        "PrecioUnitario": value.montoCompensar,
-                                        "TasaIva": 16,
-                                        "Descuento": 0
-                                    });
-                                    generaOc = 1;
-                                }
-                                if (value.bpro) {
-                                    montoNCA = montoNCA + Number(value.montoCompensar);
-                                    value.factura = $scope.factura_unidad;
-                                }
-                            }
-                        });
-                        console.log(montoNCA, 'ANDALE PLEASE')
-                        if (generaOc == 1) {
-                            detalleOc.IdProveedor = $scope.unidadCompensacion.financieraIDBP;
-                            detalleOc.Area = $scope.areaAfectacion;
-                            detalleOc.TipoComprobante = 1;
-                            detalleOc.FechaOrden = $scope.fechaDiaHoy;
-                            detalleOc.FechaAplicacion = $scope.fechaDiaHoy;
-                            detalleOc.Anticipo = 0;
-                            detalleOc.CantidadAnticipo = 0;
-                            detalleOc.PorcentajeAnticipo = 0
-                            detalleOc.FechaAnticipo = ''
-                        }
-
-                        if (montoNCA > 0) {
-                            var paraCompensacionDetalleNca = {
-                                "TipoProducto": "NCA",
-                                "SubProducto": "UNI",
-                                "Origen": "",
-                                "Destino": "",
-                                "Moneda": "PE",
-                                "TipoCambio": "1",
-                                "Cantidad": 1,
-                                "CostoUnitario": (montoNCA - ((montoNCA / 1.16) * 0.16)),
-                                "VentaUnitario": montoNCA,
-                                "DescuentoUnitario": 0,
-                                "TasaIva": 16,
-                                "Iva": (montoNCA / 1.16) * 0.16,
-                                "ISAN": "",
-                                "RetIVA": "",
-                                "RetISR": "",
-                                "IEPS": "",
-                                "Persona1": $scope.unidadCompensacion.financieraIDBP,
-                                "Persona2": 0,
-                                "DocumentoAfectado": $scope.facturaDealer,
-                                "Referencia1": "",
-                                "Version": $scope.vin,
-                                "Referencia2": $scope.facturaDealer,
-                                "TasaRetIva": "",
-                                "TasaRetIsr": "",
-                                "Importado": "",
-                                "UUID": "",
-                                "Numserie": $scope.vin
-                            }
-                            detalleComplemento.push({
-                                "IDpersona": $scope.idPersonaDealer,
-                                "Documento": $scope.facturaDealer,
-                                "Conscartera": $scope.consCarteraDealer,
-                                "Importe": montoNCA,
-                                "Concepto": $scope.carteraDealer,
-                                "Formapago": "71",
-                                "Banco": "01",
-                                "Referencia": "01",
-                                "Numerocuenta": "0101",
-                                "Chequevoucher": "01",
-                                "Fechaingreso": $scope.fechaDiaHoy
-                            });
-                            loCompensado.push(paraCompensacionDetalleNca);
-                        }
-                        console.log($scope.saldoCompensar - saldoNcr, 'COMPRA');
-                        $scope.facturasTotal.push({
-                            'tipoFactura': 'Compra',
-                            'cargo': $scope.saldoCXC,
-                            'iva': '',
-                            'total': $scope.saldoCXC,
-                            'fecha': '',
-                            'factura': $scope.unidadCompensacion.CCP_IDDOCTO,
-                            'numeroSerie': '',
-                            'saldo': '',
-                            'tipoProducto': 'COMPRA'
-                        });
-
-                        var paraCompensacionDetalle;
-                        var promises = [];
-                        console.log(paraCompensacionDetalleNca);
-                        let saldoCOMPRA = montoNCA > 0 ? ($scope.saldoCXC + montoNCA) : $scope.saldoCXC;
-                        $scope.facturasTotal.map((value) => {
-                            if (value.montoCompensar > 0 || value.tipoProducto == 'COMPRA') {
-                                switch (value.tipoProducto) {
-                                    case 'FU':
-                                        paraCompensacionDetalle = {
+                            var paraCompensacionDetalle;
+                            var promises = [];
+                            console.log(paraCompensacionDetalleNca);
+                            let saldoCOMPRA = montoNCA > 0 ? ($scope.saldoCXC + montoNCA) : $scope.saldoCXC;
+                            $scope.facturasTotal.map((value) => {
+                                if (value.montoCompensar > 0 || value.tipoProducto == 'COMPRA') {
+                                    switch (value.tipoProducto) {
+                                        case 'FU':
+                                            paraCompensacionDetalle = {
                                                 "TipoProducto": value.tipoProducto,
                                                 "SubProducto": "UNI",
                                                 "Origen": "",
@@ -1699,9 +1709,9 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                                 "UUID": "",
                                                 "Numserie": $scope.vin
                                             }
-                                        break;
-                                    case 'COMPRA':
-                                        paraCompensacionDetalle = {
+                                            break;
+                                        case 'COMPRA':
+                                            paraCompensacionDetalle = {
                                                 "TipoProducto": value.tipoProducto,
                                                 "SubProducto": "UNI",
                                                 "Origen": "",
@@ -1730,9 +1740,9 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                                 "UUID": "",
                                                 "Numserie": $scope.vin
                                             }
-                                        break;
-                                    default:
-                                        paraCompensacionDetalle = {
+                                            break;
+                                        default:
+                                            paraCompensacionDetalle = {
                                                 "TipoProducto": value.tipoProducto,
                                                 "SubProducto": "UNI",
                                                 "Origen": "",
@@ -1761,107 +1771,111 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                                 "UUID": "",
                                                 "Numserie": $scope.vin
                                             }
+                                    }
+                                    if (value.tipoProducto == 'FU' || value.tipoProducto == 'FA' || value.tipoProducto == 'FS') {
+                                        detalleComplemento.push({
+                                            "IDpersona": value.idPersona,
+                                            "Documento": value.factura,
+                                            "Conscartera": value.CCP_CONSCARTERA,
+                                            "Importe": value.montoCompensar,
+                                            "Concepto": value.CCP_CARTERA,
+                                            "Formapago": tipoPagoSelect.tipoPago,
+                                            "Banco": "01",
+                                            "Referencia": "01",
+                                            "Numerocuenta": "0101",
+                                            "Chequevoucher": "01",
+                                            "Fechaingreso": $scope.fechaDiaHoy
+                                        });
+                                    }
+
+                                    console.log(paraCompensacionDetalle, 'Lo que insertare de facturas')
+                                    loCompensado.push(paraCompensacionDetalle);
                                 }
-                                if (value.tipoProducto == 'FU' || value.tipoProducto == 'FA' || value.tipoProducto == 'FS') {
-                                    detalleComplemento.push({
-                                        "IDpersona": value.idPersona,
-                                        "Documento": value.factura,
-                                        "Conscartera": value.CCP_CONSCARTERA,
-                                        "Importe": value.montoCompensar,
-                                        "Concepto": value.CCP_CARTERA,
-                                        "Formapago": "71",
-                                        "Banco": "01",
-                                        "Referencia": "01",
-                                        "Numerocuenta": "0101",
-                                        "Chequevoucher": "01",
-                                        "Fechaingreso": $scope.fechaDiaHoy
-                                    });
+
+                            });
+                            angular.forEach(loCompensado, function (value, key) {
+                                value.Partida = key + 1;
+                            });
+                            angular.forEach(detalleComplemento, function (value, key) {
+                                value.Partida = key + 1;
+                            });
+
+                            console.log($scope.fechaRealPago)
+                            let jsonData = {
+                                "Empresa": $scope.idEmpresaCotizacion,
+                                "Sucursal": $scope.idSucursalCotizacion,
+                                "Tipo": tipoPoliza,
+                                "Contabilidad": {
+                                    "Polizas": [{
+                                        "Proceso": "CPLP" + $scope.complemento,
+                                        "DocumentoOrigen": $scope.factura_unidad,
+                                        "Canal": "CPLP" + $scope.complemento,
+                                        "Fecha": $scope.fechaCompensacion,
+                                        "Documento": $scope.factura_unidad,
+                                        "Referencia1": "",
+                                        "Referencia2": $scope.unidadCompensacion.CCP_IDDOCTO,
+                                        "Referencia3": $scope.vin,
+                                        "FechaRealPago": $scope.fechaRealPago,
+                                        "Detalle": loCompensado
+                                    }]
+                                },
+                                "Complemento": {
+                                    "Cobrador": "DIRECTO",
+                                    "Moneda": "PE",
+                                    "Tipocambio": 1,
+                                    "Detalle": detalleComplemento
                                 }
-
-                                console.log(paraCompensacionDetalle, 'Lo que insertare de facturas')
-                                loCompensado.push(paraCompensacionDetalle);                                  
                             }
-
-                        });
-                        angular.forEach(loCompensado, function(value, key) {
-                            value.Partida = key + 1;
-                        });
-                        angular.forEach(detalleComplemento, function(value, key) {
-                            value.Partida = key + 1;
-                        });
-
-                        console.log($scope.fechaRealPago)
-                        let jsonData = {
-                            "Empresa": $scope.idEmpresaCotizacion,
-                            "Sucursal": $scope.idSucursalCotizacion,
-                            "Tipo": tipoPoliza,
-                            "Contabilidad": {
-                                "Polizas": [{
-                                    "Proceso": "CPLP" + $scope.complemento,
-                                    "DocumentoOrigen": $scope.factura_unidad,
-                                    "Canal": "CPLP" + $scope.complemento,
-                                    "Fecha": $scope.fechaCompensacion,
-                                    "Documento": $scope.factura_unidad,
-                                    "Referencia1": "",
-                                    "Referencia2": $scope.unidadCompensacion.CCP_IDDOCTO,
-                                    "Referencia3": $scope.vin,
-                                    "FechaRealPago": $scope.fechaRealPago,
-                                    "Detalle": loCompensado
-                                }]
-                            },
-                            "Complemento": {
-                                "Cobrador": "DIRECTO",
-                                "Moneda": "PE",
-                                "Tipocambio": 1,
-                                "Detalle": detalleComplemento
+                            if (generaOc == 1) {
+                                jsonData.OrdenCompra = detalleOc
+                                detalleOc.IdProveedor = $scope.unidadCompensacion.financieraIDBP;
+                                detalleOc.Area = $scope.areaAfectacion;
+                                detalleOc.TipoComprobante = 1;
+                                detalleOc.FechaOrden = $scope.fechaDiaHoy;
+                                detalleOc.FechaAplicacion = $scope.fechaDiaHoy;
+                                detalleOc.Anticipo = 0;
+                                detalleOc.CantidadAnticipo = 0;
+                                detalleOc.PorcentajeAnticipo = 0
+                                detalleOc.FechaAnticipo = ''
                             }
-                        }
-                        if (generaOc == 1) {
-                            jsonData.OrdenCompra = detalleOc
-                            detalleOc.IdProveedor = $scope.unidadCompensacion.financieraIDBP;
-                            detalleOc.Area = $scope.areaAfectacion;
-                            detalleOc.TipoComprobante = 1;
-                            detalleOc.FechaOrden = $scope.fechaDiaHoy;
-                            detalleOc.FechaAplicacion = $scope.fechaDiaHoy;
-                            detalleOc.Anticipo = 0;
-                            detalleOc.CantidadAnticipo = 0;
-                            detalleOc.PorcentajeAnticipo = 0
-                            detalleOc.FechaAnticipo = ''
-                        }
-                        console.log(jsonData);
+                            console.log(jsonData);
 
-                        function escapeString(str) {
-                            return JSON.stringify(str)
-                        }
-                        let messageWithQuotes = JSON.stringify(jsonData)
-                        let jsonApi = {
+                            function escapeString(str) {
+                                return JSON.stringify(str)
+                            }
+                            let messageWithQuotes = JSON.stringify(jsonData)
+                            let jsonApi = {
                                 "Proceso": "PLANPISO",
                                 "jsonData": messageWithQuotes
                             }
-                            
-                        console.log(jsonApi);
-                        interesFactory.saveApiPoliza($scope.unidadCompensacion.CCP_IDDOCTO, $scope.unidadCompensacion.movimientoID, jsonApi, $scope.nombreBD, 10).then(function success(resultApi) {
-                            console.log(resultApi)
-                            $('#mdlLoading').modal('hide');
-                            if (resultApi.data[0].respuesta == 1) {
-                                swal("Éxito", "Se esta procesando su póliza.", "success");
-                                setTimeout(function() {
-                                    window.location = "/interes";
-                                }, 1000);
-                            }else{
+
+                            console.log(jsonApi);
+                            interesFactory.saveApiPoliza($scope.unidadCompensacion.CCP_IDDOCTO, $scope.unidadCompensacion.movimientoID, jsonApi, $scope.nombreBD, 10).then(function success(resultApi) {
+                                console.log(resultApi)
+                                $('#mdlLoading').modal('hide');
+                                if (resultApi.data[0].respuesta == 1) {
+                                    swal("Éxito", "Se esta procesando su póliza.", "success");
+                                    setTimeout(function () {
+                                        window.location = "/interes";
+                                    }, 1000);
+                                } else {
+                                    swal("Atención", "Ocurrió un error, favor de comunicarse con sistemas.", "warning");
+                                }
+                            }, function error(error) {
+                                $('#mdlLoading').modal('hide');
                                 swal("Atención", "Ocurrió un error, favor de comunicarse con sistemas.", "warning");
-                            }
-                        }, function error(error) {
-                            $('#mdlLoading').modal('hide');
-                            swal("Atención", "Ocurrió un error, favor de comunicarse con sistemas.", "warning");
-                            console.log(error, 'Error al tratar de consumir la API ')
-                        })
+                                console.log(error, 'Error al tratar de consumir la API ')
+                            })
 
-                    });
+                        });
 
+                    }
                 }
             }
+        } else {
+            alertFactory.warning('Debe seleccionar el tipo de pago');
         }
+
     };
     $scope.guardaCompensacionDetalle = function () {
         var tiempo = new Date().toLocaleTimeString();
@@ -2070,7 +2084,8 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                     consecutivo: auxConta,
                                     idReciboAutomatico: $scope.idReciboAutomatico,
                                     facturaUnidad: $scope.factura_unidad,
-                                    fecha: $scope.fechaCompensacion
+                                    fecha: $scope.fechaCompensacion,
+                                    tipoPago: $scope.tipoPagoSeleccionado
                                 }
                                 break;
                             case 'COMPRA':
@@ -2085,7 +2100,8 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                     consecutivo: auxConta,
                                     idReciboAutomatico: $scope.idReciboAutomatico,
                                     facturaUnidad: $scope.factura_unidad,
-                                    fecha: $scope.fechaCompensacion
+                                    fecha: $scope.fechaCompensacion,
+                                    tipoPago: $scope.tipoPagoSeleccionado
                                 }
                                 var preLoteCompensacion = [{
                                     'CCP_IDDOCTO': $scope.unidadCompensacion.CCP_IDDOCTO,
@@ -2112,7 +2128,8 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                     consecutivo: auxConta,
                                     idReciboAutomatico: $scope.idReciboAutomatico,
                                     facturaUnidad: $scope.factura_unidad,
-                                    fecha: $scope.fechaCompensacion
+                                    fecha: $scope.fechaCompensacion,
+                                    tipoPago: $scope.tipoPagoSeleccionado
                                 }
                         }
                         console.log(paraCompensacionDetalle, 'Lo que insertare de facturas')
@@ -2215,7 +2232,8 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                 consecutivo: auxConta,
                                 idReciboAutomatico: $scope.idReciboAutomatico,
                                 facturaUnidad: $scope.factura_unidad,
-                                fecha: $scope.fechaCompensacion
+                                fecha: $scope.fechaCompensacion,
+                                tipoPago: $scope.tipoPagoSeleccionado
                             }
                             break;
                         case 'COMPRA':
@@ -2230,7 +2248,8 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                 consecutivo: auxConta,
                                 idReciboAutomatico: $scope.idReciboAutomatico,
                                 facturaUnidad: $scope.factura_unidad,
-                                fecha: $scope.fechaCompensacion
+                                fecha: $scope.fechaCompensacion,
+                                tipoPago: $scope.tipoPagoSeleccionado
                             }
                             var preLoteCompensacion = [{
                                 'CCP_IDDOCTO': $scope.unidadCompensacion.CCP_IDDOCTO,
@@ -2257,7 +2276,8 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                 consecutivo: auxConta,
                                 idReciboAutomatico: $scope.idReciboAutomatico,
                                 facturaUnidad: $scope.factura_unidad,
-                                fecha: $scope.fechaCompensacion
+                                fecha: $scope.fechaCompensacion,
+                                tipoPago: $scope.tipoPagoSeleccionado
                             }
                     }
                     console.log(paraCompensacionDetalle, 'Lo que insertare de facturas')
@@ -2814,59 +2834,59 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
     $scope.recargar = function () {
         location.reload();
     }
-    $scope.detallePoliza = function(unidad) {
-        interesFactory.getDetallePoliza(unidad.transaccion, unidad.IdDealer).then(function(respuesta) {
-                console.log(respuesta);
-                switch (respuesta.data.status) {
-                    case 'COMPLETO':
-                        swal({
-                            title: "Póliza procesada",
-                            text: "¡COMPLETO!",
-                            type: "success",
-                            showCancelButton: true,
-                            cancelButtonText: "Cerrar"
-                        }, function() {
+    $scope.detallePoliza = function (unidad) {
+        interesFactory.getDetallePoliza(unidad.transaccion, unidad.IdDealer).then(function (respuesta) {
+            console.log(respuesta);
+            switch (respuesta.data.status) {
+                case 'COMPLETO':
+                    swal({
+                        title: "Póliza procesada",
+                        text: "¡COMPLETO!",
+                        type: "success",
+                        showCancelButton: true,
+                        cancelButtonText: "Cerrar"
+                    }, function () {
 
-                        });
-                        break;
-                    case 'PROCESANDO':
-                        swal({
-                            title: "Póliza en proceso",
-                            text: "¡Su póliza esta en proceso, favor de intentarlo mas tarde!",
-                            type: "warning",
-                            showCancelButton: true,
-                            cancelButtonText: "Cerrar"
-                        }, function() {
+                    });
+                    break;
+                case 'PROCESANDO':
+                    swal({
+                        title: "Póliza en proceso",
+                        text: "¡Su póliza esta en proceso, favor de intentarlo mas tarde!",
+                        type: "warning",
+                        showCancelButton: true,
+                        cancelButtonText: "Cerrar"
+                    }, function () {
 
+                    });
+                    break;
+                case 'ERROR':
+                    swal({
+                        title: "Ocurrio un problema",
+                        text: respuesta.data.error.mensaje + ' ¿Desea volver a intentarlo?',
+                        type: "warning",
+                        showCancelButton: true,
+                        closeOnConfirm: true,
+                        confirmButtonText: "Compensar",
+                        cancelButtonText: "Cerrar"
+                    }, function () {
+                        $scope.lstNewUnits.forEach(function (item) {
+                            if (item.movimientoID == unidad.movimientoID) {
+                                item.isChecked = true;
+                            }
                         });
-                        break;
-                    case 'ERROR':
-                        swal({
-                            title: "Ocurrio un problema",
-                            text: respuesta.data.error.mensaje + ' ¿Desea volver a intentarlo?',
-                            type: "warning",
-                            showCancelButton: true,
-                            closeOnConfirm: true,
-                            confirmButtonText: "Compensar",
-                            cancelButtonText: "Cerrar"
-                        }, function() {
-                            $scope.lstNewUnits.forEach(function(item) {
-                                if(item.movimientoID == unidad.movimientoID){
-                                    item.isChecked = true;
-                                }
-                            });
-                            $scope.callCompensation();
-                        });
-                        break;
-                    default:
-                        console.log('Ocurrio un error al intentar consultar el estatus de la poliza', respuesta.data[0]);
-                }
-            },
-            function(error) {
+                        $scope.callCompensation();
+                    });
+                    break;
+                default:
+                    console.log('Ocurrio un error al intentar consultar el estatus de la poliza', respuesta.data[0]);
+            }
+        },
+            function (error) {
                 console.log(error);
             });
     }
-    $scope.changeDate = function(fecha) {
+    $scope.changeDate = function (fecha) {
         $scope.fechaRealPago = fecha;
     }
 });

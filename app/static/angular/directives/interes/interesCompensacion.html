@@ -12,6 +12,12 @@
                 </div> 
             </div>
         </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="tipoPago">Tipo de Pago:</label>
+                <select id="tipoPago" ng-options="lst.descripcion for lst in tipoPago" ng-model="tipoPagoSelect" class="form-control"></select>
+            </div>
+        </div>
     </div>
     <div class="col-md-6">
         <div class="alert alert-info" role="alert">
@@ -170,10 +176,10 @@
 </div>
 <div>
     <button class="btn btn-primary" ng-click="setPnlInteres()" style="margin:10px"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Regresar</button>
-    <button class="btn btn-primary pull-right" ng-show="polizaApi == 0" ng-click="setPnlCompensacionResumen(saldoCompensar, fechaSeleccionada)" style="margin:10px" ng-disabled="disabledButton" >Siguiente
+    <button class="btn btn-primary pull-right" ng-show="polizaApi == 0" ng-click="setPnlCompensacionResumen(saldoCompensar, fechaSeleccionada, tipoPagoSelect)" style="margin:10px" ng-disabled="disabledButton" >Siguiente
         <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
     </button>
-    <button class="btn btn-primary pull-right" ng-show="polizaApi == 1" ng-click="setPnlCompensacionResumenApi(saldoCompensar, fechaSeleccionada)" style="margin:10px" ng-disabled="disabledButton" >Siguiente
+    <button class="btn btn-primary pull-right" ng-show="polizaApi == 1" ng-click="setPnlCompensacionResumenApi(saldoCompensar, fechaSeleccionada, tipoPagoSelect)" style="margin:10px" ng-disabled="disabledButton" >Siguiente
         <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
     </button>
 </div>
