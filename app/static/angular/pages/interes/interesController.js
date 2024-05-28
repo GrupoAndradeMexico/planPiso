@@ -1221,7 +1221,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                                 value2.montoCompensar = value2.saldo;
                                             }
                                             value2.montoCompensar = value2.montoCompensar.toFixed(2);
-                                            if (value2.tipoProducto == 'FU') {
+                                            if (value2.tipoProducto == 'FU' || value2.tipoProducto == 'FUU') {
                                                 $scope.saldoFU = value2.montoCompensar;
                                             }
                                             $scope.$apply(function () {
@@ -1680,6 +1680,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                 if (value.montoCompensar > 0 || value.tipoProducto == 'COMPRA') {
                                     switch (value.tipoProducto) {
                                         case 'FU':
+                                        case 'FUU':
                                             paraCompensacionDetalle = {
                                                 "TipoProducto": value.tipoProducto,
                                                 "SubProducto": "UNI",
@@ -1772,7 +1773,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                                                 "Numserie": $scope.vin
                                             }
                                     }
-                                    if (value.tipoProducto == 'FU' || value.tipoProducto == 'FA' || value.tipoProducto == 'FS') {
+                                    if (value.tipoProducto == 'FU' || value.tipoProducto == 'FUU' || value.tipoProducto == 'FA' || value.tipoProducto == 'FS') {
                                         detalleComplemento.push({
                                             "IDpersona": value.idPersona,
                                             "Documento": value.factura,
@@ -2073,6 +2074,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                     if (value.montoCompensar > 0 || value.tipoProducto == 'COMPRA') {
                         switch (value.tipoProducto) {
                             case 'FU':
+                            case 'FUU':
                                 paraCompensacionDetalle = {
                                     idpoliza: $scope.LastId,
                                     idmovimiento: item.movimientoID,
@@ -2158,7 +2160,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                             compensacionCompra = 0;
                             var detalleCompensacion = result.data[1];
                             angular.forEach(detalleCompensacion, function (valueDetalleCompensacion, key) {
-                                if (valueDetalleCompensacion.TipoProducto == 'FU' || valueDetalleCompensacion.TipoProducto == 'FA' || valueDetalleCompensacion.TipoProducto == 'FS' || valueDetalleCompensacion.TipoProducto == 'NCA') {
+                                if (valueDetalleCompensacion.TipoProducto == 'FU' || valueDetalleCompensacion.TipoProducto == 'FUU' || valueDetalleCompensacion.TipoProducto == 'FUU' || valueDetalleCompensacion.TipoProducto == 'FA' || valueDetalleCompensacion.TipoProducto == 'FS' || valueDetalleCompensacion.TipoProducto == 'NCA') {
                                     compensacionFacturas = Number(compensacionFacturas) + Number(valueDetalleCompensacion.VentaUnitario);
                                 }
                                 if (valueDetalleCompensacion.TipoProducto == 'PAG') {
@@ -2221,6 +2223,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                 if (value.montoCompensar > 0 || value.tipoProducto == 'COMPRA') {
                     switch (value.tipoProducto) {
                         case 'FU':
+                        case 'FUU':
                             paraCompensacionDetalle = {
                                 idpoliza: $scope.LastId,
                                 idmovimiento: item.movimientoID,
@@ -2306,7 +2309,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                         compensacionCompra = 0;
                         var detalleCompensacion = result.data[1];
                         angular.forEach(detalleCompensacion, function (valueDetalleCompensacion, key) {
-                            if (valueDetalleCompensacion.TipoProducto == 'FU' || valueDetalleCompensacion.TipoProducto == 'FA' || valueDetalleCompensacion.TipoProducto == 'FS' || valueDetalleCompensacion.TipoProducto == 'NCA') {
+                            if (valueDetalleCompensacion.TipoProducto == 'FU' || valueDetalleCompensacion.TipoProducto == 'FUU' || valueDetalleCompensacion.TipoProducto == 'FA' || valueDetalleCompensacion.TipoProducto == 'FS' || valueDetalleCompensacion.TipoProducto == 'NCA') {
                                 compensacionFacturas = Number(compensacionFacturas) + Number(valueDetalleCompensacion.VentaUnitario);
                             }
                             if (valueDetalleCompensacion.TipoProducto == 'PAG') {
@@ -2432,7 +2435,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
             // $scope.auxSumaCxp = $scope.auxSumaCxp + $scope.unidadCompensacion.montoCompensar;
             // totalCompensar();
             angular.forEach($scope.facturasTotal, function (value, key) {
-                if (value.tipoProducto == 'FU') {
+                if (value.tipoProducto == 'FU' || value.tipoProducto == 'FUU') {
                     auxSumaCxc = value.montoCompensar
                 }
                 auxSumaCxcTotal = auxSumaCxcTotal + Number(value.montoCompensar);
