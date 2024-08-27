@@ -1879,7 +1879,8 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
 
     };
     $scope.guardaCompensacionDetalle = function () {
-        var tiempo = new Date().toLocaleTimeString();
+        const options = { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'America/Mexico_City' };
+        var tiempo = new Date().toLocaleTimeString('es-MX', options);
         var item = $scope.lstUnitsCompensacion[0];
         var paraCompensacionDetalle = {
             idpoliza: $scope.LastId,
