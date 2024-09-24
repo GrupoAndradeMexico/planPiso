@@ -88,6 +88,14 @@ appModule.factory('unidadesvinFactory', function($http) {
                 headers: { 'Content-Type': 'application/json' }
             });
         },
+        insExcelDataMasivo: function(dataExcel) {
+            return $http({
+                url: apiunidadesvin + 'insExcelDataMasivo/',
+                method: "POST",
+                data: { datos: JSON.stringify(dataExcel) },
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
     };
 
 });

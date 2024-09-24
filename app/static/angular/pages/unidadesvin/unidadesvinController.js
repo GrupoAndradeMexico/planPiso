@@ -418,12 +418,19 @@ appModule.controller('unidadesvinController', function($scope, $rootScope, $loca
 
             execelFields = $scope.arrayToObject(aux);
             $scope.maxPro = execelFields.length;
-            $scope.insertData();
+            // $scope.insertData();
+            $scope.insertDataMasivo(aux);
         }, function(error) {
             console.log("Error", error);
         });
     };
-
+    $scope.insertDataMasivo = function(dataExcel){
+        unidadesvinFactory.insExcelDataMasivo(dataExcel).then(function(result){
+            console.log(result)
+        }, function err(error){
+            console.log(error)
+        });
+    }
     $scope.insertData = function() {
         try {
             execelFields[increment]['consecutivo'] = contador;
