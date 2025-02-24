@@ -1379,6 +1379,23 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
     $scope.setPnlCompensacion = function () {
         $scope.currentPanel = "pnlCompensacion";
     };
+    $scope.validaLotePago = function (saldoCompensar, fecha, tipoPagoSelect, tipoMetodo) {
+        interesFactory.validaLotePago({ CCP_IDDOCTO: $scope.unidadCompensacion.CCP_IDDOCTO }).then(function (response) {
+            if (response.data[0].respuesta == 0) {
+                if (tipoMetodo == 'api') {
+                    $scope.setPnlCompensacionResumenApi(saldoCompensar, fecha, tipoPagoSelect);
+                } else {
+                    $scope.setPnlCompensacionResumen(saldoCompensar, fecha, tipoPagoSelect);
+                }
+            } else {
+                let saldoMaximoTpp = $scope.unidadCompensacion.saldo - response.data[0].montoAPagarLote;
+                let saldoFormateado = $filter('currency')(saldoMaximoTpp, '$', 2);
+                swal(" Documento en Lote de Pago", response.data[0].mensaje + " El saldo a compensar no puede exceder los " + saldoFormateado, "warning");
+            }
+        }).catch(function (error) {
+            console.error('Error en la petición:', error);
+        });
+    }
     $scope.setPnlCompensacionResumen = function (saldoCompensar, fecha, tipoPagoSelect) {
         if (tipoPagoSelect) {
             $scope.tipoPagoSeleccionado = tipoPagoSelect.tipoPago;
