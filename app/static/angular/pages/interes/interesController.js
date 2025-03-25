@@ -1389,8 +1389,17 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                 }
             } else {
                 let saldoMaximoTpp = $scope.unidadCompensacion.saldo - response.data[0].montoAPagarLote;
-                let saldoFormateado = $filter('currency')(saldoMaximoTpp, '$', 2);
-                swal(" Documento en Lote de Pago", response.data[0].mensaje + " El saldo a compensar no puede exceder los " + saldoFormateado, "warning");
+                if($scope.unidadCompensacion.montoCompensar <= saldoMaximoTpp){
+                    if (tipoMetodo == 'api') {
+                        $scope.setPnlCompensacionResumenApi(saldoCompensar, fecha, tipoPagoSelect);
+                    } else {
+                        $scope.setPnlCompensacionResumen(saldoCompensar, fecha, tipoPagoSelect);
+                    }  
+                }else{
+                    let saldoFormateado = $filter('currency')(saldoMaximoTpp, '$', 2);
+                    swal(" Documento en Lote de Pago", response.data[0].mensaje + " El saldo a compensar no puede exceder los " + saldoFormateado, "warning");
+                }
+                
             }
         }).catch(function (error) {
             console.error('Error en la petición:', error);
