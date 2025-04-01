@@ -1419,11 +1419,13 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
             let auxFechaE = fechaComparar.split('/');
             $scope.documentoFecha = '';
             console.log(auxFechaE[2] + '-' + (auxFechaE[1] - 1).toString() + '-' + auxFechaE[0]);
-            let fechaEaux = new Date(auxFechaE[2] + '-' + (auxFechaE[1] - 1).toString() + '-' + auxFechaE[0]);
+            let fechaEaux = new Date(parseInt(auxFechaE[2]), parseInt(auxFechaE[1]) - 1, parseInt(auxFechaE[0]));
+            // let fechaEaux = new Date(auxFechaE[2] + '-' + (auxFechaE[1] - 1).toString() + '-' + auxFechaE[0]);
             angular.forEach($scope.facturasTotal, function (value, key) {
                 let auxFecha = value.fecha.split('/');
                 console.log(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
-                let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
+                let fechaFaux = new Date(parseInt(auxFecha[2]), parseInt(auxFecha[1]) - 1, parseInt(auxFecha[0]));
+                // let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
                 if (fechaFaux > fechaEaux && value.montoCompensar > 0) {
                     $scope.documentoFecha = $scope.documentoFecha + value.factura + ',';
                 }
@@ -1431,7 +1433,8 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
             angular.forEach($scope.facturasCompensacion, function (value, key) {
                 let auxFecha = value.fecha.split('/');
                 console.log(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
-                let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
+                let fechaFaux = new Date(parseInt(auxFecha[2]), parseInt(auxFecha[1]) - 1, parseInt(auxFecha[0]));
+                // let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
                 if (fechaFaux > fechaEaux && value.montoCompensar > 0) {
                     $scope.documentoFecha = $scope.documentoFecha + value.factura + ',';
                 }
