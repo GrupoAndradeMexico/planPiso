@@ -1379,6 +1379,32 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
     $scope.setPnlCompensacion = function () {
         $scope.currentPanel = "pnlCompensacion";
     };
+    $scope.validaLotePago = function (saldoCompensar, fecha, tipoPagoSelect, tipoMetodo) {
+        interesFactory.validaLotePago({ CCP_IDDOCTO: $scope.unidadCompensacion.CCP_IDDOCTO }).then(function (response) {
+            if (response.data[0].respuesta == 0) {
+                if (tipoMetodo == 'api') {
+                    $scope.setPnlCompensacionResumenApi(saldoCompensar, fecha, tipoPagoSelect);
+                } else {
+                    $scope.setPnlCompensacionResumen(saldoCompensar, fecha, tipoPagoSelect);
+                }
+            } else {
+                let saldoMaximoTpp = $scope.unidadCompensacion.saldo - response.data[0].montoAPagarLote;
+                if($scope.unidadCompensacion.montoCompensar <= saldoMaximoTpp){
+                    if (tipoMetodo == 'api') {
+                        $scope.setPnlCompensacionResumenApi(saldoCompensar, fecha, tipoPagoSelect);
+                    } else {
+                        $scope.setPnlCompensacionResumen(saldoCompensar, fecha, tipoPagoSelect);
+                    }  
+                }else{
+                    let saldoFormateado = $filter('currency')(saldoMaximoTpp, '$', 2);
+                    swal(" Documento en Lote de Pago", response.data[0].mensaje + " El saldo a compensar no puede exceder los " + saldoFormateado, "warning");
+                }
+                
+            }
+        }).catch(function (error) {
+            console.error('Error en la petición:', error);
+        });
+    }
     $scope.setPnlCompensacionResumen = function (saldoCompensar, fecha, tipoPagoSelect) {
         if (tipoPagoSelect) {
             $scope.tipoPagoSeleccionado = tipoPagoSelect.tipoPago;
@@ -1393,11 +1419,13 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
             let auxFechaE = fechaComparar.split('/');
             $scope.documentoFecha = '';
             console.log(auxFechaE[2] + '-' + (auxFechaE[1] - 1).toString() + '-' + auxFechaE[0]);
-            let fechaEaux = new Date(auxFechaE[2] + '-' + (auxFechaE[1] - 1).toString() + '-' + auxFechaE[0]);
+            let fechaEaux = new Date(parseInt(auxFechaE[2]), parseInt(auxFechaE[1]) - 1, parseInt(auxFechaE[0]));
+            // let fechaEaux = new Date(auxFechaE[2] + '-' + (auxFechaE[1] - 1).toString() + '-' + auxFechaE[0]);
             angular.forEach($scope.facturasTotal, function (value, key) {
                 let auxFecha = value.fecha.split('/');
                 console.log(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
-                let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
+                let fechaFaux = new Date(parseInt(auxFecha[2]), parseInt(auxFecha[1]) - 1, parseInt(auxFecha[0]));
+                // let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
                 if (fechaFaux > fechaEaux && value.montoCompensar > 0) {
                     $scope.documentoFecha = $scope.documentoFecha + value.factura + ',';
                 }
@@ -1405,7 +1433,8 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
             angular.forEach($scope.facturasCompensacion, function (value, key) {
                 let auxFecha = value.fecha.split('/');
                 console.log(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
-                let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
+                let fechaFaux = new Date(parseInt(auxFecha[2]), parseInt(auxFecha[1]) - 1, parseInt(auxFecha[0]));
+                // let fechaFaux = new Date(auxFecha[2] + '-' + (auxFecha[1] - 1).toString() + '-' + auxFecha[0]);
                 if (fechaFaux > fechaEaux && value.montoCompensar > 0) {
                     $scope.documentoFecha = $scope.documentoFecha + value.factura + ',';
                 }

@@ -585,6 +585,16 @@ appModule.factory('interesFactory', function($http) {
                     'Content-Type': 'application/json'
                 }
             });
+        },
+        validaLotePago: function(params) {
+            return $http({
+                url: interesesUrl + 'validaLotePago/',
+                method: "GET",
+                params: params,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
         }
     };
 });

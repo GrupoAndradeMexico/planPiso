@@ -1092,4 +1092,19 @@ ApiInteres.prototype.get_obtieneTipoPago = function (req, res, next) {
         });
     });
 };
+ApiInteres.prototype.get_validaLotePago = function (req, res, next) {
+
+    var self = this;
+
+    var params = [{ name: 'folio', value: req.query.CCP_IDDOCTO, type: self.model.types.STRING }
+
+    ];
+
+    self.model.query('SEL_DOCUMENTO_LOTE_PAGO', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
 module.exports = ApiInteres;
