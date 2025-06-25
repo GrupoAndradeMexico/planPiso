@@ -1389,17 +1389,20 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                 }
             } else {
                 let saldoMaximoTpp = $scope.unidadCompensacion.saldo - response.data[0].montoAPagarLote;
-                if($scope.unidadCompensacion.montoCompensar <= saldoMaximoTpp){
-                    if (tipoMetodo == 'api') {
-                        $scope.setPnlCompensacionResumenApi(saldoCompensar, fecha, tipoPagoSelect);
-                    } else {
-                        $scope.setPnlCompensacionResumen(saldoCompensar, fecha, tipoPagoSelect);
-                    }  
+                if($scope.saldoCXC == $scope.totalTablaCXP){
+                    if($scope.unidadCompensacion.montoCompensar <= saldoMaximoTpp){
+                        if (tipoMetodo == 'api') {
+                            $scope.setPnlCompensacionResumenApi(saldoCompensar, fecha, tipoPagoSelect);
+                        } else {
+                            $scope.setPnlCompensacionResumen(saldoCompensar, fecha, tipoPagoSelect);
+                        }  
+                    }else{
+                        let saldoFormateado = $filter('currency')(saldoMaximoTpp, '$', 2);
+                        swal(" Documento en Lote de Pago", response.data[0].mensaje + " El saldo a compensar no puede exceder los " + saldoFormateado, "warning");
+                    }
                 }else{
-                    let saldoFormateado = $filter('currency')(saldoMaximoTpp, '$', 2);
-                    swal(" Documento en Lote de Pago", response.data[0].mensaje + " El saldo a compensar no puede exceder los " + saldoFormateado, "warning");
+                    swal("No es posible realizar la compensación.","El total de Cuentas por Cobrar debe ser igual al total de Cuentas por Pagar. Verifica los montos seleccionados antes de continuar.", "warning");
                 }
-                
             }
         }).catch(function (error) {
             console.error('Error en la petición:', error);
