@@ -2896,7 +2896,7 @@ appModule.controller('interesController', function ($scope, $rootScope, $locatio
                 case 'ERROR':
                     swal({
                         title: "Ocurrio un problema",
-                        text: respuesta.data.error.mensaje + ' ¿Desea volver a intentarlo?',
+                        text: respuesta.data.error.codigo == 612 ? 'Favor de volver a intentarlo' : respuesta.data.error.mensaje + ' ¿Desea volver a intentarlo?',
                         type: "warning",
                         showCancelButton: true,
                         closeOnConfirm: true,
