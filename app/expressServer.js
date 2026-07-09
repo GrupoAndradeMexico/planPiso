@@ -2,6 +2,7 @@ var env = process.env.NODE_ENV || 'production',
 express = require('express'),
 swig = require('swig'),
 bodyParser = require('body-parser'),
+path = require('path'),
 middlewares = require('./middlewares/admin'),
 router = require('./website/router');
 
@@ -20,6 +21,7 @@ router = require('./website/router');
     for (var middleware in middlewares){
       this.expressServer.use(middlewares[middleware]);
     }
+    this.expressServer.use('/devextreme', express.static(path.join(__dirname, '../node_modules/devextreme/dist')));
 
     this.expressServer.engine('html', swig.renderFile);
     this.expressServer.set('view engine', 'html');

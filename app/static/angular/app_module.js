@@ -1,4 +1,4 @@
-var appModule = angular.module("planPisoApp", ["ngRoute",'ui.grid', 'ui.grid.grouping', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.cellNav','ui.grid.expandable', 'ui.grid.pinning']);
+var appModule = angular.module("planPisoApp", ["ngRoute", "dx", 'ui.grid', 'ui.grid.grouping', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.cellNav','ui.grid.expandable', 'ui.grid.pinning']);
 appModule.config(function($routeProvider, $locationProvider) {
 
 
@@ -107,6 +107,11 @@ appModule.config(function($routeProvider, $locationProvider) {
     .when('/pagoInteres', {
         templateUrl: 'angular/pages/pagoInteres/pagoInteres.html',
         controller: 'pagoInteresController'
+    })
+
+    .when('/sabana', {
+        templateUrl: 'angular/pages/sabana/sabana.html',
+        controller: 'sabanaController'
     });
 
 

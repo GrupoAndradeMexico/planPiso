@@ -1,0 +1,111 @@
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+
+        <div class="row m-b-sm">
+            <div class="col-md-12">
+
+                <!-- Empresa -->
+                <div class="dropdown" style="display:inline-block">
+                    <button class="btn btn-warning dropdown-toggle" type="button" data-toggle="dropdown">
+                        <i class="fa fa-building-o"></i> {{currentEmpresaName}}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li ng-class="{active: currentEmpresaID === null}">
+                            <a ng-click="setCurrentEmpresa(null)">
+                                <i class="fa fa-globe"></i> Todas las empresas
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li ng-repeat="empresa in lstEmpresas"
+                            ng-class="{active: currentEmpresaID === empresa.emp_idempresa}">
+                            <a ng-click="setCurrentEmpresa(empresa)">{{empresa.emp_nombre}}</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Financiera (depende de empresa) -->
+                <div class="dropdown" style="display:inline-block">
+                    <button class="btn btn-warning dropdown-toggle"
+                            type="button"
+                            data-toggle="dropdown"
+                            ng-disabled="currentEmpresaID === null"
+                            title="{{currentEmpresaID === null ? 'Selecciona primero una empresa' : ''}}">
+                        <i class="fa fa-institution"></i> {{currentFinancieraName}}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li ng-class="{active: currentFinancieraID === null}">
+                            <a ng-click="setCurrentFinanciera(null)">
+                                <i class="fa fa-globe"></i> Todas las financieras
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li ng-repeat="financiera in lstFinancieras"
+                            ng-class="{active: currentFinancieraID === financiera.financieraID}">
+                            <a ng-click="setCurrentFinanciera(financiera)">{{financiera.nombre}}</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Limpiar -->
+                <button class="btn btn-default" type="button" ng-click="limpiarBusqueda()" title="Limpiar filtros">
+                    <i class="fa fa-times"></i> Limpiar
+                </button>
+
+                <!-- Buscar -->
+                <button class="btn btn-primary" type="button" ng-click="buscar()">
+                    <i class="fa fa-search"></i> Buscar
+                </button>
+
+                <!-- Exportar Excel -->
+                <button class="btn btn-success" type="button" ng-click="exportarExcel()"
+                        title="Descarga el Excel con formato coloreado por grupos">
+                    <i class="fa fa-file-excel-o"></i> Exportar Excel
+                </button>
+
+                <!-- Ver seleccionadas -->
+                <button class="btn btn-default" type="button" ng-click="verSeleccionadas()">
+                    <i class="fa fa-check-square-o"></i>
+                    Ver seleccionadas
+                    <span class="badge" ng-show="seleccionadas.length > 0">{{ seleccionadas.length }}</span>
+                </button>
+
+            </div>
+        </div>
+
+        <div dx-data-grid="gridOptions"></div>
+
+    </div>
+</div>
+
+<!-- Modal: Unidades Seleccionadas -->
+<div class="modal fade" id="mdlSeleccionadas" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width:95%; max-width:none;" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                    <i class="fa fa-check-square-o"></i>
+                    Unidades seleccionadas
+                    <span class="badge m-l-xs">{{seleccionadas.length}}</span>
+                </h4>
+            </div>
+
+            <div class="modal-body">
+                <div dx-data-grid="gridSeleccionadasOptions"></div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-success" type="button" ng-click="exportarSeleccionadas()">
+                    <i class="fa fa-file-excel-o"></i> Exportar Excel
+                </button>
+                <button class="btn btn-default" type="button" data-dismiss="modal">
+                    <i class="fa fa-times"></i> Cerrar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

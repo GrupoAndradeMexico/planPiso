@@ -17,6 +17,9 @@
     <link href="assets/css/personalized.css" rel="stylesheet">
     <link href="assets/css/toastr.css" rel="stylesheet">
     <link href="assets/libs/angular-ui-grid/ui-grid.css" rel="stylesheet">
+    <!-- DevExtreme 18.1.6 -->
+    <link href="devextreme/css/dx.common.css" rel="stylesheet">
+    <link href="devextreme/css/dx.light.css" rel="stylesheet">
 </head>
 
 <body class="mini-navbar" ng-app="planPisoApp">
@@ -69,7 +72,9 @@
                         <li ng-repeat="item in lstModulos" data-toggle="tooltip" data-placement="left" title="{{item.Descripcion}}">
                             <a href="{{item.Modulo}}"><i class="{{item.class}}"></i> <span class="nav-label">{{item.Descripcion}}</span></a>
                         </li>
-                        
+                        <li data-toggle="tooltip" data-placement="left" title="Sábana Plan Piso">
+                            <a href="sabana"><i class="fa fa-table"></i> <span class="nav-label">Sábana</span> </a>
+                        </li>
                     </ul>
                 </div>
             </nav>
@@ -136,6 +141,10 @@
     <script src="assets/js/datetime.js"></script>
     <script src="assets/js/toastr.min.js"></script>
     <script src="assets/libs/angular-ui-grid/ui-grid.js"></script>
+    <!-- DevExtreme 18.1.6 — debe ir después de jQuery y antes del módulo Angular -->
+    <script src="devextreme/js/dx.all.js"></script>
+    <script src="devextreme/js/localization/dx.messages.es.js"></script>
+    <script>DevExpress.localization.locale('es');</script>
     <script src="confront.js"></script>
     <!-- app Module-->
     <script src="angular/app_module.js"></script>
@@ -164,6 +173,7 @@
     <script src="angular/pages/tiie/tiieController.js"></script>
     <script src="angular/pages/reduccion/reduccionController.js"></script>
     <script src="angular/pages/pagoInteres/pagoInteresController.js"></script>
+    <script src="angular/pages/sabana/sabanaController.js"></script>
     <!-- factorys-->
     <script src="angular/pages/common/indexFactory.js"></script>
     <script src="angular/pages/common/commonFactory.js"></script>
@@ -192,6 +202,7 @@
     <script src="angular/pages/tiie/tiieFactory.js"></script>
     <script src="angular/pages/reduccion/reduccionFactory.js"></script>
     <script src="angular/pages/pagoInteres/pagoInteresFactory.js"></script>
+    <script src="angular/pages/sabana/sabanaFactory.js"></script>
     <!-- Directives-->
     <script src="angular/directives/common/commonDirective.js"></script>
     <script src="angular/directives/loading/loadingDirective.js"></script>
@@ -214,6 +225,7 @@
     <script src="angular/directives/tiie/tiieDirective.js"></script>
     <script src="angular/directives/unidades/unidadesDirective.js"></script>
     <script src="angular/directives/pagoInteres/pagoInteresDirective.js"></script>
+    <script src="angular/directives/sabana/sabanaDirective.js"></script>
     <!-- Templete -->
     <script src="angular/pages/reduccion/reduccionTempletes.js"></script>
 </body>
