@@ -74,6 +74,33 @@
             </div>
         </div>
 
+        <!-- Chips de filtros activos -->
+        <div ng-show="currentEmpresaID !== null || currentFinancieraID !== null" class="m-b-sm">
+            <small class="text-muted m-r-xs">Filtros activos:</small>
+            <span ng-show="currentEmpresaID !== null"
+                  class="label label-warning"
+                  style="font-size:12px; padding:5px 8px; margin-right:6px; display:inline-block;">
+                <i class="fa fa-building-o"></i>
+                {{currentEmpresaName}}
+                <a ng-click="quitarEmpresa()"
+                   style="color:#fff; cursor:pointer; margin-left:5px;"
+                   title="Quitar filtro de empresa">
+                    <i class="fa fa-times-circle"></i>
+                </a>
+            </span>
+            <span ng-show="currentFinancieraID !== null"
+                  class="label label-info"
+                  style="font-size:12px; padding:5px 8px; margin-right:6px; display:inline-block;">
+                <i class="fa fa-institution"></i>
+                {{currentFinancieraName}}
+                <a ng-click="quitarFinanciera()"
+                   style="color:#fff; cursor:pointer; margin-left:5px;"
+                   title="Quitar filtro de financiera">
+                    <i class="fa fa-times-circle"></i>
+                </a>
+            </span>
+        </div>
+
         <div dx-data-grid="gridOptions"></div>
 
     </div>

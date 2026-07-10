@@ -65,6 +65,17 @@ appModule.controller('sabanaController', function($scope, commonFactory, empresa
             });
     };
 
+    // ── Quitar filtro individual (re-busca si ya había resultados) ────────────
+    $scope.quitarEmpresa = function() {
+        $scope.setCurrentEmpresa(null);
+        if ($scope.lstUnidades.length > 0) $scope.buscar();
+    };
+
+    $scope.quitarFinanciera = function() {
+        $scope.setCurrentFinanciera(null);
+        if ($scope.lstUnidades.length > 0) $scope.buscar();
+    };
+
     // ── Exportar Excel con formato coloreado ───────────────────────────────────
     $scope.exportarExcel = function() {
         var url = sabanaFactory.getExcelUrl($scope.currentEmpresaID, $scope.currentFinancieraID);
@@ -110,6 +121,7 @@ appModule.controller('sabanaController', function($scope, commonFactory, empresa
         filterRow:    { visible: true },
         searchPanel:  { visible: true, width: 260, placeholder: 'Buscar...' },
         headerFilter: { visible: true },
+        filterPanel:  { visible: true },
         groupPanel:   { visible: true },
         columnChooser:{ enabled: true },
         paging:       { pageSize: 20 },
@@ -243,6 +255,7 @@ appModule.controller('sabanaController', function($scope, commonFactory, empresa
         filterRow:           { visible: true },
         searchPanel:         { visible: true, width: 240, placeholder: 'Buscar...' },
         headerFilter:        { visible: true },
+        filterPanel:         { visible: true },
         groupPanel:          { visible: true },
         columnChooser:       { enabled: true },
         paging:              { pageSize: 10 },
