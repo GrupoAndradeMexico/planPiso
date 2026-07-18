@@ -22,5 +22,7 @@
      apiSacarUnidad: require('./controllers/apiSacarUnidad'),
      apiNotificaciones: require('./controllers/apiNotificaciones'),
      apiPagoInteres: require('./controllers/apiPagoInteres'),
-     apiSabana: require('./controllers/apiSabana')
+     apiSabana:        require('./controllers/apiSabana'),
+     apiFiltroReglas:  require('./controllers/apiFiltroReglas'),
+     apiPrelote:       require('./controllers/apiPrelote')
  }

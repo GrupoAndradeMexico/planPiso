@@ -112,6 +112,11 @@ appModule.config(function($routeProvider, $locationProvider) {
     .when('/sabana', {
         templateUrl: 'angular/pages/sabana/sabana.html',
         controller: 'sabanaController'
+    })
+
+    .when('/prelote', {
+        templateUrl: 'angular/pages/prelote/prelote.html',
+        controller: 'preloteController'
     });
 
 

@@ -1,138 +1,208 @@
 <div class="ibox float-e-margins">
     <div class="ibox-content">
 
-        <div class="row m-b-sm">
-            <div class="col-md-12">
+        <!-- ══════════════════════════════════════════════════════════
+             VISTA: GRID PRINCIPAL
+        ══════════════════════════════════════════════════════════ -->
+        <div ng-show="vistaActual === 'grid'">
 
-                <!-- Empresa -->
-                <div class="dropdown" style="display:inline-block">
-                    <button class="btn btn-warning dropdown-toggle" type="button" data-toggle="dropdown">
-                        <i class="fa fa-building-o"></i> {{currentEmpresaName}}
-                        <span class="caret"></span>
+            <!-- Fila 1: Empresa, Financiera, Limpiar, Buscar, Excel -->
+            <div class="row m-b-sm">
+                <div class="col-md-12">
+
+                    <!-- Empresa -->
+                    <div class="dropdown" style="display:inline-block">
+                        <button class="btn btn-warning dropdown-toggle" type="button" data-toggle="dropdown">
+                            <i class="fa fa-building-o"></i> {{currentEmpresaName}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li ng-class="{active: currentEmpresaID === null}">
+                                <a ng-click="setCurrentEmpresa(null)">
+                                    <i class="fa fa-globe"></i> Todas las empresas
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li ng-repeat="empresa in lstEmpresas"
+                                ng-class="{active: currentEmpresaID === empresa.emp_idempresa}">
+                                <a ng-click="setCurrentEmpresa(empresa)">{{empresa.emp_nombre}}</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Financiera (depende de empresa) -->
+                    <div class="dropdown" style="display:inline-block">
+                        <button class="btn btn-warning dropdown-toggle"
+                                type="button"
+                                data-toggle="dropdown"
+                                ng-disabled="currentEmpresaID === null"
+                                title="{{currentEmpresaID === null ? 'Selecciona primero una empresa' : ''}}">
+                            <i class="fa fa-institution"></i> {{currentFinancieraName}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li ng-class="{active: currentFinancieraID === null}">
+                                <a ng-click="setCurrentFinanciera(null)">
+                                    <i class="fa fa-globe"></i> Todas las financieras
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li ng-repeat="financiera in lstFinancieras"
+                                ng-class="{active: currentFinancieraID === financiera.financieraID}">
+                                <a ng-click="setCurrentFinanciera(financiera)">{{financiera.nombre}}</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Limpiar -->
+                    <button class="btn btn-default" type="button" ng-click="limpiarBusqueda()" title="Limpiar filtros">
+                        <i class="fa fa-times"></i> Limpiar
                     </button>
-                    <ul class="dropdown-menu">
-                        <li ng-class="{active: currentEmpresaID === null}">
-                            <a ng-click="setCurrentEmpresa(null)">
-                                <i class="fa fa-globe"></i> Todas las empresas
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li ng-repeat="empresa in lstEmpresas"
-                            ng-class="{active: currentEmpresaID === empresa.emp_idempresa}">
-                            <a ng-click="setCurrentEmpresa(empresa)">{{empresa.emp_nombre}}</a>
-                        </li>
-                    </ul>
+
+                    <!-- Buscar -->
+                    <button class="btn btn-primary" type="button" ng-click="buscar()">
+                        <i class="fa fa-search"></i> Buscar
+                    </button>
+
+                    <!-- Exportar Excel -->
+                    <button class="btn btn-success" type="button" ng-click="exportarExcel()"
+                            title="{{seleccionadas.length > 0 ? 'Exporta las unidades seleccionadas' : 'Exporta todos los resultados de la búsqueda'}}">
+                        <i class="fa fa-file-excel-o"></i> Exportar Excel
+                        <span ng-show="seleccionadas.length > 0" class="badge m-l-xs">{{seleccionadas.length}}</span>
+                    </button>
+
                 </div>
 
-                <!-- Financiera (depende de empresa) -->
-                <div class="dropdown" style="display:inline-block">
-                    <button class="btn btn-warning dropdown-toggle"
-                            type="button"
-                            data-toggle="dropdown"
-                            ng-disabled="currentEmpresaID === null"
-                            title="{{currentEmpresaID === null ? 'Selecciona primero una empresa' : ''}}">
-                        <i class="fa fa-institution"></i> {{currentFinancieraName}}
-                        <span class="caret"></span>
+                <!-- Fila 2: Filtros avanzados + Ver selección -->
+                <div class="col-md-12" style="margin-top:6px;">
+
+                    <button class="btn btn-default" type="button"
+                            ng-click="panelFiltrosVisible = !panelFiltrosVisible"
+                            ng-class="{'btn-info': filtroConstructorValue}"
+                            title="{{filtroConstructorValue ? 'Filtro constructor activo' : 'Abrir filtros avanzados'}}">
+                        <i class="fa fa-sliders"></i> Filtros avanzados
+                        <i class="fa" ng-class="panelFiltrosVisible ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                     </button>
-                    <ul class="dropdown-menu">
-                        <li ng-class="{active: currentFinancieraID === null}">
-                            <a ng-click="setCurrentFinanciera(null)">
-                                <i class="fa fa-globe"></i> Todas las financieras
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li ng-repeat="financiera in lstFinancieras"
-                            ng-class="{active: currentFinancieraID === financiera.financieraID}">
-                            <a ng-click="setCurrentFinanciera(financiera)">{{financiera.nombre}}</a>
-                        </li>
-                    </ul>
+
+                    <button class="btn btn-default" type="button" ng-click="verSeleccionadas()">
+                        <i class="fa fa-check-square-o"></i>
+                        Ver selección
+                        <span class="badge" ng-show="seleccionadas.length > 0">{{ seleccionadas.length }}</span>
+                    </button>
+
                 </div>
-
-                <!-- Limpiar -->
-                <button class="btn btn-default" type="button" ng-click="limpiarBusqueda()" title="Limpiar filtros">
-                    <i class="fa fa-times"></i> Limpiar
-                </button>
-
-                <!-- Buscar -->
-                <button class="btn btn-primary" type="button" ng-click="buscar()">
-                    <i class="fa fa-search"></i> Buscar
-                </button>
-
-                <!-- Exportar Excel -->
-                <button class="btn btn-success" type="button" ng-click="exportarExcel()"
-                        title="Descarga el Excel con formato coloreado por grupos">
-                    <i class="fa fa-file-excel-o"></i> Exportar Excel
-                </button>
-
-                <!-- Ver seleccionadas -->
-                <button class="btn btn-default" type="button" ng-click="verSeleccionadas()">
-                    <i class="fa fa-check-square-o"></i>
-                    Ver seleccionadas
-                    <span class="badge" ng-show="seleccionadas.length > 0">{{ seleccionadas.length }}</span>
-                </button>
-
             </div>
+
+            <!-- Panel: Filtros avanzados ─────────────────────────────── -->
+            <div ng-show="panelFiltrosVisible" class="m-b-sm" style="border:1px solid #e7eaec; border-radius:4px; padding:12px; background:#fafafa;">
+                <div class="row">
+
+                    <!-- Constructor de filtro -->
+                    <div class="col-md-8">
+                        <div class="m-b-xs">
+                            <strong><i class="fa fa-filter text-info"></i> Constructor de filtro</strong>
+                            <span class="pull-right">
+                                <button class="btn btn-xs btn-primary" type="button" ng-click="aplicarFiltroConstructor()">
+                                    <i class="fa fa-check"></i> Aplicar
+                                </button>
+                                <button class="btn btn-xs btn-default m-l-xs" type="button" ng-click="limpiarFiltroConstructor()">
+                                    <i class="fa fa-times"></i> Limpiar filtro
+                                </button>
+                                <button class="btn btn-xs btn-success m-l-xs" type="button"
+                                        ng-click="guardarReglaActual()"
+                                        ng-disabled="esFiltroYaGuardado()"
+                                        title="{{esFiltroYaGuardado() ? 'Esta expresión ya está guardada como regla' : reglaEnEdicion ? 'Guardar los cambios en la regla' : 'Guardar el filtro actual como nueva regla'}}">
+                                    <i class="fa fa-save"></i>
+                                    {{reglaEnEdicion ? 'Actualizar regla' : 'Guardar regla actual'}}
+                                </button>
+                            </span>
+                        </div>
+                        <div dx-filter-builder="filtroConstructorOptions"></div>
+                    </div>
+
+                    <!-- Lista de reglas guardadas -->
+                    <div class="col-md-4" style="border-left:1px solid #e7eaec;">
+                        <div class="m-b-xs">
+                            <strong><i class="fa fa-bookmark text-info"></i> Reglas guardadas</strong>
+                            <small class="text-muted m-l-xs">Clic para aplicar</small>
+                        </div>
+                        <div dx-list="lstReglasOptions" style="max-height:250px; border:1px solid #e7eaec; border-radius:3px;"></div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Chips de filtros activos -->
+            <div ng-show="currentEmpresaID !== null || currentFinancieraID !== null" class="m-b-sm">
+                <small class="text-muted m-r-xs">Filtros activos:</small>
+                <span ng-show="currentEmpresaID !== null"
+                      class="label label-warning"
+                      style="font-size:12px; padding:5px 8px; margin-right:6px; display:inline-block;">
+                    <i class="fa fa-building-o"></i>
+                    {{currentEmpresaName}}
+                    <a ng-click="quitarEmpresa()"
+                       style="color:#fff; cursor:pointer; margin-left:5px;"
+                       title="Quitar filtro de empresa">
+                        <i class="fa fa-times-circle"></i>
+                    </a>
+                </span>
+                <span ng-show="currentFinancieraID !== null"
+                      class="label label-info"
+                      style="font-size:12px; padding:5px 8px; margin-right:6px; display:inline-block;">
+                    <i class="fa fa-institution"></i>
+                    {{currentFinancieraName}}
+                    <a ng-click="quitarFinanciera()"
+                       style="color:#fff; cursor:pointer; margin-left:5px;"
+                       title="Quitar filtro de financiera">
+                        <i class="fa fa-times-circle"></i>
+                    </a>
+                </span>
+            </div>
+
+            <!-- Grid principal -->
+            <div dx-data-grid="gridOptions"></div>
+
         </div>
 
-        <!-- Chips de filtros activos -->
-        <div ng-show="currentEmpresaID !== null || currentFinancieraID !== null" class="m-b-sm">
-            <small class="text-muted m-r-xs">Filtros activos:</small>
-            <span ng-show="currentEmpresaID !== null"
-                  class="label label-warning"
-                  style="font-size:12px; padding:5px 8px; margin-right:6px; display:inline-block;">
-                <i class="fa fa-building-o"></i>
-                {{currentEmpresaName}}
-                <a ng-click="quitarEmpresa()"
-                   style="color:#fff; cursor:pointer; margin-left:5px;"
-                   title="Quitar filtro de empresa">
-                    <i class="fa fa-times-circle"></i>
-                </a>
-            </span>
-            <span ng-show="currentFinancieraID !== null"
-                  class="label label-info"
-                  style="font-size:12px; padding:5px 8px; margin-right:6px; display:inline-block;">
-                <i class="fa fa-institution"></i>
-                {{currentFinancieraName}}
-                <a ng-click="quitarFinanciera()"
-                   style="color:#fff; cursor:pointer; margin-left:5px;"
-                   title="Quitar filtro de financiera">
-                    <i class="fa fa-times-circle"></i>
-                </a>
-            </span>
+        <!-- ══════════════════════════════════════════════════════════
+             VISTA: SELECCIÓN
+        ══════════════════════════════════════════════════════════ -->
+        <div ng-show="vistaActual === 'seleccion'">
+
+            <!-- Barra de acciones -->
+            <div class="row m-b-sm">
+                <div class="col-md-12">
+
+                    <button class="btn btn-default" type="button" ng-click="regresarAlGrid()">
+                        <i class="fa fa-arrow-left"></i> Regresar
+                    </button>
+
+                    <span class="m-l-md" style="font-size:14px; font-weight:600;">
+                        <i class="fa fa-check-square-o text-info"></i>
+                        Unidades seleccionadas
+                        <span class="badge m-l-xs">{{seleccionadas.length}}</span>
+                    </span>
+
+                    <span class="m-l-md" style="border-left:1px solid #e7eaec; padding-left:12px;">
+                        <strong class="text-muted" style="font-size:12px; text-transform:uppercase; letter-spacing:1px;">
+                            Acciones
+                        </strong>
+
+                        <button class="btn btn-primary btn-sm m-l-sm" type="button"
+                                ng-click="crearPrelote()"
+                                title="Crea un pre-lote de pago con las unidades seleccionadas">
+                            <i class="fa fa-list-alt"></i> Crear Pre-Lote
+                        </button>
+
+                    </span>
+
+                </div>
+            </div>
+
+            <!-- Grid de unidades seleccionadas -->
+            <div dx-data-grid="gridSeleccionadasOptions"></div>
+
         </div>
 
-        <div dx-data-grid="gridOptions"></div>
-
-    </div>
-</div>
-
-<!-- Modal: Unidades Seleccionadas -->
-<div class="modal fade" id="mdlSeleccionadas" tabindex="-1" role="dialog">
-    <div class="modal-dialog" style="width:95%; max-width:none;" role="document">
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">
-                    <i class="fa fa-check-square-o"></i>
-                    Unidades seleccionadas
-                    <span class="badge m-l-xs">{{seleccionadas.length}}</span>
-                </h4>
-            </div>
-
-            <div class="modal-body">
-                <div dx-data-grid="gridSeleccionadasOptions"></div>
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-success" type="button" ng-click="exportarSeleccionadas()">
-                    <i class="fa fa-file-excel-o"></i> Exportar Excel
-                </button>
-                <button class="btn btn-default" type="button" data-dismiss="modal">
-                    <i class="fa fa-times"></i> Cerrar
-                </button>
-            </div>
-
-        </div>
     </div>
 </div>

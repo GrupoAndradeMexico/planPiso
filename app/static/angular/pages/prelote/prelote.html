@@ -1,0 +1,95 @@
+<div class="animated fadeInRight">
+
+    <!-- Encabezado de página -->
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Pre-Lotes Plan Piso</h2>
+            <ol class="breadcrumb">
+                <li><a href="sabana">Sábana</a></li>
+                <li class="active"><strong>Pre-Lotes</strong></li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+
+                <!-- ══════════════════════════════════════════
+                     VISTA: LISTA DE PRE-LOTES
+                ══════════════════════════════════════════ -->
+                <div ng-show="vistaActual === 'lista'">
+
+                    <div class="row m-b-sm">
+                        <div class="col-md-12">
+                            <h4 style="display:inline-block; margin:0; vertical-align:middle;">
+                                <i class="fa fa-list-alt text-info"></i> Mis Pre-Lotes
+                            </h4>
+                            <button class="btn btn-xs btn-default m-l-sm" ng-click="cargarLista()"
+                                    title="Actualizar lista">
+                                <i class="fa fa-refresh"></i> Actualizar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div dx-data-grid="gridListaOptions"></div>
+
+                </div>
+
+                <!-- ══════════════════════════════════════════
+                     VISTA: DETALLE (unidades vs sábana)
+                ══════════════════════════════════════════ -->
+                <div ng-show="vistaActual === 'detalle'">
+
+                    <!-- Barra de navegación del detalle -->
+                    <div class="row m-b-sm">
+                        <div class="col-md-12">
+
+                            <button class="btn btn-default btn-sm" ng-click="regresar()">
+                                <i class="fa fa-arrow-left"></i> Regresar
+                            </button>
+
+                            <span class="m-l-md" style="font-size:15px; font-weight:600; vertical-align:middle;">
+                                <i class="fa fa-list-alt text-info"></i>
+                                {{preloteActual.ppl_nombre}}
+                            </span>
+
+                            <span class="label label-info m-l-sm"
+                                  style="font-size:12px; padding:4px 8px; vertical-align:middle;">
+                                {{preloteActual.NombreEmpresa}}
+                            </span>
+
+                            <span class="label label-default m-l-xs"
+                                  style="font-size:12px; padding:4px 8px; vertical-align:middle;">
+                                <i class="fa fa-calendar"></i>
+                                {{preloteActual.ppl_fecha | date:'dd/MM/yyyy HH:mm'}}
+                            </span>
+
+                            <span class="label label-primary m-l-xs"
+                                  style="font-size:12px; padding:4px 8px; vertical-align:middle;">
+                                {{preloteActual.TotalUnidades}} unidades
+                            </span>
+
+                        </div>
+                    </div>
+
+                    <!-- Leyenda de alertas -->
+                    <div class="row m-b-sm">
+                        <div class="col-md-12">
+                            <small class="text-muted m-r-xs">Leyenda alertas:</small>
+                            <span class="label label-success m-r-xs" style="font-size:11px;">Sin cambios</span>
+                            <span class="label label-warning m-r-xs" style="font-size:11px;">Saldo / Situación cambió</span>
+                            <span class="label label-danger"          style="font-size:11px;">No está en sábana</span>
+                        </div>
+                    </div>
+
+                    <!-- Grid de unidades con comparación -->
+                    <div dx-data-grid="gridDetalleOptions"></div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>

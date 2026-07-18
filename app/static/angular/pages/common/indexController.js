@@ -20,9 +20,10 @@ appModule.controller("indexController", function($scope,$rootScope, empresaFacto
         empresaFactory.getUsuarioNombre( $('#idUsuario').val() ).then(function(result) {
             localStorage.setItem("nombreUsuario", result.data[0].nombre);
             $scope.nombreUsuario    = result.data[0].nombre;
-           
+
         });
 
+        $(".init-mgs").hide();
         $("#wrapper").show();
     } 
     else {

@@ -1,4 +1,4 @@
-appModule.controller('sabanaController', function($scope, commonFactory, empresaFactory, sabanaFactory) {
+appModule.controller('sabanaController', function($scope, commonFactory, empresaFactory, sabanaFactory, filtroReglasFactory, preloteFactory) {
 
     $scope.idUsuario = localStorage.getItem("idUsuario");
 
@@ -78,17 +78,94 @@ appModule.controller('sabanaController', function($scope, commonFactory, empresa
 
     // ── Exportar Excel con formato coloreado ───────────────────────────────────
     $scope.exportarExcel = function() {
-        var url = sabanaFactory.getExcelUrl($scope.currentEmpresaID, $scope.currentFinancieraID);
-        window.open(url, '_blank');
+        if ($scope.seleccionadas.length > 0) {
+            // Exportar solo las filas seleccionadas
+            sabanaFactory.exportarSeleccionadas($scope.seleccionadas)
+                .then(function(blob) {
+                    var url   = window.URL.createObjectURL(blob);
+                    var a     = document.createElement('a');
+                    var fecha = new Date().toISOString().slice(0, 10);
+                    a.href     = url;
+                    a.download = 'sabana_seleccionadas_' + fecha + '.xlsx';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(function() {
+                    swal('Error', 'No se pudo generar el Excel de seleccionadas.', 'error');
+                });
+        } else {
+            // Sin selección: exportar todos los resultados de la búsqueda
+            var url = sabanaFactory.getExcelUrl($scope.currentEmpresaID, $scope.currentFinancieraID);
+            window.open(url, '_blank');
+        }
     };
 
-    // ── Acción sobre seleccionadas ─────────────────────────────────────────────
+    // ── Panel swap: grid principal ↔ vista de selección ───────────────────────
+    $scope.vistaActual = 'grid';
+
+    $scope.regresarAlGrid = function() {
+        $scope.vistaActual = 'grid';
+    };
+
     $scope.verSeleccionadas = function() {
         if ($scope.seleccionadas.length === 0) {
             swal('Aviso', 'No hay unidades seleccionadas.', 'warning');
             return;
         }
-        $('#mdlSeleccionadas').modal('show');
+        $scope.vistaActual = 'seleccion';
+    };
+
+    // ── Crear Pre-Lote ─────────────────────────────────────────────────────────
+    $scope.crearPrelote = function() {
+        if ($scope.seleccionadas.length === 0) {
+            swal('Aviso', 'No hay unidades seleccionadas.', 'warning');
+            return;
+        }
+
+        // Agrupar por empresa para mostrar resumen al usuario
+        var grupos = {};
+        $scope.seleccionadas.forEach(function(u) {
+            var k = u.IdEmpresa;
+            if (!grupos[k]) grupos[k] = { nombre: u.NombreEmpresa || ('Empresa ' + k), total: 0 };
+            grupos[k].total++;
+        });
+        var numEmpresas   = Object.keys(grupos).length;
+        var resumen       = Object.keys(grupos).map(function(k) {
+            return '• ' + grupos[k].nombre + ' — ' + grupos[k].total + ' unidades';
+        }).join('\n');
+
+        swal({
+            title:             'Crear Pre-Lote',
+            text:              'Se crearán ' + numEmpresas + ' pre-lote(s):\n' + resumen + '\n\nNombre del grupo:',
+            type:              'input',
+            inputValue:        '',
+            showCancelButton:  true,
+            confirmButtonText: 'Crear',
+            cancelButtonText:  'Cancelar',
+            closeOnConfirm:    false
+        }, function(nombre) {
+            if (nombre === false) return;
+            nombre = (nombre || '').trim();
+            if (!nombre) {
+                swal.showInputError('El nombre es obligatorio.');
+                return;
+            }
+
+            swal({ title: 'Guardando…', text: 'Por favor espera.', showConfirmButton: false });
+
+            preloteFactory.insertPrelote(nombre, $scope.idUsuario, $scope.seleccionadas)
+                .then(function(result) {
+                    if (result.data && result.data.ok) {
+                        swal('Creado', 'Pre-lote(s) creados correctamente.', 'success');
+                    } else {
+                        swal('Error', (result.data && result.data.mensaje) || 'No se pudo crear el pre-lote.', 'error');
+                    }
+                }, function() {
+                    swal('Error', 'Error de comunicación al crear el pre-lote.', 'error');
+                });
+        });
     };
 
     $scope.exportarSeleccionadas = function() {
@@ -140,8 +217,9 @@ appModule.controller('sabanaController', function($scope, commonFactory, empresa
             { dataField: 'IdEmpresa',            caption: 'IdEmpresa',                   width: 96,  dataType: 'number' },
             { dataField: 'NombreEmpresa',        caption: 'Nombre Empresa',              width: 240 },
             { dataField: 'IdFinanciera',         caption: 'IdFinanciera',                width: 104, dataType: 'number' },
-            { dataField: 'NombreFinanciera',            caption: 'Nombre Financiera',           width: 224 },
+            { dataField: 'NombreFinanciera',                caption: 'Nombre Financiera',           width: 224 },
             { dataField: 'Serie',                caption: 'Serie',                       width: 176 },
+            { dataField: 'SerieRepetida',        caption: 'Serie repetida',              width: 120, dataType: 'boolean', visible: false },
             { dataField: 'Modelo',               caption: 'Modelo',                      width: 128 },
             { dataField: 'Marca',                caption: 'Marca',                       width: 128 },
             { dataField: 'Anio_modelo',          caption: 'Anio_modelo',                 width: 96,  dataType: 'number' },
@@ -255,7 +333,7 @@ appModule.controller('sabanaController', function($scope, commonFactory, empresa
         filterRow:           { visible: true },
         searchPanel:         { visible: true, width: 240, placeholder: 'Buscar...' },
         headerFilter:        { visible: true },
-        filterPanel:         { visible: true },
+        filterPanel:         { visible: false },
         groupPanel:          { visible: true },
         columnChooser:       { enabled: true },
         paging:              { pageSize: 10 },
@@ -263,6 +341,260 @@ appModule.controller('sabanaController', function($scope, commonFactory, empresa
         export:              { enabled: false },
         noDataText:          'No hay unidades seleccionadas.',
         columns:             $scope.gridOptions.columns
+    };
+
+    // ── Filtro Constructor (dxFilterBuilder) ───────────────────────────────────
+    var _filterFields = [
+        { dataField: 'NombreEmpresa',        caption: 'Empresa',                 dataType: 'string' },
+        { dataField: 'NOMBREFIN',            caption: 'Financiera',              dataType: 'string' },
+        { dataField: 'Marca',                caption: 'Marca',                   dataType: 'string' },
+        { dataField: 'Modelo',               caption: 'Modelo',                  dataType: 'string' },
+        { dataField: 'SUC',                  caption: 'Sucursal',                dataType: 'string' },
+        { dataField: 'VEH_NUMSERIE',         caption: 'No. Serie',               dataType: 'string' },
+        { dataField: 'SerieRepetida',        caption: 'Serie repetida',          dataType: 'boolean' },
+        { dataField: 'VEH_SITUACION',        caption: 'Situación',               dataType: 'string' },
+        { dataField: 'Saldo_actual',         caption: 'Saldo actual',            dataType: 'number' },
+        { dataField: 'SALDO_PP',             caption: 'Saldo PP',                dataType: 'number' },
+        { dataField: 'DIAS',                 caption: 'Días',                    dataType: 'number' },
+        { dataField: 'DIASVENCIDOS',         caption: 'Días vencidos',           dataType: 'number' },
+        { dataField: 'INTERESES',            caption: 'Intereses',               dataType: 'number' },
+        { dataField: 'Importe_original',     caption: 'Importe original',        dataType: 'number' },
+        { dataField: 'Resultado',            caption: 'Unidad Estrella',         dataType: 'number' },
+        { dataField: 'UnidadesNoFinanciadas',caption: 'Unid. No Financiadas',    dataType: 'number' },
+        { dataField: 'Validacion',           caption: 'Validación',              dataType: 'string' },
+        { dataField: 'FECHAFACPTA',          caption: 'Fecha Factura',           dataType: 'date'   },
+        { dataField: 'Fecha_vencimiento',    caption: 'Fecha Vencimiento',       dataType: 'date'   },
+        { dataField: 'Fecha_inicio',         caption: 'Fecha Inicio',            dataType: 'date'   }
+    ];
+
+    $scope.panelFiltrosVisible    = false;
+    $scope.filtroConstructorValue = null;
+    $scope.reglaEnEdicion         = null;   // regla que está siendo editada
+
+    // Devuelve true si la expresión actual ya existe en las reglas guardadas
+    // (excluye la regla que se está editando para no bloquearse a sí misma)
+    $scope.esFiltroYaGuardado = function() {
+        if ($scope.reglaEnEdicion) return false;
+        if (!$scope.filtroConstructorValue) return false;
+        var exprActual = JSON.stringify($scope.filtroConstructorValue);
+        return $scope.lstReglas.some(function(r) {
+            return r.Expresion === exprActual;
+        });
+    };
+
+    $scope.filtroConstructorOptions = {
+        bindingOptions: { value: 'filtroConstructorValue' },
+        fields:         _filterFields,
+        groupOperationDescriptions: {
+            and:    'Todas se cumplen (Y)',
+            or:     'Al menos una se cumple (O)',
+            notAnd: 'No todas se cumplen (No Y)',
+            notOr:  'Ninguna se cumple (No O)'
+        },
+        onValueChanged: function(e) {
+            $scope.$applyAsync(function() {
+                $scope.filtroConstructorValue = e.value;
+            });
+            if ($scope.gridInstance) {
+                $scope.gridInstance.clearFilter('dataSource');
+                if (e.value) {
+                    $scope.gridInstance.filter(e.value);
+                }
+            }
+        }
+    };
+
+    $scope.aplicarFiltroConstructor = function() {
+        if ($scope.gridInstance) {
+            $scope.gridInstance.clearFilter('dataSource');
+            if ($scope.filtroConstructorValue) {
+                $scope.gridInstance.filter($scope.filtroConstructorValue);
+            }
+        }
+    };
+
+    $scope.limpiarFiltroConstructor = function() {
+        $scope.filtroConstructorValue = null;
+        if ($scope.gridInstance) {
+            $scope.gridInstance.clearFilter('dataSource');
+        }
+    };
+
+    // ── Reglas guardadas (dxList) ──────────────────────────────────────────────
+    $scope.lstReglas = [];
+
+    function _cargarReglas() {
+        filtroReglasFactory.getReglas($scope.idUsuario).then(function(result) {
+            $scope.lstReglas = result.data || [];
+        });
+    }
+    _cargarReglas();
+
+    $scope.aplicarRegla = function(regla) {
+        try {
+            var expr = JSON.parse(regla.Expresion);
+            $scope.filtroConstructorValue = expr;
+            $scope.reglaEnEdicion         = null;   // salir del modo edición al cambiar de regla
+            if ($scope.gridInstance) {
+                $scope.gridInstance.clearFilter('dataSource');
+                $scope.gridInstance.filter(expr);
+            }
+        } catch (e) {
+            swal('Error', 'La expresión de la regla no es válida.', 'error');
+        }
+    };
+
+    $scope.guardarReglaActual = function() {
+        if ($scope.esFiltroYaGuardado()) {
+            swal('Aviso', 'Esta expresión ya está guardada como regla. Modifica el filtro antes de guardar una nueva.', 'warning');
+            return;
+        }
+        if (!$scope.filtroConstructorValue) {
+            swal('Aviso', 'No hay ningún filtro activo en el constructor.', 'warning');
+            return;
+        }
+
+        var modoEdicion  = !!$scope.reglaEnEdicion;
+        var nombreActual = modoEdicion ? $scope.reglaEnEdicion.Nombre : '';
+
+        swal({
+            title:          modoEdicion ? 'Actualizar regla' : 'Guardar regla',
+            text:           'Nombre de la regla:',
+            type:           'input',
+            inputValue:     nombreActual,
+            showCancelButton:  true,
+            confirmButtonText: modoEdicion ? 'Actualizar' : 'Guardar',
+            cancelButtonText:  'Cancelar',
+            closeOnConfirm:    false
+        }, function(nombre) {
+            if (nombre === false) return;
+            nombre = (nombre || '').trim();
+            if (!nombre) {
+                swal.showInputError('El nombre es obligatorio.');
+                return;
+            }
+            var expresion = JSON.stringify($scope.filtroConstructorValue);
+
+            if (modoEdicion) {
+                filtroReglasFactory.updateRegla($scope.reglaEnEdicion.Id, nombre, expresion)
+                    .then(function(result) {
+                        if (result.data && result.data.ok) {
+                            $scope.$applyAsync(function() { $scope.reglaEnEdicion = null; });
+                            swal('Actualizado', 'Regla "' + nombre + '" actualizada.', 'success');
+                            _cargarReglas();
+                        } else {
+                            swal('Error', (result.data && result.data.mensaje) || 'No se pudo actualizar.', 'error');
+                        }
+                    }, function() {
+                        swal('Error', 'Error de comunicación al actualizar la regla.', 'error');
+                    });
+            } else {
+                filtroReglasFactory.insertRegla($scope.idUsuario, nombre, expresion)
+                    .then(function(result) {
+                        if (result.data && result.data.ok) {
+                            swal('Guardado', 'Regla "' + nombre + '" guardada.', 'success');
+                            _cargarReglas();
+                        } else {
+                            swal('Error', (result.data && result.data.mensaje) || 'No se pudo guardar.', 'error');
+                        }
+                    }, function() {
+                        swal('Error', 'Error de comunicación al guardar la regla.', 'error');
+                    });
+            }
+        });
+    };
+
+    $scope.editarRegla = function(regla) {
+        try {
+            var expr = JSON.parse(regla.Expresion);
+            $scope.filtroConstructorValue = expr;
+            $scope.reglaEnEdicion         = regla;
+            $scope.panelFiltrosVisible    = true;
+            if ($scope.gridInstance) {
+                $scope.gridInstance.clearFilter('dataSource');
+                $scope.gridInstance.filter(expr);
+            }
+        } catch (e) {
+            swal('Error', 'La expresión de la regla no es válida.', 'error');
+        }
+    };
+
+    $scope.eliminarRegla = function(regla) {
+        swal({
+            title:             '¿Eliminar regla?',
+            text:              '"' + regla.Nombre + '"',
+            type:              'warning',
+            showCancelButton:  true,
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText:  'Cancelar'
+        }, function(confirmar) {
+            if (!confirmar) return;
+            filtroReglasFactory.deleteRegla(regla.Id).then(function(result) {
+                if (result.data && result.data.ok) {
+                    $scope.$applyAsync(function() {
+                        if ($scope.reglaEnEdicion && $scope.reglaEnEdicion.Id === regla.Id) {
+                            $scope.reglaEnEdicion         = null;
+                            $scope.filtroConstructorValue = null;
+                        }
+                    });
+                    _cargarReglas();
+                } else {
+                    swal('Error', (result.data && result.data.mensaje) || 'No se pudo eliminar.', 'error');
+                }
+            }, function() {
+                swal('Error', 'Error de comunicación al eliminar la regla.', 'error');
+            });
+        });
+    };
+
+    $scope.lstReglasOptions = {
+        bindingOptions: { dataSource: 'lstReglas' },
+        displayExpr:    'Nombre',
+        onItemClick: function(e) {
+            $scope.$applyAsync(function() {
+                $scope.aplicarRegla(e.itemData);
+            });
+        },
+        itemTemplate: function(data, _index, element) {
+            var $row = $('<div>').css({ display: 'flex', alignItems: 'center', padding: '2px 0' });
+
+            var $icon = $('<i>').addClass(
+                data.EsDefault
+                    ? 'fa fa-star text-warning m-r-xs'
+                    : 'fa fa-bookmark text-info m-r-xs'
+            );
+            var $nombre = $('<span>').text(data.Nombre).css('flex', '1');
+
+            $row.append($icon).append($nombre);
+
+            if (!data.EsDefault) {
+                var $btnEdit = $('<a>')
+                    .attr('title', 'Editar regla')
+                    .css({ color: '#3498db', cursor: 'pointer', marginLeft: '6px' })
+                    .html('<i class="fa fa-pencil"></i>')
+                    .on('click', function(evt) {
+                        evt.stopPropagation();
+                        $scope.$applyAsync(function() {
+                            $scope.editarRegla(data);
+                        });
+                    });
+
+                var $btnDel = $('<a>')
+                    .attr('title', 'Eliminar regla')
+                    .css({ color: '#e74c3c', cursor: 'pointer', marginLeft: '6px' })
+                    .html('<i class="fa fa-trash-o"></i>')
+                    .on('click', function(evt) {
+                        evt.stopPropagation();
+                        $scope.$applyAsync(function() {
+                            $scope.eliminarRegla(data);
+                        });
+                    });
+
+                $row.append($btnEdit).append($btnDel);
+            }
+
+            element.append($row);
+        }
     };
 
     // ── Helpers privados ───────────────────────────────────────────────────────

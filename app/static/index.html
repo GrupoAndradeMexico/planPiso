@@ -72,9 +72,12 @@
                         <li ng-repeat="item in lstModulos" data-toggle="tooltip" data-placement="left" title="{{item.Descripcion}}">
                             <a href="{{item.Modulo}}"><i class="{{item.class}}"></i> <span class="nav-label">{{item.Descripcion}}</span></a>
                         </li>
-                        <li data-toggle="tooltip" data-placement="left" title="Sábana Plan Piso">
+                        <!-- <li data-toggle="tooltip" data-placement="left" title="Sábana Plan Piso">
                             <a href="sabana"><i class="fa fa-table"></i> <span class="nav-label">Sábana</span> </a>
                         </li>
+                        <li data-toggle="tooltip" data-placement="left" title="Pre-Lotes Plan Piso">
+                            <a href="prelote"><i class="fa fa-list-alt"></i> <span class="nav-label">Pre-Lotes</span> </a>
+                        </li> -->
                     </ul>
                 </div>
             </nav>
@@ -122,6 +125,7 @@
         </div>
     </div>
     <input type="hidden" id="idUsuario" value="[[ user.idUsuario ]]">
+    <!-- <input type="hidden" id="idUsuario" value="71"> -->
     <!--End Main Wrapper-->
     <!-- Mainly scripts -->
     <script src="assets/js/jquery.min.js"></script>
@@ -203,6 +207,9 @@
     <script src="angular/pages/reduccion/reduccionFactory.js"></script>
     <script src="angular/pages/pagoInteres/pagoInteresFactory.js"></script>
     <script src="angular/pages/sabana/sabanaFactory.js"></script>
+    <script src="angular/pages/sabana/filtroReglasFactory.js"></script>
+    <script src="angular/pages/sabana/preloteFactory.js"></script>
+    <script src="angular/pages/prelote/preloteController.js"></script>
     <!-- Directives-->
     <script src="angular/directives/common/commonDirective.js"></script>
     <script src="angular/directives/loading/loadingDirective.js"></script>
