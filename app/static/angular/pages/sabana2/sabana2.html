@@ -1,0 +1,183 @@
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+
+        <!-- Fecha efectiva del reporte -->
+        <div ng-if="mensajeFechaEfectiva" class="m-b-sm">
+            <strong><i class="fa fa-calendar"></i> {{mensajeFechaEfectiva}}</strong>
+        </div>
+
+        <!-- Fila 1: Empresa, Vistas guardadas, Guardar vista -->
+        <div class="row m-b-sm">
+            <div class="col-md-12">
+
+                <!-- Empresa -->
+                <div class="dropdown" style="display:inline-block">
+                    <button class="btn btn-warning dropdown-toggle" type="button" data-toggle="dropdown">
+                        <i class="fa fa-building-o"></i> {{currentEmpresaName}}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li ng-class="{active: haySeleccion && currentEmpresaID === null}">
+                            <a ng-click="setCurrentEmpresa(null)">
+                                <i class="fa fa-globe"></i> Todas las empresas
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li ng-repeat="empresa in lstEmpresas"
+                            ng-class="{active: currentEmpresaID === empresa.emp_idempresa}">
+                            <a ng-click="setCurrentEmpresa(empresa)">{{empresa.emp_nombre}}</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Vistas guardadas -->
+                <select class="form-control"
+                        style="display:inline-block; width:auto; margin-left:8px;"
+                        ng-model="vistaSeleccionadaId"
+                        ng-change="seleccionarVistaGuardada(vistaSeleccionadaId)"
+                        ng-options="vista.IdVista as vista.Nombre for vista in lstVistasGuardadas">
+                    <option value="">Vista por defecto</option>
+                </select>
+
+                <!-- Guardar vista actual -->
+                <button class="btn btn-primary" type="button"
+                        ng-click="mostrarGuardarVista = !mostrarGuardarVista"
+                        style="margin-left:8px;">
+                    <i class="fa fa-save"></i> Guardar vista actual
+                </button>
+
+                <!-- Filtros avanzados -->
+                <button class="btn btn-default" type="button"
+                        ng-if="haySeleccion"
+                        ng-click="toggleFiltrosAvanzados()"
+                        ng-class="{'btn-info': filtroConstructorValue}"
+                        style="margin-left:8px;"
+                        title="{{filtroConstructorValue ? 'Filtro avanzado activo' : 'Abrir filtros avanzados'}}">
+                    <i class="fa fa-sliders"></i> Filtros avanzados
+                    <i class="fa" ng-class="panelFiltrosVisible ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                </button>
+
+                <!-- Switch Pivot / Detalle -->
+                <div class="btn-group" ng-if="haySeleccion" style="margin-left:8px;">
+                    <button class="btn btn-default" type="button"
+                            ng-class="{active: vistaActual === 'pivot'}"
+                            ng-click="cambiarVista('pivot')">
+                        <i class="fa fa-table"></i> Pivot
+                    </button>
+                    <button class="btn btn-default" type="button"
+                            ng-class="{active: vistaActual === 'detalle'}"
+                            ng-click="cambiarVista('detalle')">
+                        <i class="fa fa-list"></i> Detalle (todas las filas)
+                    </button>
+                </div>
+
+                <!-- Resumen de carga de financieras -->
+                <button class="btn btn-default" type="button"
+                        ng-click="verResumenCarga()"
+                        style="margin-left:8px;">
+                    <i class="fa fa-list-alt"></i> Ver Resumen
+                </button>
+
+            </div>
+        </div>
+
+        <!-- Panel: Filtros avanzados ─────────────────────────────── -->
+        <div ng-show="panelFiltrosVisible" class="m-b-sm" style="border:1px solid #e7eaec; border-radius:4px; padding:12px; background:#fafafa;">
+            <div class="m-b-xs">
+                <strong><i class="fa fa-filter text-info"></i> Constructor de filtro</strong>
+                <small class="text-muted m-l-xs">Aplica tanto al Pivot como al Detalle</small>
+                <span class="pull-right">
+                    <button class="btn btn-xs btn-default" type="button" ng-click="limpiarFiltroConstructor()">
+                        <i class="fa fa-times"></i> Limpiar filtro
+                    </button>
+                </span>
+            </div>
+            <div dx-filter-builder="filtroConstructorOptions"></div>
+        </div>
+
+        <!-- Form: Guardar vista actual -->
+        <div ng-show="mostrarGuardarVista" class="m-b-sm" style="border:1px solid #e7eaec; border-radius:4px; padding:12px; background:#fafafa;">
+            <div class="row">
+                <div class="col-md-4">
+                    <label>Nombre</label>
+                    <input type="text" class="form-control" ng-model="nuevaVistaNombre" placeholder="Nombre de la vista">
+                </div>
+                <div class="col-md-5">
+                    <label>Descripción</label>
+                    <input type="text" class="form-control" ng-model="nuevaVistaDescripcion" placeholder="Descripción (opcional)">
+                </div>
+                <div class="col-md-3">
+                    <label>&nbsp;</label>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="nuevaVistaSoloEmpresa"> ¿Solo para esta empresa?
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" style="margin-top:8px;">
+                    <button class="btn btn-success btn-sm" type="button"
+                            ng-click="guardarVistaActual(nuevaVistaNombre, nuevaVistaDescripcion, nuevaVistaSoloEmpresa); mostrarGuardarVista = false">
+                        <i class="fa fa-check"></i> Confirmar
+                    </button>
+                    <button class="btn btn-default btn-sm" type="button" ng-click="mostrarGuardarVista = false">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mensaje: sin empresa seleccionada -->
+        <div ng-if="!haySeleccion" class="alert alert-info">
+            <i class="fa fa-info-circle"></i> Selecciona una empresa (o "Todas las empresas") para ver los datos.
+        </div>
+
+        <!-- Pivot Table -->
+        <div ng-show="haySeleccion && vistaActual === 'pivot'">
+            <div dx-pivot-grid="pivotGridOptions"></div>
+        </div>
+
+        <!-- Detalle: todas las filas sin agrupar -->
+        <div ng-show="haySeleccion && vistaActual === 'detalle'">
+            <div dx-data-grid="flatGridOptions"></div>
+        </div>
+
+        <!-- Modal: Drill-down (detalle de una celda del pivot) -->
+        <div class="modal fade" id="mdlDrillDown" tabindex="-1" role="dialog">
+            <div class="modal-dialog" style="width: 90%;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title"><i class="fa fa-search-plus text-info"></i> Detalle de la celda seleccionada</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div dx-data-grid="drillDownGridOptions"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal: Resumen de carga de financieras -->
+        <div class="modal fade" id="mdlResumenCarga" tabindex="-1" role="dialog">
+            <div class="modal-dialog" style="width: 80%;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title"><i class="fa fa-list-alt text-info"></i> Resumen de carga de financieras</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div dx-data-grid="resumenCargaGridOptions"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

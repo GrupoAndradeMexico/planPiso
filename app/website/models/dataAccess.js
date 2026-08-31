@@ -51,7 +51,7 @@ DataAccess.prototype.query = function(stored, params, callback) {
 DataAccess.prototype.post = function(stored, params, callback) {
     var self = this.connection;
     this.connection.connect(function(err) {
-        // Stored Procedure 
+        // Stored Procedure
         var request = new sql.Request(self);
 
         if (params.length > 0) {
@@ -81,6 +81,52 @@ DataAccess.prototype.queryAllRecordSet = function(stored, params, callback) {
             });
         }
         request.execute(stored)
+            .then(function(recordsets) {
+                callback(null, recordsets);
+            }).catch(function(err) {
+                callback(err);
+            });
+    });
+};
+
+// ── Método aislado para sabana2 ─────────────────────────────────────────────
+// SSMS negocia la sesión con language=Español/dateformat=dmy, pero el driver
+// mssql/tedious no fija nada por defecto (queda en us_english/mdy). Eso hace
+// que conversiones implícitas de VARCHAR a DATE dentro de los SPs (fechas en
+// formato dd/mm/yyyy) fallen solo desde Node ("Error converting data type
+// varchar to date").
+//
+// mssql v3.3.0 usa un pool de conexiones físicas (generic-pool). El intento
+// inicial (SET en una llamada .execute() aparte, incluso ya fijado con una
+// transacción) NO funcionó: la ruta RPC de tedious (request.execute() +
+// .input()) no respeta el SET LANGUAGE/DATEFORMAT de la sesión igual que un
+// batch de texto plano. Se confirmó empíricamente que SET + EXEC combinados
+// en UNA sola llamada request.query() (texto, no RPC) sí funcionan — por eso
+// este método arma el EXEC como texto parametrizado con @nombre en vez de
+// usar .execute()/.input(). Sigue siendo seguro contra inyección porque los
+// valores van bindeados vía request.input(), no concatenados en el string.
+//
+// NO se aplicó a query/post/queryAllRecordSet (arriba) a propósito: esos los
+// usan TODOS los controllers ya en producción, y no se quiso arriesgar ese
+// comportamiento. Este método es exclusivo de apiSabana2.js — si otro
+// controller nuevo pega con el mismo error de conversión de fecha, migrarlo
+// a este método (o promoverlo a compartido) caso por caso.
+DataAccess.prototype.queryLocalizado = function(stored, params, callback) {
+    var self = this.connection;
+    this.connection.connect(function(err) {
+        var request = new sql.Request(self);
+
+        var asignaciones = [];
+        if (params.length > 0) {
+            params.forEach(function(param) {
+                request.input(param.name, param.type, param.value);
+                asignaciones.push('@' + param.name + ' = @' + param.name);
+            });
+        }
+
+        var execText = 'EXEC ' + stored + (asignaciones.length ? ' ' + asignaciones.join(', ') : '');
+
+        request.query("SET LANGUAGE Español; SET DATEFORMAT dmy; " + execText)
             .then(function(recordsets) {
                 callback(null, recordsets);
             }).catch(function(err) {

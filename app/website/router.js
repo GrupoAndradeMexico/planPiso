@@ -24,5 +24,6 @@
      apiPagoInteres: require('./controllers/apiPagoInteres'),
      apiSabana:        require('./controllers/apiSabana'),
      apiFiltroReglas:  require('./controllers/apiFiltroReglas'),
-     apiPrelote:       require('./controllers/apiPrelote')
+     apiPrelote:       require('./controllers/apiPrelote'),
+     sabana2:          require('./controllers/apiSabana2')
  }

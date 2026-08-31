@@ -1,0 +1,9 @@
+/* .dx-overlay-wrapper (DevExtreme) tiene z-index:1000 por default — por debajo
+   de los modales de Bootstrap (.modal z-index:1050, .modal-backdrop 1040).
+   Cualquier popup de DevExtreme (headerFilter, selector de campos, export,
+   menús de contexto) abierto DENTRO de un modal de Bootstrap queda oculto
+   detrás de él. Mismo problema que ya se resolvió para #mdlLoading con
+   z-index:4048 — aquí se sube el propio popup de DevExtreme en vez del modal. */
+.dx-overlay-wrapper {
+    z-index: 4050 !important;
+}

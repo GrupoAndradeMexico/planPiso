@@ -109,9 +109,14 @@ appModule.config(function($routeProvider, $locationProvider) {
         controller: 'pagoInteresController'
     })
 
+    // .when('/sabana', {
+    //     templateUrl: 'angular/pages/sabana/sabana.html',
+    //     controller: 'sabanaController'
+    // })
+
     .when('/sabana', {
-        templateUrl: 'angular/pages/sabana/sabana.html',
-        controller: 'sabanaController'
+        templateUrl: 'angular/pages/sabana2/sabana2.html',
+        controller: 'sabana2Controller'
     })
 
     .when('/prelote', {
